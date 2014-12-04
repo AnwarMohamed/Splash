@@ -34,28 +34,36 @@ class MenuBar extends JMenuBar {
     private JMenu fileMenu = new JMenu("File");
     private JMenu editMenu = new JMenu("Edit");
     private JMenu viewMenu = new JMenu("View");
-    private JMenu windowMenu = new JMenu("Window");
+    private JMenu imageMenu = new JMenu("Image");
+    private JMenu layersMenu = new JMenu("Layers");
     private JMenu helpMenu = new JMenu("Help");
 
-    public JMenuItem newAction = new JMenuItem("New", 
+    public JMenuItem newAction = new JMenuItem("New",
             new ImageIcon("res/images/document-new.png"));
-    public JMenuItem openAction = new JMenuItem("Open", 
+    public JMenuItem openAction = new JMenuItem("Open",
             new ImageIcon("res/images/document-open.png"));
-    public JMenuItem saveAction = new JMenuItem("Save", 
+    public JMenuItem openRecentAction = new JMenuItem("Open Recent");
+    public JMenuItem saveAction = new JMenuItem("Save",
             new ImageIcon("res/images/document-save.png"));
-    public JMenuItem saveAsAction = new JMenuItem("Save As", 
+    public JMenuItem saveAsAction = new JMenuItem("Save As",
             new ImageIcon("res/images/document-save-as.png"));
-    public JMenuItem exitAction = new JMenuItem("Exit", 
+    public JMenuItem printAction = new JMenuItem("Print",
+            new ImageIcon("res/images/document-print.png"));    
+    public JMenuItem exitAction = new JMenuItem("Exit",
             new ImageIcon("res/images/application-exit.png"));
 
-    public JMenuItem copyAction = new JMenuItem("Copy", 
+    public JMenuItem undoAction = new JMenuItem("Undo",
+            new ImageIcon("res/images/edit-undo.png"));
+    public JMenuItem redoAction = new JMenuItem("Redo",
+            new ImageIcon("res/images/edit-redo.png"));
+    public JMenuItem copyAction = new JMenuItem("Copy",
             new ImageIcon("res/images/edit-copy.png"));
-    public JMenuItem cutAction = new JMenuItem("Cut", 
+    public JMenuItem cutAction = new JMenuItem("Cut",
             new ImageIcon("res/images/edit-cut.png"));
-    public JMenuItem pasteAction = new JMenuItem("Paste", 
+    public JMenuItem pasteAction = new JMenuItem("Paste",
             new ImageIcon("res/images/edit-paste.png"));
 
-    public JMenuItem aboutAction = new JMenuItem("About", 
+    public JMenuItem aboutAction = new JMenuItem("About",
             new ImageIcon("res/images/help-about.png"));
 
     public MenuBar() {
@@ -71,6 +79,7 @@ class MenuBar extends JMenuBar {
                 KeyStroke.getKeyStroke(
                         KeyEvent.VK_O,
                         Event.CTRL_MASK));
+        fileMenu.add(openRecentAction);
         fileMenu.addSeparator();
         fileMenu.add(saveAction);
         saveAction.setMnemonic('S');
@@ -82,6 +91,13 @@ class MenuBar extends JMenuBar {
         saveAsAction.setAccelerator(
                 KeyStroke.getKeyStroke("control alt S"));
         fileMenu.addSeparator();
+        fileMenu.add(printAction);
+        printAction.setMnemonic('P');
+        printAction.setAccelerator(
+                KeyStroke.getKeyStroke(
+                        KeyEvent.VK_P,
+                        Event.CTRL_MASK));
+        fileMenu.addSeparator();
         fileMenu.add(exitAction);
         exitAction.setMnemonic('E');
         exitAction.setAccelerator(
@@ -90,6 +106,19 @@ class MenuBar extends JMenuBar {
                         Event.ALT_MASK));
         add(fileMenu);
 
+        editMenu.add(undoAction);
+        undoAction.setMnemonic('U');
+        undoAction.setAccelerator(
+                KeyStroke.getKeyStroke(
+                        KeyEvent.VK_Z,
+                        Event.CTRL_MASK));
+        editMenu.add(redoAction);
+        redoAction.setMnemonic('R');
+        redoAction.setAccelerator(
+                KeyStroke.getKeyStroke(
+                        KeyEvent.VK_Y,
+                        Event.CTRL_MASK));
+        editMenu.addSeparator();
         editMenu.add(cutAction);
         cutAction.setMnemonic('X');
         cutAction.setAccelerator(
@@ -112,7 +141,9 @@ class MenuBar extends JMenuBar {
 
         add(viewMenu);
 
-        add(windowMenu);
+        add(imageMenu);
+        
+        add(layersMenu);
 
         helpMenu.add(aboutAction);
         add(helpMenu);

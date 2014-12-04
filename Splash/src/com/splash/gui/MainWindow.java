@@ -37,18 +37,24 @@ public class MainWindow extends WebFrame {
         
         initMenuBar();
         initToolBar();
+        initStatusBar();
     }
     
-    private ToolBar toolBar;
+    private ToolBar toolBar = null;
     private void initToolBar() {
-        toolBar = new ToolBar();        
-        
+        toolBar = new ToolBar();                
         add(toolBar, BorderLayout.NORTH);
     }
     
-    private MenuBar menuBar; 
+    private MenuBar menuBar = null; 
     private void initMenuBar() {
         menuBar = new MenuBar();
         setJMenuBar(menuBar);                
+    }
+
+    private StatusBar statusBar = null;
+    private void initStatusBar() {
+        statusBar = new StatusBar();
+        add(statusBar, BorderLayout.SOUTH);
     }
 }

@@ -23,7 +23,6 @@ package com.splash.gui;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JButton;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
@@ -38,7 +37,11 @@ class ToolBar extends JToolBar {
             new ImageIcon("res/images/document-save.png"));
     public JButton saveAsAction = new JButton(
             new ImageIcon("res/images/document-save-as.png"));
-
+   
+    public JButton undoAction = new JButton(
+            new ImageIcon("res/images/edit-undo.png"));
+    public JButton redoAction = new JButton(
+            new ImageIcon("res/images/edit-redo.png"));
     public JButton copyAction = new JButton(
             new ImageIcon("res/images/edit-copy.png"));
     public JButton cutAction = new JButton(
@@ -56,11 +59,16 @@ class ToolBar extends JToolBar {
         saveAction.setToolTipText("Save");
         cutAction.setToolTipText("Cut");
         copyAction.setToolTipText("Copy");
-        pasteAction.setToolTipText("Paste");        
+        pasteAction.setToolTipText("Paste");
+        undoAction.setToolTipText("Undo");
+        redoAction.setToolTipText("Redo");
         
         add(newAction);
         add(openAction);
         add(saveAction);
+        add(new JSeparator(SwingConstants.VERTICAL));
+        add(undoAction);
+        add(redoAction);
         add(new JSeparator(SwingConstants.VERTICAL));
         add(cutAction);
         add(copyAction);

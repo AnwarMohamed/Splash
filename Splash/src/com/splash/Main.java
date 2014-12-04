@@ -31,6 +31,11 @@ public class Main {
         WebLookAndFeel.setDecorateFrames(true);
         WebLookAndFeel.setDecorateDialogs(true);
 
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+        }
+
         MainWindow mainWindow = new MainWindow();
         mainWindow.show();
     }
