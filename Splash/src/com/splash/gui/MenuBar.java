@@ -8,7 +8,7 @@
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ *  any later version.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,6 +23,7 @@ package com.splash.gui;
 
 import java.awt.Event;
 import java.awt.event.KeyEvent;
+import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -36,17 +37,26 @@ class MenuBar extends JMenuBar {
     private JMenu windowMenu = new JMenu("Window");
     private JMenu helpMenu = new JMenu("Help");
 
-    public JMenuItem newAction = new JMenuItem("New");
-    public JMenuItem openAction = new JMenuItem("Open");
-    public JMenuItem saveAction = new JMenuItem("Save");
-    public JMenuItem saveAsAction = new JMenuItem("Save As");
-    public JMenuItem exitAction = new JMenuItem("Exit");
+    public JMenuItem newAction = new JMenuItem("New", 
+            new ImageIcon("res/images/document-new.png"));
+    public JMenuItem openAction = new JMenuItem("Open", 
+            new ImageIcon("res/images/document-open.png"));
+    public JMenuItem saveAction = new JMenuItem("Save", 
+            new ImageIcon("res/images/document-save.png"));
+    public JMenuItem saveAsAction = new JMenuItem("Save As", 
+            new ImageIcon("res/images/document-save-as.png"));
+    public JMenuItem exitAction = new JMenuItem("Exit", 
+            new ImageIcon("res/images/application-exit.png"));
 
-    public JMenuItem copyAction = new JMenuItem("Copy");
-    public JMenuItem cutAction = new JMenuItem("Cut");
-    public JMenuItem pasteAction = new JMenuItem("Paste");
+    public JMenuItem copyAction = new JMenuItem("Copy", 
+            new ImageIcon("res/images/edit-copy.png"));
+    public JMenuItem cutAction = new JMenuItem("Cut", 
+            new ImageIcon("res/images/edit-cut.png"));
+    public JMenuItem pasteAction = new JMenuItem("Paste", 
+            new ImageIcon("res/images/edit-paste.png"));
 
-    public JMenuItem aboutAction = new JMenuItem("About");
+    public JMenuItem aboutAction = new JMenuItem("About", 
+            new ImageIcon("res/images/help-about.png"));
 
     public MenuBar() {
         fileMenu.add(newAction);
@@ -69,7 +79,8 @@ class MenuBar extends JMenuBar {
                         KeyEvent.VK_S,
                         Event.CTRL_MASK));
         fileMenu.add(saveAsAction);
-        saveAsAction.setAccelerator(KeyStroke.getKeyStroke("control alt S"));
+        saveAsAction.setAccelerator(
+                KeyStroke.getKeyStroke("control alt S"));
         fileMenu.addSeparator();
         fileMenu.add(exitAction);
         exitAction.setMnemonic('E');
