@@ -23,38 +23,62 @@ package com.splash.gui;
 
 import com.alee.laf.rootpane.WebFrame;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 public class MainWindow extends WebFrame {
 
     public MainWindow() {
-        super("Splash | Just Another Awesome Paint Program");        
-        
-        setBounds(50, 100, 800, 600); 
+        super("Splash | Just Another Awesome Paint Program");
+
+        setIconImage((new ImageIcon("res/icon.png")).getImage());
+
+        setSize(1000, 700);
         setLocationRelativeTo(null);
-        
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-        
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         initMenuBar();
         initToolBar();
         initStatusBar();
-    }
-    
-    private ToolBar toolBar = null;
-    private void initToolBar() {
-        toolBar = new ToolBar();                
-        add(toolBar, BorderLayout.NORTH);
-    }
-    
-    private MenuBar menuBar = null; 
-    private void initMenuBar() {
-        menuBar = new MenuBar();
-        setJMenuBar(menuBar);                
+        addCanvas(500, 500);
     }
 
+    private ToolBar toolBar = null;
+    private MenuBar menuBar = null;
     private StatusBar statusBar = null;
+    private Canvas canvas = null;
+
+    private void initToolBar() {
+        toolBar = new ToolBar();
+        add(toolBar, BorderLayout.NORTH);
+    }
+
+    private void initMenuBar() {
+        menuBar = new MenuBar();
+
+        menuBar.aboutAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                AboutWindow aboutWindow = new AboutWindow(false);
+                aboutWindow.show();
+            }
+        });
+
+        setJMenuBar(menuBar);
+    }
+
     private void initStatusBar() {
         statusBar = new StatusBar();
         add(statusBar, BorderLayout.SOUTH);
+    }
+
+    private void addCanvas(int width, int height) {
+        canvas = new Canvas(width, height);
+        canvas.setMouseMoveLabel(statusBar.positionLabel);
+        
+        add(canvas);
     }
 }

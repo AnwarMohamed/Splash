@@ -2,7 +2,7 @@
  *  Copyright (C) 2014
  *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Abdallah Elerian  <abdallah.elerian@gmail.com>
- *                      Moataz Hamouda    <>
+ *                      Moataz Hamouda    <moatazhammouda4@gmail.com>
  *                      Yasmine Elhabashi <yasmine.elhabashi@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -19,32 +19,10 @@
  *  along with this program; if not, write to authors.
  *
  */
-package com.splash;
+package com.splash.gui.elements;
 
-import com.alee.laf.WebLookAndFeel;
-import com.splash.gui.MainWindow;
-import com.splash.gui.AboutWindow;
+import javax.swing.JComponent;
 
-public class Main {
+public class Tool extends JComponent {
 
-    public static void main(String[] args) {
-        WebLookAndFeel.install();
-        WebLookAndFeel.setDecorateFrames(true);
-        WebLookAndFeel.setDecorateDialogs(true);
-
-        /*
-        AboutWindow splashWindow = new AboutWindow(true);
-        splashWindow.show();
-        
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException ex) {
-        }
-
-        splashWindow.hide();
-        */
-                
-        MainWindow mainWindow = new MainWindow();
-        mainWindow.show();
-    }
 }
