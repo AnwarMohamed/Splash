@@ -26,6 +26,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.util.ArrayList;
 import javax.swing.JComponent;
 
 public class Layer extends JComponent {
@@ -33,6 +34,8 @@ public class Layer extends JComponent {
     private Image image = null;
     private Graphics2D graphics2D = null;
 
+    private ArrayList<JComponent> objects = new ArrayList<>();
+    
     public static final Color TRANSPARENT = new Color(255, 255, 255, 0);
     public static final int SELECTION_OVERLAY = 0x3f3f5f7f;
 
@@ -42,19 +45,22 @@ public class Layer extends JComponent {
         setSize(width, height);
     }
 
+    public void addObject(JComponent component) {
+        objects.add(component);
+    }        
+    
     @Override
-    public void paintComponent(Graphics g) {
-        if (image == null) {
-            image = createImage(getSize().width, getSize().height);
-            graphics2D = (Graphics2D) image.getGraphics();
-            graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            clear();
+    public void paintComponent(Graphics g) {        
+        super.paintComponent(g);
+
+        for (JComponent object: objects) {
+            object.paint(g);
         }
-        
-        g.drawImage(image, 0, 0, null);
     }
 
     public void clear() {
+        objects.clear();
+        
         graphics2D.setPaint(TRANSPARENT);
         graphics2D.fillRect(0, 0, getSize().width, getSize().height);
         graphics2D.setPaint(Color.black);
