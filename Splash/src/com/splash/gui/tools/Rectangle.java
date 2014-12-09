@@ -19,47 +19,23 @@
  *  along with this program; if not, write to authors.
  *
  */
-package com.splash.gui.elements;
+package com.splash.gui.tools;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import javax.swing.JComponent;
+import com.splash.gui.elements.DimensionedTool;
+import java.awt.*;
+import java.awt.geom.*;
 
-public abstract class Tool extends JComponent {
+public class Rectangle extends DimensionedTool {
 
-    protected int x, y;
-    protected Color color;
-
-    public Tool() {
-        x = 0;
-        y = 0;
-        color = null;
+    public Rectangle() {
+        super();
     }
 
     @Override
-    public int getX() {
-        return x;
+    public void paint(Graphics g) {
+        Graphics2D graph = (Graphics2D) g;
+        Shape drawRect = new Rectangle2D.Float(x, y, width, height);
+        graph.draw(drawRect);
+        graph.setColor(color);
     }
-
-    void setCoordinates(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    @Override
-    public int getY() {
-        return y;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    @Override
-    public abstract void paint(Graphics g);
-
 }

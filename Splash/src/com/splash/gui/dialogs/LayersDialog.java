@@ -1,7 +1,23 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  Copyright (C) 2014
+ *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
+ *                      Abdallah Elerian  <abdallah.elerian@gmail.com>
+ *                      Moataz Hammouda    <moatazhammouda4@gmail.com>
+ *                      Yasmine Elhabashi <yasmine.elhabashi@gmail.com>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to authors.
+ *
  */
 package com.splash.gui.dialogs;
 
@@ -19,13 +35,10 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-/**
- *
- * @author Anwar Mohamed
- */
 public class LayersDialog extends WebDialog {
 
     public DefaultListModel layersModel;
@@ -39,15 +52,17 @@ public class LayersDialog extends WebDialog {
 
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+        setResizable(true);
         setLayout(new BorderLayout());
         setSize(240, 300);
-        setUndecorated(true);
+        
 
         this.width = width;
         this.height = height;
 
         layersModel = new DefaultListModel();
         list = new JList(layersModel);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JScrollPane pane = new JScrollPane(list);
         pane.setSize(220, 200);

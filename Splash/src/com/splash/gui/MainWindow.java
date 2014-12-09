@@ -2,7 +2,7 @@
  *  Copyright (C) 2014
  *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Abdallah Elerian  <abdallah.elerian@gmail.com>
- *                      Moataz Hamouda    <>
+ *                      Moataz Hammouda   <moatazhammouda4@gmail.com>
  *                      Yasmine Elhabashi <yasmine.elhabashi@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -91,7 +91,7 @@ public class MainWindow extends WebFrame {
             public void run() {
                 toolBoxDialog = new ToolBoxDialog(thisFrame);
                 toolBoxDialog.setLocationRelativeTo(thisFrame);
-                toolBoxDialog.setLocation(1115, 120);
+                toolBoxDialog.setLocation(1115, 380);
                 toolBoxDialog.setVisible(true);
 
                 canvas.setToolBox(toolBoxDialog);

@@ -21,45 +21,38 @@
  */
 package com.splash.gui.elements;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import javax.swing.JComponent;
 
-public abstract class Tool extends JComponent {
+public abstract class DimensionedTool extends Tool {
 
-    protected int x, y;
-    protected Color color;
+    protected int width;
+    protected int height;
 
-    public Tool() {
-        x = 0;
-        y = 0;
-        color = null;
-    }
-
-    @Override
-    public int getX() {
-        return x;
-    }
-
-    void setCoordinates(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    @Override
-    public int getY() {
-        return y;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
+    public DimensionedTool() {
+        super();
+        width = 0;
+        height = 0;
     }
 
     @Override
     public abstract void paint(Graphics g);
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
 
 }

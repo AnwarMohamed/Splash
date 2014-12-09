@@ -2,7 +2,7 @@
  *  Copyright (C) 2014
  *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Abdallah Elerian  <abdallah.elerian@gmail.com>
- *                      Moataz Hamouda    <moatazhammouda4@gmail.com>
+ *                      Moataz Hammouda   <moatazhammouda4@gmail.com>
  *                      Yasmine Elhabashi <yasmine.elhabashi@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -56,6 +56,7 @@ public class Canvas extends JComponent implements MouseListener,
     private float cam_positionY;
 
     private int selectedLayer;
+    private ToolBoxDialog toolBox;
 
     private BufferedImage image;
     private int imageHeight, imageWidth, imageX, imageY;
@@ -186,7 +187,7 @@ public class Canvas extends JComponent implements MouseListener,
     @Override
     public void mouseMoved(MouseEvent e) {
         if (mouseMoveLabel != null) {
-            mouseMoveLabel.setText(" " + (this.getAlignmentX() - e.getX()) + ", " + e.getY());
+            mouseMoveLabel.setText(" " + (e.getX() - getImageX()) + ", " + (e.getY() - getImageY()));
         }
     }
 
@@ -203,7 +204,7 @@ public class Canvas extends JComponent implements MouseListener,
     }
 
     void setToolBox(ToolBoxDialog toolBoxDialog) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        toolBox = toolBoxDialog;
     }
 
 }

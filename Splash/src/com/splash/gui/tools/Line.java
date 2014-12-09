@@ -19,47 +19,38 @@
  *  along with this program; if not, write to authors.
  *
  */
-package com.splash.gui.elements;
+package com.splash.gui.tools;
 
-import java.awt.Color;
+import com.splash.gui.elements.Tool;
 import java.awt.Graphics;
-import javax.swing.JComponent;
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.Line2D;
 
-public abstract class Tool extends JComponent {
+public class Line extends Tool {
 
-    protected int x, y;
-    protected Color color;
+    private int x1, y1;
 
-    public Tool() {
-        x = 0;
-        y = 0;
-        color = null;
+    public Line(int x1, int y1) {
+        super();
+        this.x1 = x1;
+        this.y1 = y1;
     }
 
-    @Override
-    public int getX() {
-        return x;
-    }
+    public Line(int x, int y, int x1, int y1) {
+        super();
 
-    void setCoordinates(int x, int y) {
         this.x = x;
         this.y = y;
+        this.x1 = x1;
+        this.y1 = y1;
     }
 
     @Override
-    public int getY() {
-        return y;
+    public void paint(Graphics g) {
+        Graphics2D graph2 = (Graphics2D) g;
+        Shape drawline = new Line2D.Float(x, y, x1, y1);
+        graph2.draw(drawline);
     }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    @Override
-    public abstract void paint(Graphics g);
 
 }
