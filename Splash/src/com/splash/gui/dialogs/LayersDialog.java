@@ -2,7 +2,7 @@
  *  Copyright (C) 2014
  *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Abdallah Elerian  <abdallah.elerian@gmail.com>
- *                      Moataz Hammouda    <moatazhammouda4@gmail.com>
+ *                      Moataz Hammouda   <moatazhammouda4@gmail.com>
  *                      Yasmine Elhabashi <yasmine.elhabashi@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify

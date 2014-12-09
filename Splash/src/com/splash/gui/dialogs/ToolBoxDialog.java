@@ -2,7 +2,7 @@
  *  Copyright (C) 2014
  *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Abdallah Elerian  <abdallah.elerian@gmail.com>
- *                      Moataz Hammouda    <moatazhammouda4@gmail.com>
+ *                      Moataz Hammouda   <moatazhammouda4@gmail.com>
  *                      Yasmine Elhabashi <yasmine.elhabashi@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,10 @@ package com.splash.gui.dialogs;
 
 import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
+import com.splash.gui.Canvas;
+import com.splash.gui.elements.Tool;
 import com.splash.gui.elements.WrapLayout;
+import com.splash.gui.tools.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -58,6 +61,9 @@ public class ToolBoxDialog extends WebDialog {
             new ImageIcon("res/images/edit-select.png"));
     public JToggleButton pickAction = new JToggleButton(
             new ImageIcon("res/images/color-picker-grey.png"));
+    
+    private Canvas canvas = null;
+    private Tool currentTool = null;
 
     public ToolBoxDialog(WebFrame parent) {
         super(parent, "Tool Box", false);
@@ -88,6 +94,8 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 moveAction.setSelected(true);
+                
+                currentTool = null;
             }
         });
 
@@ -152,6 +160,9 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 rectangleAction.setSelected(true);
+                
+                currentTool = new Rectangle();
+                setCanvasTool(currentTool);
             }
         });
 
@@ -193,5 +204,16 @@ public class ToolBoxDialog extends WebDialog {
         triangleAction.setSelected(false);
         circleAction.setSelected(false);
         ellipseAction.setSelected(false);
+    }
+    
+    private void setCanvasTool(Tool tool) {
+        if (canvas != null) {
+            canvas.setToolBox(this);
+        }
+    }
+    
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+        canvas.setToolBox(this);
     }
 }

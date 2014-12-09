@@ -85,7 +85,7 @@ public class MainWindow extends WebFrame {
                 canvas.setLayersModel(layersDialog.layers);
             }
         });
-        
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -94,7 +94,7 @@ public class MainWindow extends WebFrame {
                 toolBoxDialog.setLocation(1115, 380);
                 toolBoxDialog.setVisible(true);
 
-                canvas.setToolBox(toolBoxDialog);
+                toolBoxDialog.setCanvas(canvas);
             }
         });
 

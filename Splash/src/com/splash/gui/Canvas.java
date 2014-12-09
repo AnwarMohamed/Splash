@@ -23,8 +23,11 @@ package com.splash.gui;
 
 import com.splash.gui.dialogs.ToolBoxDialog;
 import com.splash.gui.elements.Layer;
+import com.splash.gui.elements.Tool;
+import com.splash.gui.tools.Rectangle;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -56,7 +59,9 @@ public class Canvas extends JComponent implements MouseListener,
     private float cam_positionY;
 
     private int selectedLayer;
+
     private ToolBoxDialog toolBox;
+    private Tool selectedTool;
 
     private BufferedImage image;
     private int imageHeight, imageWidth, imageX, imageY;
@@ -166,6 +171,15 @@ public class Canvas extends JComponent implements MouseListener,
 
     @Override
     public void mousePressed(MouseEvent e) {
+        final int x = e.getX();
+        final int y = e.getY();
+        final java.awt.Rectangle cellBounds = getBounds();
+
+        if (cellBounds != null && cellBounds.contains(x, y)) {
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+        } else {
+            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }
     }
 
     @Override
@@ -203,8 +217,12 @@ public class Canvas extends JComponent implements MouseListener,
         selectedLayer = index;
     }
 
-    void setToolBox(ToolBoxDialog toolBoxDialog) {
+    public void setToolBox(ToolBoxDialog toolBoxDialog) {
         toolBox = toolBoxDialog;
+    }
+
+    public void setSelectedTool(Tool tool) {
+        selectedTool = tool;
     }
 
 }
