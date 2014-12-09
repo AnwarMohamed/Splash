@@ -39,7 +39,7 @@ public class Main {
         try {
             Thread.sleep(4000);
         } catch (InterruptedException ex) {
-        }
+        }                
 
         splashWindow.hide();
         */

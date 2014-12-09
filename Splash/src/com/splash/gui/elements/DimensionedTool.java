@@ -25,17 +25,14 @@ import java.awt.Graphics;
 
 public abstract class DimensionedTool extends Tool {
 
-    protected int width;
-    protected int height;
+    private int width;
+    private int height;
 
     public DimensionedTool() {
         super();
         width = 0;
         height = 0;
     }
-
-    @Override
-    public abstract void paint(Graphics g);
 
     @Override
     public int getWidth() {
@@ -54,5 +51,4 @@ public abstract class DimensionedTool extends Tool {
     public void setHeight(int height) {
         this.height = height;
     }
-
 }

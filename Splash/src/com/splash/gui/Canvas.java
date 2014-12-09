@@ -22,6 +22,7 @@
 package com.splash.gui;
 
 import com.splash.gui.dialogs.ToolBoxDialog;
+import com.splash.gui.elements.DimensionedTool;
 import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.tools.Rectangle;
@@ -108,6 +109,7 @@ public class Canvas extends JComponent implements MouseListener,
         imageX = x;
         imageY = y;
 
+        setSize(width, height);
         selectedLayer = 0;
     }
 
@@ -129,7 +131,7 @@ public class Canvas extends JComponent implements MouseListener,
         Graphics2D g = (Graphics2D) _g;
         g.setPaint(paintLight);
         g.fillRect(imageX, imageY, imageWidth, imageHeight);
-        g.drawImage(getRenderedImage(), 0, 0, null);
+        g.drawImage(getRenderedImage(), imageX, imageY, null);
     }
 
     @Override
@@ -147,7 +149,7 @@ public class Canvas extends JComponent implements MouseListener,
     }
 
     public BufferedImage getRenderedImage() {
-        BufferedImage image = new BufferedImage(
+        image = new BufferedImage(
                 imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
         {
             if (layers != null) {
@@ -171,19 +173,19 @@ public class Canvas extends JComponent implements MouseListener,
 
     @Override
     public void mousePressed(MouseEvent e) {
-        final int x = e.getX();
-        final int y = e.getY();
-        final java.awt.Rectangle cellBounds = getBounds();
-
-        if (cellBounds != null && cellBounds.contains(x, y)) {
-            setCursor(new Cursor(Cursor.HAND_CURSOR));
-        } else {
-            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        if (withinBounds(e.getX(), e.getY()) && selectedTool != null) {
+            layers.get(selectedLayer).addTool(selectedTool);
+            selectedTool.setCoordinates(e.getX() - getImageX(), e.getY() - getImageY());
+            selectedTool.setDragMode(true);
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (withinBounds(e.getX(), e.getY()) && selectedTool != null) {
+            selectedTool.setDragMode(false);
+            selectedTool = selectedTool.newInstance();
+        }
     }
 
     @Override
@@ -196,12 +198,28 @@ public class Canvas extends JComponent implements MouseListener,
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        if (withinBounds(e.getX(), e.getY()) && 
+                selectedTool != null && selectedTool.getDragMode()) {
+            if (selectedTool instanceof DimensionedTool) {
+                ((DimensionedTool)selectedTool).setHeight(
+                        e.getY() - getImageY() - selectedTool.getY());
+                ((DimensionedTool)selectedTool).setWidth(
+                        e.getX() - getImageX() - selectedTool.getX());       
+                repaint();
+            }
+        }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
         if (mouseMoveLabel != null) {
             mouseMoveLabel.setText(" " + (e.getX() - getImageX()) + ", " + (e.getY() - getImageY()));
+        }
+
+        if (withinBounds(e.getX(), e.getY())) {
+            setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+        } else {
+            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
     }
 
@@ -225,4 +243,11 @@ public class Canvas extends JComponent implements MouseListener,
         selectedTool = tool;
     }
 
+    private boolean withinBounds(int x, int y) {
+        final java.awt.Rectangle cellBounds
+                = new java.awt.Rectangle(
+                        getImageX(), getImageY(),
+                        getImageWidth(), getImageHeight());
+        return cellBounds.contains(x, y);
+    }
 }

@@ -27,28 +27,25 @@ import javax.swing.JComponent;
 
 public abstract class Tool extends JComponent {
 
-    protected int x, y;
-    protected Color color;
+    private Color color;
+    private boolean dragMode;
 
     public Tool() {
-        x = 0;
-        y = 0;
-        color = null;
+        setLocation(0, 0);
+        color = Color.BLACK;
+        dragMode = false;
     }
 
-    @Override
-    public int getX() {
-        return x;
+    public boolean getDragMode() {
+        return dragMode;
     }
 
-    void setCoordinates(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public void setDragMode(boolean dragMode) {
+        this.dragMode = dragMode;
     }
 
-    @Override
-    public int getY() {
-        return y;
+    public void setCoordinates(int x, int y) {
+        setLocation(x, y);
     }
 
     public Color getColor() {
@@ -62,4 +59,5 @@ public abstract class Tool extends JComponent {
     @Override
     public abstract void paint(Graphics g);
 
+    public abstract Tool newInstance();
 }

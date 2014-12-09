@@ -25,33 +25,32 @@ import com.splash.gui.elements.DimensionedTool;
 import com.splash.gui.elements.Tool;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
-public class Ellipse extends DimensionedTool {
+public class Move extends DimensionedTool {
 
-    public Ellipse() {
+    public Move() {
         super();
     }
 
     @Override
     public void paint(Graphics g) {
-        Graphics2D graph = (Graphics2D) g;
+        /*Graphics2D graph2 = (Graphics2D) g;*/
 
         /*if (getDragMode()) {
-            g.clearRect(getX(), getY(), getWidth(), getHeight());
-        }
-                */
-
-        graph.setColor(getColor());
-        graph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Shape drawEllipse = new Ellipse2D.Float(getX(), getY(), getWidth(), getHeight());
-        graph.draw(drawEllipse);
+         g.clearRect(getX(), getY(), getWidth(), getHeight());
+         }
+         */
+        /*
+         graph2.setColor(getColor());
+         Shape drawEllipse = new Ellipse2D.Float(getX(), getY(), getWidth(), getHeight());
+         graph2.draw(drawEllipse);
+         */
     }
 
     @Override
-    public Ellipse newInstance() {
-        return new Ellipse();
+    public Move newInstance() {
+        return new Move();
     }
 }

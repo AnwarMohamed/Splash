@@ -22,6 +22,7 @@
 package com.splash.gui.tools;
 
 import com.splash.gui.elements.DimensionedTool;
+import com.splash.gui.elements.Tool;
 import java.awt.*;
 import java.awt.geom.*;
 
@@ -34,8 +35,21 @@ public class Rectangle extends DimensionedTool {
     @Override
     public void paint(Graphics g) {
         Graphics2D graph = (Graphics2D) g;
-        Shape drawRect = new Rectangle2D.Float(x, y, width, height);
+
+        /*
+         if (getDragMode()) {
+         g.setColor(new Color(255, 255, 255, 0));
+         g.clearRect(getX(), getY(), getWidth(), getHeight());
+         }
+         */
+        graph.setColor(getColor());
+        graph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Shape drawRect = new Rectangle2D.Float(getX(), getY(), getWidth(), getHeight());
         graph.draw(drawRect);
-        graph.setColor(color);
+    }
+
+    @Override
+    public Rectangle newInstance() {
+        return new Rectangle();
     }
 }

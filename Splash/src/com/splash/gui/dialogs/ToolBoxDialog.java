@@ -26,6 +26,8 @@ import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.Canvas;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.elements.WrapLayout;
+import com.splash.gui.tools.Ellipse;
+import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -61,7 +63,7 @@ public class ToolBoxDialog extends WebDialog {
             new ImageIcon("res/images/edit-select.png"));
     public JToggleButton pickAction = new JToggleButton(
             new ImageIcon("res/images/color-picker-grey.png"));
-    
+
     private Canvas canvas = null;
     private Tool currentTool = null;
 
@@ -75,13 +77,14 @@ public class ToolBoxDialog extends WebDialog {
         setLayout(new WrapLayout(0, 3, 0));
 
         moveAction.setSelected(true);
-        
+
         add(moveAction);
         add(selectAction);
         add(freeHandAction);
         add(fillAction);
         add(brushAction);
         add(eraserAction);
+        add(textAction);
         add(pickAction);
         add(lineAction);
         add(rectangleAction);
@@ -94,7 +97,7 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 moveAction.setSelected(true);
-                
+
                 currentTool = null;
             }
         });
@@ -152,6 +155,9 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 lineAction.setSelected(true);
+                
+                currentTool = new Line();
+                setCanvasTool(currentTool);
             }
         });
 
@@ -160,7 +166,7 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 rectangleAction.setSelected(true);
-                
+
                 currentTool = new Rectangle();
                 setCanvasTool(currentTool);
             }
@@ -187,6 +193,9 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 ellipseAction.setSelected(true);
+
+                currentTool = new Ellipse();
+                setCanvasTool(currentTool);
             }
         });
     }
@@ -205,13 +214,13 @@ public class ToolBoxDialog extends WebDialog {
         circleAction.setSelected(false);
         ellipseAction.setSelected(false);
     }
-    
+
     private void setCanvasTool(Tool tool) {
         if (canvas != null) {
-            canvas.setToolBox(this);
+            canvas.setSelectedTool(tool);
         }
     }
-    
+
     public void setCanvas(Canvas canvas) {
         this.canvas = canvas;
         canvas.setToolBox(this);

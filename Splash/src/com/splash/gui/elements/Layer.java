@@ -34,7 +34,7 @@ public class Layer extends JComponent {
     private Image image = null;
     private Graphics2D graphics2D = null;
 
-    private ArrayList<JComponent> objects = new ArrayList<>();
+    private ArrayList<Tool> objects = new ArrayList<>();
     
     public static final Color TRANSPARENT = new Color(255, 255, 255, 0);
     public static final int SELECTION_OVERLAY = 0x3f3f5f7f;
@@ -45,7 +45,7 @@ public class Layer extends JComponent {
         setSize(width, height);
     }
 
-    public void addObject(JComponent component) {
+    public void addTool(Tool component) {
         objects.add(component);
     }        
     
@@ -53,7 +53,7 @@ public class Layer extends JComponent {
     public void paintComponent(Graphics g) {        
         super.paintComponent(g);
 
-        for (JComponent object: objects) {
+        for (Tool object: objects) {
             object.paint(g);
         }
     }
