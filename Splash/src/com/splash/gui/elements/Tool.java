@@ -23,27 +23,27 @@ package com.splash.gui.elements;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import javax.swing.JComponent;
 
 public abstract class Tool extends JComponent {
 
     private Color color;
-    private boolean dragMode;
+    //private boolean dragMode;
 
     public Tool() {
         setLocation(0, 0);
         color = Color.BLACK;
-        dragMode = false;
+        //    dragMode = false;
     }
 
-    public boolean getDragMode() {
-        return dragMode;
-    }
-
-    public void setDragMode(boolean dragMode) {
-        this.dragMode = dragMode;
-    }
-
+    //public boolean getDragMode() {
+    //    return dragMode;
+    //}
+    //public void setDragMode(boolean dragMode) {
+    //    this.dragMode = dragMode;
+    //}
     public void setCoordinates(int x, int y) {
         setLocation(x, y);
     }
@@ -56,8 +56,16 @@ public abstract class Tool extends JComponent {
         this.color = color;
     }
 
+    protected Graphics2D graph;
+
     @Override
-    public abstract void paint(Graphics g);
+    public void paint(Graphics g) {
+        graph = (Graphics2D) g;
+        graph.setColor(getColor());
+        graph.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING, 
+                RenderingHints.VALUE_ANTIALIAS_ON);
+    }
 
     public abstract Tool newInstance();
 }

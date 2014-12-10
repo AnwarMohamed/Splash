@@ -34,17 +34,9 @@ public class Rectangle extends DimensionedTool {
 
     @Override
     public void paint(Graphics g) {
-        Graphics2D graph = (Graphics2D) g;
-
-        /*
-         if (getDragMode()) {
-         g.setColor(new Color(255, 255, 255, 0));
-         g.clearRect(getX(), getY(), getWidth(), getHeight());
-         }
-         */
-        graph.setColor(getColor());
-        graph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Shape drawRect = new Rectangle2D.Float(getX(), getY(), getWidth(), getHeight());
+        super.paint(g);
+        Shape drawRect = new Rectangle2D.Float(
+                getX(), getY(), getWidth(), getHeight());
         graph.draw(drawRect);
     }
 

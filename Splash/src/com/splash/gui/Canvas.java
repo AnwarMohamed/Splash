@@ -25,6 +25,7 @@ import com.splash.gui.dialogs.ToolBoxDialog;
 import com.splash.gui.elements.DimensionedTool;
 import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.Tool;
+import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -43,6 +44,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import static java.lang.Math.abs;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
@@ -175,15 +177,16 @@ public class Canvas extends JComponent implements MouseListener,
     public void mousePressed(MouseEvent e) {
         if (withinBounds(e.getX(), e.getY()) && selectedTool != null) {
             layers.get(selectedLayer).addTool(selectedTool);
-            selectedTool.setCoordinates(e.getX() - getImageX(), e.getY() - getImageY());
-            selectedTool.setDragMode(true);
+            selectedTool.setCoordinates(
+                    e.getX() - getImageX(), e.getY() - getImageY());
+            //        selectedTool.setDragMode(true);
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         if (withinBounds(e.getX(), e.getY()) && selectedTool != null) {
-            selectedTool.setDragMode(false);
+            //        selectedTool.setDragMode(false);
             selectedTool = selectedTool.newInstance();
         }
     }
@@ -198,13 +201,36 @@ public class Canvas extends JComponent implements MouseListener,
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (withinBounds(e.getX(), e.getY()) && 
-                selectedTool != null && selectedTool.getDragMode()) {
+        if (withinBounds(e.getX(), e.getY())
+                && selectedTool != null /*&& selectedTool.getDragMode()*/) {
             if (selectedTool instanceof DimensionedTool) {
-                ((DimensionedTool)selectedTool).setHeight(
-                        e.getY() - getImageY() - selectedTool.getY());
-                ((DimensionedTool)selectedTool).setWidth(
-                        e.getX() - getImageX() - selectedTool.getX());       
+                final int height = e.getY() - getImageY() - selectedTool.getY();
+                final int width = e.getX() - getImageX() - selectedTool.getX();
+
+                if (height >= 0 && width >= 0) {
+                    ((DimensionedTool) selectedTool).setHeight(height);
+                    ((DimensionedTool) selectedTool).setWidth(width);
+                } else if (height < 0 && width < 0) {
+                    System.out.println(height + " " + width);
+                    final int newY = e.getY() - getImageY();
+                    final int newX = e.getX() - getImageX();
+
+                    int x = Math.min(e.getX() - getImageX(), selectedTool.getX());
+                    int w = Math.abs(selectedTool.getX() - e.getX() - getImageX());
+
+                    int y = Math.min(e.getY() - getImageY(), selectedTool.getY());
+                    int h = Math.abs(selectedTool.getY() - e.getY() - getImageY());
+
+                    selectedTool.setLocation(x, y);
+                    ((DimensionedTool) selectedTool).setHeight(h);
+                    ((DimensionedTool) selectedTool).setWidth(w);
+                }
+
+                repaint();
+            } else if (selectedTool instanceof Line) {
+                ((Line) selectedTool).setEndPoint(
+                        e.getX() - getImageX(),
+                        e.getY() - getImageY());
                 repaint();
             }
         }
@@ -213,7 +239,9 @@ public class Canvas extends JComponent implements MouseListener,
     @Override
     public void mouseMoved(MouseEvent e) {
         if (mouseMoveLabel != null) {
-            mouseMoveLabel.setText(" " + (e.getX() - getImageX()) + ", " + (e.getY() - getImageY()));
+            mouseMoveLabel.setText(
+                    " " + (e.getX() - getImageX())
+                    + ", " + (e.getY() - getImageY()));
         }
 
         if (withinBounds(e.getX(), e.getY())) {

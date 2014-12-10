@@ -37,16 +37,9 @@ public class Ellipse extends DimensionedTool {
 
     @Override
     public void paint(Graphics g) {
-        Graphics2D graph = (Graphics2D) g;
-
-        /*if (getDragMode()) {
-            g.clearRect(getX(), getY(), getWidth(), getHeight());
-        }
-                */
-
-        graph.setColor(getColor());
-        graph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Shape drawEllipse = new Ellipse2D.Float(getX(), getY(), getWidth(), getHeight());
+        super.paint(g);
+        Shape drawEllipse = new Ellipse2D.Float(
+                getX(), getY(), getWidth(), getHeight());
         graph.draw(drawEllipse);
     }
 
