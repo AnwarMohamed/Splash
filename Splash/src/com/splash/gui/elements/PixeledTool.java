@@ -19,32 +19,24 @@
  *  along with this program; if not, write to authors.
  *
  */
-package com.splash;
+package com.splash.gui.elements;
 
-import com.alee.laf.WebLookAndFeel;
-import com.splash.gui.MainWindow;
-import com.splash.gui.AboutWindow;
+import java.awt.Point;
+import java.util.ArrayList;
 
-public class Main {
+public abstract class PixeledTool extends Tool {
 
-    public static void main(String[] args) {
-        WebLookAndFeel.install();
-        WebLookAndFeel.setDecorateFrames(true);
-        WebLookAndFeel.setDecorateDialogs(true);
+    private ArrayList<Point> pixels = new ArrayList<>();
 
-        /*
-        AboutWindow splashWindow = new AboutWindow(true);
-        splashWindow.show();
-        
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException ex) {
-        }                
+    public ArrayList<Point> getPixels() {
+        return pixels;
+    }
 
-        splashWindow.hide();
-        */
-                
-        MainWindow mainWindow = new MainWindow();
-        mainWindow.show();
+    public void setPixels(ArrayList<Point> pixels) {
+        this.pixels = pixels;
+    }
+
+    public PixeledTool() {
+        super();
     }
 }

@@ -21,46 +21,34 @@
  */
 package com.splash.gui.tools;
 
-import com.splash.gui.elements.PixelTool;
-import com.splash.gui.elements.Tool;
+import com.splash.gui.elements.PixeledTool;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Shape;
-import java.awt.geom.Line2D;
-import java.util.ArrayList;
 
-/**
- *
- * @author Abdallah
- */
-public class FreeHand extends PixelTool {
-
-        ArrayList<Point> point = new ArrayList<Point>();
+public class FreeHand extends PixeledTool {
 
     public FreeHand(int x, int y) {
         super();
     }
-    
-    public FreeHand(){
-        
+
+    public FreeHand() {
+        super();
     }
 
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
-        /*Shape drawPoint = new Line2D.Float(
-        getX(), getY(),getX(),getY());
-        graph.draw(drawPoint);
-        */
-        for (int i = 0; i < point.size() - 1; i++)
-            g.drawLine((int)point.get(i).getX(),/* arr[i].y*/(int) point.get(i).getY(),(int) point.get(i+1).getX(), (int) point.get(i+1).getY());
+
+        for (int i = 0; i < getPixels().size() - 1; i++) {
+            g.drawLine(
+                    (int) getPixels().get(i).getX(),
+                    (int) getPixels().get(i).getY(),
+                    (int) getPixels().get(i + 1).getX(),
+                    (int) getPixels().get(i + 1).getY());
+        }
     }
 
-    /**
-     *
-     * @return
-     */
+    @Override
     public FreeHand newInstance() {
         return new FreeHand();
     }
-
 }
