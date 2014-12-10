@@ -25,6 +25,7 @@ import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.dialogs.ToolBoxDialog;
 import com.splash.gui.elements.DimensionedTool;
 import com.splash.gui.elements.Layer;
+import com.splash.gui.elements.PixeledTool;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.Line;
@@ -159,7 +160,7 @@ public class Canvas extends JComponent implements MouseListener,
             if (layers != null) {
                 Graphics2D g = image.createGraphics();
                 for (Layer layer : layers) {
-                    layer.paint(g);
+                    layer.paintComponent(g);
                 }
                 g.dispose();
             }
@@ -187,7 +188,7 @@ public class Canvas extends JComponent implements MouseListener,
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (withinBounds(e.getX(), e.getY()) && selectedTool != null) {
+        if (/*withinBounds(e.getX(), e.getY()) &&*/selectedTool != null) {
             //        selectedTool.setDragMode(false);
             selectedTool = selectedTool.newInstance();
         }
@@ -203,42 +204,41 @@ public class Canvas extends JComponent implements MouseListener,
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (withinBounds(e.getX(), e.getY())
-                && selectedTool != null /*&& selectedTool.getDragMode()*/) {
-            if (selectedTool instanceof DimensionedTool) {
-                final int height = e.getY() - getImageY() - selectedTool.getY();
-                final int width = e.getX() - getImageX() - selectedTool.getX();
 
-                if (height >= 0 && width >= 0) {
-                    ((DimensionedTool) selectedTool).setHeight(height);
-                    ((DimensionedTool) selectedTool).setWidth(width);
-                } else if (height < 0 && width < 0) {
-                    System.out.println(height + " " + width);
-                    final int newY = e.getY() - getImageY();
-                    final int newX = e.getX() - getImageX();
+        if (selectedTool instanceof DimensionedTool) {
+            final int height = e.getY() - getImageY() - selectedTool.getY();
+            final int width = e.getX() - getImageX() - selectedTool.getX();
 
-                    int x = Math.min(e.getX() - getImageX(), selectedTool.getX());
-                    int w = Math.abs(selectedTool.getX() - e.getX() - getImageX());
+            if (height >= 0 && width >= 0) {
+                ((DimensionedTool) selectedTool).setHeight(height);
+                ((DimensionedTool) selectedTool).setWidth(width);
+            } else if (height < 0 && width < 0) {
+                System.out.println(height + " " + width);
+                final int newY = e.getY() - getImageY();
+                final int newX = e.getX() - getImageX();
 
-                    int y = Math.min(e.getY() - getImageY(), selectedTool.getY());
-                    int h = Math.abs(selectedTool.getY() - e.getY() - getImageY());
+                int x = Math.min(e.getX() - getImageX(), selectedTool.getX());
+                int w = Math.abs(selectedTool.getX() - e.getX() - getImageX());
 
-                    selectedTool.setLocation(x, y);
-                    ((DimensionedTool) selectedTool).setHeight(h);
-                    ((DimensionedTool) selectedTool).setWidth(w);
-                }
+                int y = Math.min(e.getY() - getImageY(), selectedTool.getY());
+                int h = Math.abs(selectedTool.getY() - e.getY() - getImageY());
 
-                repaint();
-            } else if (selectedTool instanceof Line) {
-                ((Line) selectedTool).setEndPoint(
-                        e.getX() - getImageX(),
-                        e.getY() - getImageY());
-                repaint();
-            } else if (selectedTool instanceof FreeHand) {
-                ((FreeHand) selectedTool).setLocation(
-                        e.getX() - getImageX(),
-                        e.getY() - getImageY());
+                selectedTool.setLocation(x, y);
+                ((DimensionedTool) selectedTool).setHeight(h);
+                ((DimensionedTool) selectedTool).setWidth(w);
             }
+
+            repaint();
+        } else if (selectedTool instanceof Line) {
+            ((Line) selectedTool).setEndPoint(
+                    e.getX() - getImageX(),
+                    e.getY() - getImageY());
+            repaint();
+        } else if (selectedTool instanceof PixeledTool) {
+            ((PixeledTool) selectedTool).setCoordinates(
+                    e.getX() - getImageX(),
+                    e.getY() - getImageY());
+            repaint();
         }
     }
 
@@ -284,7 +284,7 @@ public class Canvas extends JComponent implements MouseListener,
                         getImageWidth(), getImageHeight());
         return cellBounds.contains(x, y);
     }
-    
+
     private WebFrame mainFrame = null;
 
     public WebFrame getMainFrame() {

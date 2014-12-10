@@ -36,6 +36,12 @@ public abstract class PixeledTool extends Tool {
         this.pixels = pixels;
     }
 
+    @Override
+    public void setCoordinates(int x, int y) {
+        super.setCoordinates(x, y);
+        pixels.add(new Point(x, y));
+    }
+    
     public PixeledTool() {
         super();
     }
