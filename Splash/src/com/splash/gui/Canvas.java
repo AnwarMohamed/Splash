@@ -159,7 +159,7 @@ public class Canvas extends JComponent implements MouseListener,
             if (layers != null) {
                 Graphics2D g = image.createGraphics();
                 for (Layer layer : layers) {
-                    layer.paintComponent(g);
+                    layer.paint(g);
                 }
                 g.dispose();
             }
