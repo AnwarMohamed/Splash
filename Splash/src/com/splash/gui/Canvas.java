@@ -22,6 +22,7 @@
 package com.splash.gui;
 
 import com.alee.laf.rootpane.WebFrame;
+import com.splash.gui.dialogs.BrushDialog;
 import com.splash.gui.dialogs.ToolBoxDialog;
 import com.splash.gui.elements.DimensionedTool;
 import com.splash.gui.elements.Layer;
@@ -68,6 +69,8 @@ public class Canvas extends JComponent implements MouseListener,
 
     private ToolBoxDialog toolBox;
     private Tool selectedTool;
+    
+    private BrushDialog brushDialog;
 
     private BufferedImage image;
     private int imageHeight, imageWidth, imageX, imageY;
@@ -96,9 +99,9 @@ public class Canvas extends JComponent implements MouseListener,
         setDoubleBuffered(true);
         setFocusable(true);
 
-        addMouseListener(this);
-        addMouseMotionListener(this);
-        addMouseWheelListener(this);
+        addMouseListener(Canvas.this);
+        addMouseMotionListener(Canvas.this);
+        addMouseWheelListener(Canvas.this);
 
         cam_zoom = 1;
         cam_positionX = 0;
@@ -293,6 +296,10 @@ public class Canvas extends JComponent implements MouseListener,
 
     public void setMainFrame(WebFrame mainFrame) {
         this.mainFrame = mainFrame;
+    }
+
+    public void setBrushBox(BrushDialog aThis) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -19,36 +19,8 @@
  *  along with this program; if not, write to authors.
  *
  */
-package com.splash.gui.tools;
+package com.splash.file;
 
-import com.splash.gui.elements.PixeledTool;
-import java.awt.AlphaComposite;
-import java.awt.Graphics;
-
-public class FreeHand extends PixeledTool {
-
-    public FreeHand(int x, int y) {
-        super();
-    }
-
-    public FreeHand() {
-        super();
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        for (int i = 0; i < getPixels().size() - 1; i++) {
-            graph.drawLine(
-                    (int) getPixels().get(i).getX(),
-                    (int) getPixels().get(i).getY(),
-                    (int) getPixels().get(i + 1).getX(),
-                    (int) getPixels().get(i + 1).getY());
-        }
-    }
-
-    @Override
-    public FreeHand newInstance() {
-        return new FreeHand();
-    }
+public class AboudaFile {
+    
 }

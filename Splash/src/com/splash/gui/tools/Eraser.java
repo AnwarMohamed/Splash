@@ -21,34 +21,38 @@
  */
 package com.splash.gui.tools;
 
-import com.splash.gui.elements.PixeledTool;
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
-public class FreeHand extends PixeledTool {
+public class Eraser extends FreeHand {
 
-    public FreeHand(int x, int y) {
+    public Eraser(int x, int y) {
         super();
+        setColor(new Color(0, 0, 0, 0));
     }
 
-    public FreeHand() {
+    public Eraser() {
         super();
+        setColor(new Color(0, 0, 0, 0));
     }
 
+    @Override
+    public Eraser newInstance() {
+        return new Eraser();
+    }
+    
     @Override
     public void paint(Graphics g) {
-        super.paint(g);
-        for (int i = 0; i < getPixels().size() - 1; i++) {
-            graph.drawLine(
-                    (int) getPixels().get(i).getX(),
-                    (int) getPixels().get(i).getY(),
-                    (int) getPixels().get(i + 1).getX(),
-                    (int) getPixels().get(i + 1).getY());
-        }
-    }
-
-    @Override
-    public FreeHand newInstance() {
-        return new FreeHand();
+        graph = (Graphics2D)g;        
+        graph.setComposite(
+                AlphaComposite.getInstance(
+                        AlphaComposite.SRC_IN, 0.0f));
+        super.paint(graph);
+        
+        graph.setComposite(
+                AlphaComposite.getInstance(
+                        AlphaComposite.SRC_OVER, 1.0f));
     }
 }

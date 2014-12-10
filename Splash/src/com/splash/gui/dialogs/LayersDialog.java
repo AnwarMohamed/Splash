@@ -50,7 +50,7 @@ public class LayersDialog extends WebDialog {
     public LayersDialog(WebFrame parent, int width, int height) {
         super(parent, "Layers", false);
 
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 
         setResizable(true);
         setLayout(new BorderLayout());

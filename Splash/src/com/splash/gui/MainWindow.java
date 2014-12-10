@@ -23,6 +23,7 @@ package com.splash.gui;
 
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
+import com.splash.gui.dialogs.BrushDialog;
 import com.splash.gui.dialogs.LayersDialog;
 import com.splash.gui.dialogs.ToolBoxDialog;
 import java.awt.BorderLayout;
@@ -39,6 +40,7 @@ public class MainWindow extends WebFrame {
 
     private LayersDialog layersDialog = null;
     private ToolBoxDialog toolBoxDialog = null;
+    private BrushDialog brushDialog = null;
     private WebFrame thisFrame = this;
 
     private final int DEFAULT_WIDTH = 900;
@@ -46,10 +48,8 @@ public class MainWindow extends WebFrame {
 
     public MainWindow() {
         super("Splash | Just Another Awesome Paint Program");
-        //setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
         setIconImage((new ImageIcon("res/icon.png")).getImage());
-        mainContainer = getContentPane();
 
         setSize(1360, 750);
         setMinimumSize(new Dimension(500, 500));
@@ -58,16 +58,6 @@ public class MainWindow extends WebFrame {
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        /*
-         addComponentListener(new ComponentAdapter() {
-         @Override
-         public void componentResized(ComponentEvent e) {
-         //pack();
-         canvas.setLocation(((mainContainer.getWidth()) / 2) - (canvas.getImageWidth() / 2),
-         ((mainContainer.getHeight()) / 2) - (canvas.getImageHeight() / 2));
-         }
-         });
-         */
         initMenuBar();
         initToolBar();
         initCanvas(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -81,7 +71,6 @@ public class MainWindow extends WebFrame {
                 layersDialog.setLocationRelativeTo(thisFrame);
                 layersDialog.setLocation(1115, 120);
                 layersDialog.setVisible(true);
-
                 canvas.setLayersModel(layersDialog.layers);
             }
         });
@@ -93,18 +82,26 @@ public class MainWindow extends WebFrame {
                 toolBoxDialog.setLocationRelativeTo(thisFrame);
                 toolBoxDialog.setLocation(1115, 380);
                 toolBoxDialog.setVisible(true);
-
                 toolBoxDialog.setCanvas(canvas);
             }
         });
 
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                brushDialog = new BrushDialog(thisFrame);
+                brushDialog.setLocationRelativeTo(thisFrame);
+                brushDialog.setLocation(1115, 500);
+                brushDialog.setVisible(true);
+                brushDialog.setCanvas(canvas);
+            }
+        });
     }
 
     private ToolBar toolBar = null;
     private MenuBar menuBar = null;
     private StatusBar statusBar = null;
     private Canvas canvas = null;
-    private Container mainContainer = null;
 
     private void initToolBar() {
         toolBar = new ToolBar();
@@ -113,7 +110,6 @@ public class MainWindow extends WebFrame {
 
     private void initMenuBar() {
         menuBar = new MenuBar();
-
         menuBar.aboutAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ev) {
@@ -142,10 +138,7 @@ public class MainWindow extends WebFrame {
         canvas = new Canvas(
                 ((getWidth() - 50) / 2) - (width / 2),
                 ((getHeight() - 160) / 2) - (height / 2), width, height);
-
-        //GridBagConstraints.CENTER
-        //centre.add(canvas);
-        //mainContainer.addComponent(canvas, GridBagConstraints.CENTER);
+        
         add(canvas, BorderLayout.CENTER);
     }
 }

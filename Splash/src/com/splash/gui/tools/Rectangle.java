@@ -22,7 +22,6 @@
 package com.splash.gui.tools;
 
 import com.splash.gui.elements.DimensionedTool;
-import com.splash.gui.elements.Tool;
 import java.awt.*;
 import java.awt.geom.*;
 

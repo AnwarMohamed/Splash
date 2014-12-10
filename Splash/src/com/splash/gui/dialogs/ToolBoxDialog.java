@@ -27,12 +27,14 @@ import com.splash.gui.Canvas;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.elements.WrapLayout;
 import com.splash.gui.tools.Ellipse;
+import com.splash.gui.tools.Eraser;
 import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.FreeHand;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JToggleButton;
 
@@ -71,9 +73,9 @@ public class ToolBoxDialog extends WebDialog {
     public ToolBoxDialog(WebFrame parent) {
         super(parent, "Tool Box", false);
 
+        setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);       
+        
         setSize(240, 160);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
         setResizable(true);
         setLayout(new WrapLayout(0, 3, 0));
 
@@ -116,7 +118,7 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 freeHandAction.setSelected(true);
-                
+
                 currentTool = new FreeHand();
                 setCanvasTool(currentTool);
             }
@@ -143,6 +145,9 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 eraserAction.setSelected(true);
+
+                currentTool = new Eraser();
+                setCanvasTool(currentTool);
             }
         });
 
@@ -159,7 +164,7 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 lineAction.setSelected(true);
-                
+
                 currentTool = new Line();
                 setCanvasTool(currentTool);
             }
