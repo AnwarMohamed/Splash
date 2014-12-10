@@ -21,10 +21,12 @@
  */
 package com.splash.gui;
 
+import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.dialogs.ToolBoxDialog;
 import com.splash.gui.elements.DimensionedTool;
 import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.Tool;
+import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
 import java.awt.BasicStroke;
@@ -232,6 +234,10 @@ public class Canvas extends JComponent implements MouseListener,
                         e.getX() - getImageX(),
                         e.getY() - getImageY());
                 repaint();
+            } else if (selectedTool instanceof FreeHand) {
+                ((FreeHand) selectedTool).setLocation(
+                        e.getX() - getImageX(),
+                        e.getY() - getImageY());
             }
         }
     }
@@ -278,4 +284,15 @@ public class Canvas extends JComponent implements MouseListener,
                         getImageWidth(), getImageHeight());
         return cellBounds.contains(x, y);
     }
+    
+    private WebFrame mainFrame = null;
+
+    public WebFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(WebFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
 }

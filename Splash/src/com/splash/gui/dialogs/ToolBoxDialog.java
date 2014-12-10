@@ -29,6 +29,7 @@ import com.splash.gui.elements.WrapLayout;
 import com.splash.gui.tools.Ellipse;
 import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
+import com.splash.gui.tools.FreeHand;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -115,6 +116,9 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 freeHandAction.setSelected(true);
+                
+                currentTool = new FreeHand();
+                setCanvasTool(currentTool);
             }
         });
 

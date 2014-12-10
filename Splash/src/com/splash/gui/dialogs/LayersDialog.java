@@ -55,7 +55,6 @@ public class LayersDialog extends WebDialog {
         setResizable(true);
         setLayout(new BorderLayout());
         setSize(240, 300);
-        
 
         this.width = width;
         this.height = height;
@@ -91,28 +90,38 @@ public class LayersDialog extends WebDialog {
 
         addNewLayer();
 
-        ListSelectionListener listSelectionListener = 
-                new ListSelectionListener() {
+        ListSelectionListener listSelectionListener = new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent listSelectionEvent) {
                 if (canvas != null) {
-                    canvas.setSelectedLayer(listSelectionEvent.getFirstIndex());
+                    canvas.setSelectedLayer(list.getSelectedIndex());
                 }
             }
         };
-        
+
         list.addListSelectionListener(listSelectionListener);
     }
 
     private void addNewLayer() {
         if (layers.size() > 0) {
-            layersModel.add(list.getSelectedIndex(), "New Layer" + layers.size());
+            layersModel.add(
+                    list.getSelectedIndex(), "New Layer" + layers.size());
             layers.add(list.getSelectedIndex(), new Layer(width, height));
-            list.setSelectedIndex(list.getSelectedIndex());
+            list.setSelectedIndex(list.getSelectedIndex() - 1);
         } else {
             layersModel.addElement("New Layer" + layers.size());
             layers.add(new Layer(width, height));
             list.setSelectedIndex(layers.size() - 1);
+        }
+
+        if (canvas != null) {
+            canvas.setSelectedLayer(list.getSelectedIndex());
+            canvas.repaint();
+
+            if (canvas.getMainFrame() != null) {
+                canvas.getMainFrame().invalidate();
+                canvas.getMainFrame().repaint();
+            }
         }
     }
 
@@ -127,10 +136,20 @@ public class LayersDialog extends WebDialog {
         } else {
             addNewLayer();
         }
+
+        if (canvas != null) {
+            canvas.setSelectedLayer(list.getSelectedIndex());
+            canvas.repaint();
+
+            if (canvas.getMainFrame() != null) {
+                canvas.getMainFrame().invalidate();
+                canvas.getMainFrame().repaint();
+            }
+        }
     }
-    
+
     private Canvas canvas = null;
-    
+
     public void linkCanvas(Canvas canvas) {
         this.canvas = canvas;
     }

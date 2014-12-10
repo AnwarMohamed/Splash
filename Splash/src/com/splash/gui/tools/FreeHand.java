@@ -33,9 +33,10 @@ public class FreeHand extends Tool {
     }
 
     public FreeHand() {
-
+        super();
     }
 
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
         Shape drawPoint = new Line2D.Float(
