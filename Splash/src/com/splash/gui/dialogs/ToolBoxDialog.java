@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2014
- *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Abdallah Elerian  <abdallah.elerian@gmail.com>
+ *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Moataz Hammouda   <moatazhammouda4@gmail.com>
  *                      Yasmine Elhabashi <yasmine.elhabashi@gmail.com>
  *
@@ -35,7 +35,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JToggleButton;
 
 public class ToolBoxDialog extends WebDialog {

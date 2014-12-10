@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2014
- *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Abdallah Elerian  <abdallah.elerian@gmail.com>
+ *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Moataz Hammouda   <moatazhammouda4@gmail.com>
  *                      Yasmine Elhabashi <yasmine.elhabashi@gmail.com>
  *
@@ -24,10 +24,8 @@ package com.splash.gui.dialogs;
 import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.Canvas;
-import com.splash.gui.elements.Tool;
 import java.awt.BorderLayout;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

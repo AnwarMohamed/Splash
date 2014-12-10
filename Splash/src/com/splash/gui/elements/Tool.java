@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2014
- *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Abdallah Elerian  <abdallah.elerian@gmail.com>
+ *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Moataz Hammouda   <moatazhammouda4@gmail.com>
  *                      Yasmine Elhabashi <yasmine.elhabashi@gmail.com>
  *
@@ -30,20 +30,12 @@ import javax.swing.JComponent;
 public abstract class Tool extends JComponent {
 
     private Color color;
-    //private boolean dragMode;
 
     public Tool() {
         setLocation(0, 0);
-        color = Color.BLACK;
-        //    dragMode = false;
+        setColor(Color.BLACK);
     }
 
-    //public boolean getDragMode() {
-    //    return dragMode;
-    //}
-    //public void setDragMode(boolean dragMode) {
-    //    this.dragMode = dragMode;
-    //}
     public void setCoordinates(int x, int y) {
         setLocation(x, y);
     }

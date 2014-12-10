@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2014
- *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Abdallah Elerian  <abdallah.elerian@gmail.com>
+ *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Moataz Hammouda   <moatazhammouda4@gmail.com>
  *                      Yasmine Elhabashi <yasmine.elhabashi@gmail.com>
  *
@@ -22,7 +22,6 @@
 package com.splash.gui.tools;
 
 import com.splash.gui.elements.PixeledTool;
-import java.awt.AlphaComposite;
 import java.awt.Graphics;
 
 public class FreeHand extends PixeledTool {

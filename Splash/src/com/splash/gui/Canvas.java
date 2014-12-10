@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2014
- *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Abdallah Elerian  <abdallah.elerian@gmail.com>
+ *                      Anwar Mohamed     <anwarelmakrahy@gmail.com>
  *                      Moataz Hammouda   <moatazhammouda4@gmail.com>
  *                      Yasmine Elhabashi <yasmine.elhabashi@gmail.com>
  *
@@ -28,11 +28,7 @@ import com.splash.gui.elements.DimensionedTool;
 import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.PixeledTool;
 import com.splash.gui.elements.Tool;
-import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.Line;
-import com.splash.gui.tools.Rectangle;
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -43,12 +39,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import static java.lang.Math.abs;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
