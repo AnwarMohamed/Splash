@@ -26,6 +26,7 @@ import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.Canvas;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.elements.WrapLayout;
+import com.splash.gui.tools.Circle;
 import com.splash.gui.tools.Ellipse;
 import com.splash.gui.tools.EquilateralTriangle;
 import com.splash.gui.tools.Eraser;
@@ -218,6 +219,9 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 circleAction.setSelected(true);
+
+                currentTool = new Circle();
+                setCanvasTool(currentTool);
             }
         });
 
@@ -270,6 +274,7 @@ public class ToolBoxDialog extends WebDialog {
         circleAction.setSelected(false);
         ellipseAction.setSelected(false);
         squareAction.setSelected(false);
+        textAction.setSelected(false);
     }
 
     private void setCanvasTool(Tool tool) {
