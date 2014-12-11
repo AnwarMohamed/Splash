@@ -34,6 +34,8 @@ import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.IsocelesTriangle;
 import com.splash.gui.tools.RightAngledTriangle;
+import com.splash.gui.tools.Square;
+import com.splash.gui.tools.Text;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -44,6 +46,8 @@ public class ToolBoxDialog extends WebDialog {
 
     public JToggleButton rectangleAction = new JToggleButton(
             new ImageIcon("res/images/draw-rectangle.png"));
+    public JToggleButton squareAction = new JToggleButton(
+            new ImageIcon("res/images/draw-square.png"));
     public JToggleButton isocelesTriangleAction = new JToggleButton(
             new ImageIcon("res/images/draw-triangle3.png"));
     public JToggleButton rightTriangleAction = new JToggleButton(
@@ -95,6 +99,7 @@ public class ToolBoxDialog extends WebDialog {
         add(pickAction);
         add(lineAction);
         add(rectangleAction);
+        add(squareAction);
         add(isocelesTriangleAction);
         add(rightTriangleAction);
         add(circleAction);
@@ -226,6 +231,28 @@ public class ToolBoxDialog extends WebDialog {
                 setCanvasTool(currentTool);
             }
         });
+
+        textAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                untoggleButtons();
+                textAction.setSelected(true);
+
+                currentTool = new Text();
+                setCanvasTool(currentTool);
+            }
+        });
+
+        squareAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                untoggleButtons();
+                squareAction.setSelected(true);
+
+                currentTool = new Square();
+                setCanvasTool(currentTool);
+            }
+        });
     }
 
     private void untoggleButtons() {
@@ -242,6 +269,7 @@ public class ToolBoxDialog extends WebDialog {
         isocelesTriangleAction.setSelected(false);
         circleAction.setSelected(false);
         ellipseAction.setSelected(false);
+        squareAction.setSelected(false);
     }
 
     private void setCanvasTool(Tool tool) {

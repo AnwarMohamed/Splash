@@ -188,6 +188,7 @@ public class Canvas extends JComponent implements MouseListener,
         if (/*withinBounds(e.getX(), e.getY()) &&*/selectedTool != null) {
             //        selectedTool.setDragMode(false);
             selectedTool = selectedTool.newInstance();
+            repaint();
         }
     }
 
@@ -235,6 +236,9 @@ public class Canvas extends JComponent implements MouseListener,
             ((PixeledTool) selectedTool).setCoordinates(
                     e.getX() - getImageX(),
                     e.getY() - getImageY());
+            repaint();
+        }
+        else {
             repaint();
         }
     }
