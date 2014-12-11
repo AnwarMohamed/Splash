@@ -45,7 +45,7 @@ public class LayersDialog extends WebDialog {
     private JList list;
 
     public ArrayList<Layer> layers = new ArrayList<>();
-    private int width, height;
+    private int width, height, layersSum=0;
 
     public LayersDialog(WebFrame parent, int width, int height) {
         super(parent, "Layers", false);
@@ -105,11 +105,11 @@ public class LayersDialog extends WebDialog {
     private void addNewLayer() {
         if (layers.size() > 0) {
             layersModel.add(
-                    list.getSelectedIndex() - 1, "New Layer" + layers.size());
+                    list.getSelectedIndex(), "New Layer" + layersSum++);
             layers.add(list.getSelectedIndex() - 1, new Layer(width, height));
             list.setSelectedIndex(list.getSelectedIndex() - 1);
         } else {
-            layersModel.addElement("New Layer" + layers.size());
+            layersModel.addElement("New Layer" + layersSum++);
             layers.add(new Layer(width, height));
             list.setSelectedIndex(0);
         }
@@ -134,6 +134,7 @@ public class LayersDialog extends WebDialog {
         } else if (layers.size() > 0) {
             list.setSelectedIndex(index - 1);
         } else {
+            layersSum = 0;
             addNewLayer();
         }
 

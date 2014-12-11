@@ -32,6 +32,7 @@ import com.splash.gui.tools.Eraser;
 import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.FreeHand;
+import com.splash.gui.tools.IsocelesTriangle;
 import com.splash.gui.tools.RightAngledTriangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +44,7 @@ public class ToolBoxDialog extends WebDialog {
 
     public JToggleButton rectangleAction = new JToggleButton(
             new ImageIcon("res/images/draw-rectangle.png"));
-    public JToggleButton equTriangleAction = new JToggleButton(
+    public JToggleButton isocelesTriangleAction = new JToggleButton(
             new ImageIcon("res/images/draw-triangle3.png"));
     public JToggleButton rightTriangleAction = new JToggleButton(
             new ImageIcon("res/images/draw-triangle.png"));
@@ -94,7 +95,7 @@ public class ToolBoxDialog extends WebDialog {
         add(pickAction);
         add(lineAction);
         add(rectangleAction);
-        add(equTriangleAction);
+        add(isocelesTriangleAction);
         add(rightTriangleAction);
         add(circleAction);
         add(ellipseAction);
@@ -196,13 +197,13 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
-        equTriangleAction.addActionListener(new ActionListener() {
+        isocelesTriangleAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
-                equTriangleAction.setSelected(true);
+                isocelesTriangleAction.setSelected(true);
 
-                currentTool = new EquilateralTriangle();
+                currentTool = new IsocelesTriangle();
                 setCanvasTool(currentTool);
             }
         });
@@ -238,6 +239,7 @@ public class ToolBoxDialog extends WebDialog {
         lineAction.setSelected(false);
         rectangleAction.setSelected(false);
         rightTriangleAction.setSelected(false);
+        isocelesTriangleAction.setSelected(false);
         circleAction.setSelected(false);
         ellipseAction.setSelected(false);
     }
