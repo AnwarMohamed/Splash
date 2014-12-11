@@ -28,12 +28,15 @@ import com.splash.gui.elements.Layer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -45,7 +48,7 @@ public class LayersDialog extends WebDialog {
     private JList list;
 
     public ArrayList<Layer> layers = new ArrayList<>();
-    private int width, height, layersSum=0;
+    private int width, height, layersSum = 0;
 
     public LayersDialog(WebFrame parent, int width, int height) {
         super(parent, "Layers", false);
@@ -90,16 +93,23 @@ public class LayersDialog extends WebDialog {
 
         addNewLayer();
 
-        ListSelectionListener listSelectionListener = new ListSelectionListener() {
+        list.addMouseListener(new MouseAdapter() {
             @Override
-            public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                if (canvas != null) {
-                    canvas.setSelectedLayer(list.getSelectedIndex());
+            public void mouseClicked(MouseEvent event) {
+                if (event.getClickCount() == 1) {
+                    if (canvas != null) {
+                        canvas.setSelectedLayer(list.getSelectedIndex());
+                    }
+                } else if (event.getClickCount() == 2) {
+                    String layerLabel = 
+                            JOptionPane.showInputDialog(
+                                    "Enter New Layer Label");
+                    if (layerLabel != null && layerLabel.length() > 0) {
+                        layersModel.set(list.getSelectedIndex(), layerLabel);
+                    }
                 }
             }
-        };
-
-        list.addListSelectionListener(listSelectionListener);
+        });
     }
 
     private void addNewLayer() {
