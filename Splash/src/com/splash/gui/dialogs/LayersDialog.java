@@ -105,13 +105,13 @@ public class LayersDialog extends WebDialog {
     private void addNewLayer() {
         if (layers.size() > 0) {
             layersModel.add(
-                    list.getSelectedIndex(), "New Layer" + layers.size());
-            layers.add(list.getSelectedIndex(), new Layer(width, height));
+                    list.getSelectedIndex() - 1, "New Layer" + layers.size());
+            layers.add(list.getSelectedIndex() - 1, new Layer(width, height));
             list.setSelectedIndex(list.getSelectedIndex() - 1);
         } else {
             layersModel.addElement("New Layer" + layers.size());
             layers.add(new Layer(width, height));
-            list.setSelectedIndex(layers.size() - 1);
+            list.setSelectedIndex(0);
         }
 
         if (canvas != null) {

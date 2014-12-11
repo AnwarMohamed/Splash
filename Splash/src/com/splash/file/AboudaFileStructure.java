@@ -32,7 +32,7 @@ public class AboudaFileStructure {
 
     class FileHeader {
 
-        char[] signature;
+        byte[] signature;
         int fileSize;
         int colorsDataOffset;
         int colorsDataSize;
@@ -55,10 +55,10 @@ public class AboudaFileStructure {
 
     class ColorDataItem {
 
-        char red;
-        char green;
-        char blue;
-        char alpha;
+        byte red;
+        byte green;
+        byte blue;
+        byte alpha;
     }
 
     class LayersData {
@@ -95,7 +95,7 @@ public class AboudaFileStructure {
     }
 
     class ImageDataItem {
-        char type;
-        char flags;
+        byte type;
+        byte flags;
     }
 }

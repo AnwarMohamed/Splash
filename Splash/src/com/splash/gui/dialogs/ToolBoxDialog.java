@@ -27,10 +27,12 @@ import com.splash.gui.Canvas;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.elements.WrapLayout;
 import com.splash.gui.tools.Ellipse;
+import com.splash.gui.tools.EquilateralTriangle;
 import com.splash.gui.tools.Eraser;
 import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.FreeHand;
+import com.splash.gui.tools.RightAngledTriangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -41,7 +43,9 @@ public class ToolBoxDialog extends WebDialog {
 
     public JToggleButton rectangleAction = new JToggleButton(
             new ImageIcon("res/images/draw-rectangle.png"));
-    public JToggleButton triangleAction = new JToggleButton(
+    public JToggleButton equTriangleAction = new JToggleButton(
+            new ImageIcon("res/images/draw-triangle3.png"));
+    public JToggleButton rightTriangleAction = new JToggleButton(
             new ImageIcon("res/images/draw-triangle.png"));
     public JToggleButton circleAction = new JToggleButton(
             new ImageIcon("res/images/draw-circle.png"));
@@ -72,8 +76,8 @@ public class ToolBoxDialog extends WebDialog {
     public ToolBoxDialog(WebFrame parent) {
         super(parent, "Tool Box", false);
 
-        setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);       
-        
+        setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
+
         setSize(240, 160);
         setResizable(true);
         setLayout(new WrapLayout(0, 3, 0));
@@ -90,7 +94,8 @@ public class ToolBoxDialog extends WebDialog {
         add(pickAction);
         add(lineAction);
         add(rectangleAction);
-        add(triangleAction);
+        add(equTriangleAction);
+        add(rightTriangleAction);
         add(circleAction);
         add(ellipseAction);
 
@@ -180,11 +185,25 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
-        triangleAction.addActionListener(new ActionListener() {
+        rightTriangleAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
-                triangleAction.setSelected(true);
+                rightTriangleAction.setSelected(true);
+
+                currentTool = new RightAngledTriangle();
+                setCanvasTool(currentTool);
+            }
+        });
+
+        equTriangleAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                untoggleButtons();
+                equTriangleAction.setSelected(true);
+
+                currentTool = new EquilateralTriangle();
+                setCanvasTool(currentTool);
             }
         });
 
@@ -218,7 +237,7 @@ public class ToolBoxDialog extends WebDialog {
         pickAction.setSelected(false);
         lineAction.setSelected(false);
         rectangleAction.setSelected(false);
-        triangleAction.setSelected(false);
+        rightTriangleAction.setSelected(false);
         circleAction.setSelected(false);
         ellipseAction.setSelected(false);
     }

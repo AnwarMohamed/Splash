@@ -21,6 +21,7 @@
  */
 package com.splash.gui;
 
+import com.alee.laf.filechooser.WebFileChooser;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.dialogs.BrushDialog;
@@ -29,11 +30,14 @@ import com.splash.gui.dialogs.ToolBoxDialog;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MainWindow extends WebFrame {
 
@@ -41,6 +45,7 @@ public class MainWindow extends WebFrame {
     private ToolBoxDialog toolBoxDialog = null;
     private BrushDialog brushDialog = null;
     private WebFrame thisFrame = this;
+    private WebFileChooser fileChooser = null;
 
     private final int DEFAULT_WIDTH = 900;
     private final int DEFAULT_HEIGHT = 500;
@@ -50,7 +55,10 @@ public class MainWindow extends WebFrame {
 
         setIconImage((new ImageIcon("res/icon.png")).getImage());
 
-        setSize(1360, 750);
+        setSize(
+                (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 10,
+                (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 40);
+
         setMinimumSize(new Dimension(500, 500));
         setLocationRelativeTo(null);
 
@@ -71,6 +79,7 @@ public class MainWindow extends WebFrame {
                 layersDialog.setLocation(1115, 120);
                 layersDialog.setVisible(true);
                 canvas.setLayersModel(layersDialog.layers);
+                layersDialog.linkCanvas(canvas);
             }
         });
 
@@ -95,6 +104,17 @@ public class MainWindow extends WebFrame {
                 brushDialog.setCanvas(canvas);
             }
         });
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                fileChooser = new WebFileChooser();
+                fileChooser.setAcceptAllFileFilterUsed(false);
+                fileChooser.setFileFilter(
+                        new FileNameExtensionFilter(
+                                "Splash Project file", "abouda"));
+            }
+        });
     }
 
     private ToolBar toolBar = null;
@@ -105,6 +125,27 @@ public class MainWindow extends WebFrame {
     private void initToolBar() {
         toolBar = new ToolBar();
         add(toolBar, BorderLayout.NORTH);
+
+        toolBar.openAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                menuBar.openAction.doClick();
+            }
+        });
+
+        toolBar.saveAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                menuBar.saveAction.doClick();
+            }
+        });
+
+        toolBar.newAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                menuBar.newAction.doClick();
+            }
+        });
     }
 
     private void initMenuBar() {
@@ -114,6 +155,22 @@ public class MainWindow extends WebFrame {
             public void actionPerformed(ActionEvent ev) {
                 AboutWindow aboutWindow = new AboutWindow(false);
                 aboutWindow.show();
+            }
+        });
+
+        menuBar.openAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                fileChooser.setDialogTitle("Open Project");
+                int returnVal = fileChooser.showOpenDialog(thisFrame);
+            }
+        });
+
+        menuBar.saveAsAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                fileChooser.setDialogTitle("Save Project As");
+                int returnVal = fileChooser.showSaveDialog(thisFrame);
             }
         });
 
@@ -137,7 +194,7 @@ public class MainWindow extends WebFrame {
         canvas = new Canvas(
                 ((getWidth() - 50) / 2) - (width / 2),
                 ((getHeight() - 160) / 2) - (height / 2), width, height);
-        
+
         add(canvas, BorderLayout.CENTER);
     }
 }

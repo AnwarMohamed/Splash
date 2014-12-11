@@ -26,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
 
 public class AboudaFile {
 
@@ -59,5 +60,13 @@ public class AboudaFile {
 
     public boolean isIsReady() {
         return isReady;
+    }
+
+    private byte[] toByteArray(int value) {
+        return ByteBuffer.allocate(4).putInt(value).array();
+    }
+
+    private int fromByteArray(byte[] bytes) {
+        return ByteBuffer.wrap(bytes).getInt();
     }
 }
