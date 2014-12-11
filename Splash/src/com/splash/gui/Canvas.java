@@ -62,9 +62,7 @@ public class Canvas extends JComponent implements MouseListener,
     private int selectedLayer;
 
     private ToolBoxDialog toolBox;
-    private Tool selectedTool;
-    
-    private BrushDialog brushDialog;
+    private Tool selectedTool;    
 
     private BufferedImage image;
     private int imageHeight, imageWidth, imageX, imageY;
@@ -179,7 +177,11 @@ public class Canvas extends JComponent implements MouseListener,
             layers.get(selectedLayer).addTool(selectedTool);
             selectedTool.setCoordinates(
                     e.getX() - getImageX(), e.getY() - getImageY());
-            //        selectedTool.setDragMode(true);
+            
+            if (mainFrame != null && mainFrame.getBrushDialog() != null) {
+                selectedTool.setBorderSize(
+                        mainFrame.getBrushDialog().getStrokeSize());
+            }
         }
     }
 
@@ -286,18 +288,17 @@ public class Canvas extends JComponent implements MouseListener,
         return cellBounds.contains(x, y);
     }
 
-    private WebFrame mainFrame = null;
+    private MainWindow mainFrame = null;
 
     public WebFrame getMainFrame() {
         return mainFrame;
     }
 
-    public void setMainFrame(WebFrame mainFrame) {
+    public void setMainWindow(MainWindow mainFrame) {
         this.mainFrame = mainFrame;
     }
 
     public void setBrushBox(BrushDialog aThis) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

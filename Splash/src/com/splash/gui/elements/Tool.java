@@ -21,6 +21,7 @@
  */
 package com.splash.gui.elements;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -29,11 +30,19 @@ import javax.swing.JComponent;
 
 public abstract class Tool extends JComponent {
 
-    private Color color;
+    private Color color = Color.BLACK;
+    private int borderSize = 1;
+
+    public int getBorderSize() {
+        return borderSize;
+    }
+
+    public void setBorderSize(int borderSize) {
+        this.borderSize = borderSize;
+    }
 
     public Tool() {
         setLocation(0, 0);
-        setColor(Color.BLACK);
     }
 
     public void setCoordinates(int x, int y) {
@@ -54,9 +63,10 @@ public abstract class Tool extends JComponent {
     public void paint(Graphics g) {
         graph = (Graphics2D) g;
         graph.setColor(getColor());
+        graph.setStroke(new BasicStroke(getBorderSize()));
         graph.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING, 
-                RenderingHints.VALUE_ANTIALIAS_ON);              
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
     public abstract Tool newInstance();

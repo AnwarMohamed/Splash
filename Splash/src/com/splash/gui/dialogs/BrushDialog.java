@@ -33,7 +33,6 @@ import javax.swing.event.ChangeListener;
 public class BrushDialog extends WebDialog {
 
     public JSlider slider = new JSlider(1, 20, 1);
-    private int strokesize = 1;
     private Canvas canvas = null;
 
     public BrushDialog(WebFrame parent) {
@@ -48,17 +47,11 @@ public class BrushDialog extends WebDialog {
         slider.setMinorTickSpacing(1);
         slider.setMajorTickSpacing(60);
 
-        slider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent ce) {
-                strokesize = (int) slider.getValue();
-            }
-        });
-        add(slider);
+        add(slider, BorderLayout.NORTH);
     }
 
     public int getStrokeSize() {
-        return strokesize;
+        return slider.getValue();
     }
 
     public void setCanvas(Canvas canvas) {

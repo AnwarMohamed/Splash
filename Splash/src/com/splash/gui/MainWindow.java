@@ -23,6 +23,7 @@ package com.splash.gui;
 
 import com.alee.laf.filechooser.WebFileChooser;
 import com.alee.laf.panel.WebPanel;
+import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.dialogs.BrushDialog;
 import com.splash.gui.dialogs.LayersDialog;
@@ -194,7 +195,11 @@ public class MainWindow extends WebFrame {
         canvas = new Canvas(
                 ((getWidth() - 50) / 2) - (width / 2),
                 ((getHeight() - 160) / 2) - (height / 2), width, height);
-
+        canvas.setMainWindow(MainWindow.this);
         add(canvas, BorderLayout.CENTER);
+    }
+    
+    public BrushDialog getBrushDialog() {
+        return brushDialog;
     }
 }
