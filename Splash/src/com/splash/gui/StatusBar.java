@@ -46,7 +46,7 @@ class StatusBar extends JPanel {
         add(rightPanel, BorderLayout.EAST);
         setBackground(SystemColor.control);
 
-        positionLabel = new JLabel(" Position");  
+        positionLabel = new JLabel(" 0, 0");  
         add(positionLabel);
     }
 

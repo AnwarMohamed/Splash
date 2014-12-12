@@ -48,6 +48,10 @@ public class Layer extends JComponent {
         objects.add(component);
     }        
     
+    public ArrayList<Tool> getTools() {
+        return objects;
+    }
+    
     @Override
     public void paintComponent(Graphics g) {        
         super.paintComponent(g);

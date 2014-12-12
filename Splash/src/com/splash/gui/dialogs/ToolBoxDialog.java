@@ -78,6 +78,7 @@ public class ToolBoxDialog extends WebDialog {
 
     private Canvas canvas = null;
     private Tool currentTool = null;
+    private BrushDialog brushBox = null;
 
     public ToolBoxDialog(WebFrame parent) {
         super(parent, "Tool Box", false);
@@ -132,6 +133,10 @@ public class ToolBoxDialog extends WebDialog {
 
                 currentTool = new FreeHand();
                 setCanvasTool(currentTool);
+
+                if (brushBox != null) {
+                    brushBox.EnableBrushBox(true);
+                }
             }
         });
 
@@ -148,6 +153,10 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 brushAction.setSelected(true);
+
+                if (brushBox != null) {
+                    brushBox.EnableBrushBox(true);
+                }
             }
         });
 
@@ -159,6 +168,10 @@ public class ToolBoxDialog extends WebDialog {
 
                 currentTool = new Eraser();
                 setCanvasTool(currentTool);
+
+                if (brushBox != null) {
+                    brushBox.EnableBrushBox(true);
+                }
             }
         });
 
@@ -178,6 +191,10 @@ public class ToolBoxDialog extends WebDialog {
 
                 currentTool = new Line();
                 setCanvasTool(currentTool);
+
+                if (brushBox != null) {
+                    brushBox.EnableBrushBox(true);
+                }
             }
         });
 
@@ -189,6 +206,10 @@ public class ToolBoxDialog extends WebDialog {
 
                 currentTool = new Rectangle();
                 setCanvasTool(currentTool);
+
+                if (brushBox != null) {
+                    brushBox.EnableBrushBox(true);
+                }
             }
         });
 
@@ -200,6 +221,10 @@ public class ToolBoxDialog extends WebDialog {
 
                 currentTool = new RightAngledTriangle();
                 setCanvasTool(currentTool);
+
+                if (brushBox != null) {
+                    brushBox.EnableBrushBox(true);
+                }
             }
         });
 
@@ -211,6 +236,10 @@ public class ToolBoxDialog extends WebDialog {
 
                 currentTool = new IsocelesTriangle();
                 setCanvasTool(currentTool);
+
+                if (brushBox != null) {
+                    brushBox.EnableBrushBox(true);
+                }
             }
         });
 
@@ -222,6 +251,10 @@ public class ToolBoxDialog extends WebDialog {
 
                 currentTool = new Circle();
                 setCanvasTool(currentTool);
+
+                if (brushBox != null) {
+                    brushBox.EnableBrushBox(true);
+                }
             }
         });
 
@@ -233,6 +266,10 @@ public class ToolBoxDialog extends WebDialog {
 
                 currentTool = new Ellipse();
                 setCanvasTool(currentTool);
+
+                if (brushBox != null) {
+                    brushBox.EnableBrushBox(true);
+                }
             }
         });
 
@@ -244,6 +281,10 @@ public class ToolBoxDialog extends WebDialog {
 
                 currentTool = new Text();
                 setCanvasTool(currentTool);
+
+                if (brushBox != null) {
+                    brushBox.EnableFontBox(true);
+                }
             }
         });
 
@@ -255,6 +296,10 @@ public class ToolBoxDialog extends WebDialog {
 
                 currentTool = new Square();
                 setCanvasTool(currentTool);
+
+                if (brushBox != null) {
+                    brushBox.EnableBrushBox(true);
+                }
             }
         });
     }
@@ -275,6 +320,11 @@ public class ToolBoxDialog extends WebDialog {
         ellipseAction.setSelected(false);
         squareAction.setSelected(false);
         textAction.setSelected(false);
+
+        if (brushBox != null) {
+            brushBox.EnableBrushBox(false);
+            brushBox.EnableFontBox(false);
+        }
     }
 
     private void setCanvasTool(Tool tool) {
@@ -286,5 +336,9 @@ public class ToolBoxDialog extends WebDialog {
     public void setCanvas(Canvas canvas) {
         this.canvas = canvas;
         canvas.setToolBox(this);
+    }
+
+    public void setBrushBox(BrushDialog brushBox) {
+        this.brushBox = brushBox;
     }
 }

@@ -21,8 +21,16 @@
  */
 package com.splash.file;
 
+import com.splash.gui.Canvas;
+import com.splash.gui.elements.Layer;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -33,8 +41,8 @@ public class AboudaFactory {
         Deflater deflater = new Deflater();
         deflater.setInput(data);
 
-        ByteArrayOutputStream outputStream = 
-                new ByteArrayOutputStream(data.length);
+        ByteArrayOutputStream outputStream
+                = new ByteArrayOutputStream(data.length);
 
         deflater.finish();
         byte[] buffer = new byte[1024];
@@ -53,7 +61,7 @@ public class AboudaFactory {
 
         ByteArrayOutputStream outputStream
                 = new ByteArrayOutputStream(data.length);
-        
+
         byte[] buffer = new byte[1024];
         while (!inflater.finished()) {
             int count = inflater.inflate(buffer);
@@ -61,5 +69,36 @@ public class AboudaFactory {
         }
         outputStream.close();
         return outputStream.toByteArray();
+    }
+
+    public static void generateOutputFile(String filename, Canvas canvas) {
+
+        try {
+            OutputStream outputStream;
+            outputStream = new FileOutputStream(
+                    filename.endsWith(".abouda")
+                            ? filename : filename.concat(".abouda"));
+
+            AboudaFileStructure outputStruct = new AboudaFileStructure();
+
+            if (canvas != null && canvas.getLayers() != null) {
+
+                outputStruct.setImageDimentions(
+                        canvas.getImageWidth(),
+                        canvas.getImageHeight());
+
+                for (Layer layer : canvas.getLayers()) {
+                    outputStruct.addLayer(layer);
+                }
+            }
+
+            outputStream.write(outputStruct.generateFile());
+            outputStream.close();
+        } catch (IOException ex) {
+        }
+    }
+
+    public static void parseInputFile(String filename, Canvas canvas) {
+
     }
 }

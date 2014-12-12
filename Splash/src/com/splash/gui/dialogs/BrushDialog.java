@@ -21,33 +21,88 @@
  */
 package com.splash.gui.dialogs;
 
+import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.Canvas;
+import com.splash.gui.elements.WrapLayout;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.GridLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JPopupMenu.Separator;
 import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 
 public class BrushDialog extends WebDialog {
 
-    public JSlider slider = new JSlider(1, 20, 1);
+    private JSlider slider = new JSlider(1, 100, 1);
     private Canvas canvas = null;
+    private JComboBox fontComboBox = new JComboBox();
+    private JComboBox fontSizeComboBox = new JComboBox();
+    private WebPanel formatPanel = new WebPanel();
+
+    public JToggleButton boldAction = new JToggleButton(
+            new ImageIcon("res/images/format-text-bold.png"));
+    public JToggleButton italicAction = new JToggleButton(
+            new ImageIcon("res/images/format-text-italic.png"));
+    public JToggleButton strikeAction = new JToggleButton(
+            new ImageIcon("res/images/format-text-strikethrough.png"));
+    public JToggleButton underlineAction = new JToggleButton(
+            new ImageIcon("res/images/format-text-underline.png"));
 
     public BrushDialog(WebFrame parent) {
         super(parent, "Brush Box", false);
-        
+
         setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
-        
-        setSize(240, 160);        
+
+        setSize(240, 200);
         setResizable(true);
-        setLayout(new BorderLayout());
-        
+        setLayout(new GridLayout(4, 0));
+
         slider.setMinorTickSpacing(1);
         slider.setMajorTickSpacing(60);
 
-        add(slider, BorderLayout.NORTH);
+        add(slider);
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                String fonts[]
+                        = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                        .getAvailableFontFamilyNames();
+
+                for (String font : fonts) {
+                    fontComboBox.addItem(font);
+                }
+            }
+        });
+
+        add(fontComboBox);
+
+        int fontSizes[]
+                = {8, 9, 10, 11, 12, 14, 16, 18, 20,
+                    22, 24, 26, 28, 36, 48, 72, 96};
+        for (int fontSize : fontSizes) {
+            fontSizeComboBox.addItem(Integer.toString(fontSize));
+        }
+
+        add(fontSizeComboBox);
+
+        formatPanel.setLayout(new WrapLayout());
+        formatPanel.add(boldAction);
+        formatPanel.add(italicAction);
+        formatPanel.add(strikeAction);
+        formatPanel.add(underlineAction);
+
+        add(formatPanel, BorderLayout.SOUTH);
+        
+        EnableFontBox(false);
+        EnableBrushBox(false);
     }
 
     public int getStrokeSize() {
@@ -56,5 +111,18 @@ public class BrushDialog extends WebDialog {
 
     public void setCanvas(Canvas canvas) {
         this.canvas = canvas;
+    }
+
+    public void EnableFontBox(boolean bool) {
+        boldAction.setEnabled(bool);
+        italicAction.setEnabled(bool);
+        strikeAction.setEnabled(bool);
+        underlineAction.setEnabled(bool);
+        fontComboBox.setEnabled(bool);
+        fontSizeComboBox.setEnabled(bool);
+    }
+
+    public void EnableBrushBox(boolean bool) {
+        slider.setEnabled(bool);
     }
 }

@@ -300,5 +300,9 @@ public class Canvas extends JComponent implements MouseListener,
 
     public void setBrushBox(BrushDialog aThis) {
     }
+    
+    public ArrayList<Layer> getLayers() {
+        return layers;
+    }
 
 }

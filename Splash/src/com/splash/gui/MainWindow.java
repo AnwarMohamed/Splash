@@ -25,6 +25,7 @@ import com.alee.laf.filechooser.WebFileChooser;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
+import com.splash.file.AboudaFactory;
 import com.splash.gui.dialogs.BrushDialog;
 import com.splash.gui.dialogs.LayersDialog;
 import com.splash.gui.dialogs.ToolBoxDialog;
@@ -77,7 +78,7 @@ public class MainWindow extends WebFrame {
                 layersDialog = new LayersDialog(
                         thisFrame, DEFAULT_WIDTH, DEFAULT_HEIGHT);
                 layersDialog.setLocationRelativeTo(thisFrame);
-                layersDialog.setLocation(1115, 120);
+                layersDialog.setLocation(1115, 105);
                 layersDialog.setVisible(true);
                 canvas.setLayersModel(layersDialog.layers);
                 layersDialog.linkCanvas(canvas);
@@ -89,9 +90,12 @@ public class MainWindow extends WebFrame {
             public void run() {
                 toolBoxDialog = new ToolBoxDialog(thisFrame);
                 toolBoxDialog.setLocationRelativeTo(thisFrame);
-                toolBoxDialog.setLocation(1115, 380);
+                toolBoxDialog.setLocation(1115, 365);
                 toolBoxDialog.setVisible(true);
-                toolBoxDialog.setCanvas(canvas);
+
+                if (canvas != null) {
+                    toolBoxDialog.setCanvas(canvas);
+                }
             }
         });
 
@@ -100,9 +104,13 @@ public class MainWindow extends WebFrame {
             public void run() {
                 brushDialog = new BrushDialog(thisFrame);
                 brushDialog.setLocationRelativeTo(thisFrame);
-                brushDialog.setLocation(1115, 500);
+                brushDialog.setLocation(1115, 485);
                 brushDialog.setVisible(true);
                 brushDialog.setCanvas(canvas);
+
+                if (toolBoxDialog != null) {
+                    toolBoxDialog.setBrushBox(brushDialog);
+                }
             }
         });
 
@@ -172,6 +180,12 @@ public class MainWindow extends WebFrame {
             public void actionPerformed(ActionEvent ev) {
                 fileChooser.setDialogTitle("Save Project As");
                 int returnVal = fileChooser.showSaveDialog(thisFrame);
+
+                if (returnVal == WebFileChooser.APPROVE_OPTION) {
+                    AboudaFactory.generateOutputFile(
+                            fileChooser.getSelectedFile().getAbsolutePath(),
+                            canvas);
+                }
             }
         });
 
@@ -198,7 +212,7 @@ public class MainWindow extends WebFrame {
         canvas.setMainWindow(MainWindow.this);
         add(canvas, BorderLayout.CENTER);
     }
-    
+
     public BrushDialog getBrushDialog() {
         return brushDialog;
     }
