@@ -23,7 +23,6 @@ package com.splash.gui;
 
 import com.alee.laf.filechooser.WebFileChooser;
 import com.alee.laf.panel.WebPanel;
-import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.splash.file.AboudaFactory;
 import com.splash.gui.dialogs.BrushDialog;
@@ -35,8 +34,10 @@ import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -186,6 +187,34 @@ public class MainWindow extends WebFrame {
                             fileChooser.getSelectedFile().getAbsolutePath(),
                             canvas);
                 }
+            }
+        });
+
+        menuBar.exportAsPngAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                fileChooser.setDialogTitle("Export As PNG");
+                fileChooser.setFileFilter(
+                        new FileNameExtensionFilter(
+                                "PNG Image", "png"));
+
+                int returnVal = fileChooser.showSaveDialog(thisFrame);
+
+                if (returnVal == WebFileChooser.APPROVE_OPTION) {
+                    try {
+                        ImageIO.write(
+                                canvas.getRenderedImage(),
+                                "png",
+                                new File(
+                                        fileChooser.getSelectedFile().
+                                        getAbsolutePath() + ".png"));
+                    } catch (IOException ex) {
+                    }
+                }
+
+                fileChooser.setFileFilter(
+                        new FileNameExtensionFilter(
+                                "Splash Project file", "abouda"));
             }
         });
 

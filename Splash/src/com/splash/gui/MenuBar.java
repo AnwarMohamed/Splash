@@ -47,6 +47,9 @@ class MenuBar extends JMenuBar {
             new ImageIcon("res/images/document-save.png"));
     public JMenuItem saveAsAction = new JMenuItem("Save As",
             new ImageIcon("res/images/document-save-as.png"));
+    public JMenu exportAction = new JMenu("Export As");
+    public JMenuItem exportAsPngAction = new JMenuItem("PNG Image",
+            new ImageIcon("res/images/png-icon.png"));    
     public JMenuItem printAction = new JMenuItem("Print",
             new ImageIcon("res/images/document-print.png"));    
     public JMenuItem exitAction = new JMenuItem("Exit",
@@ -91,13 +94,16 @@ class MenuBar extends JMenuBar {
         saveAsAction.setAccelerator(
                 KeyStroke.getKeyStroke("control alt S"));
         fileMenu.addSeparator();
+        fileMenu.add(exportAction);
+        exportAction.add(exportAsPngAction);
+        fileMenu.addSeparator();
         fileMenu.add(printAction);
         printAction.setMnemonic('P');
         printAction.setAccelerator(
                 KeyStroke.getKeyStroke(
                         KeyEvent.VK_P,
                         Event.CTRL_MASK));
-        fileMenu.addSeparator();
+        fileMenu.addSeparator();        
         fileMenu.add(exitAction);
         exitAction.setMnemonic('E');
         exitAction.setAccelerator(

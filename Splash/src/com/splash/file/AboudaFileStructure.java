@@ -21,8 +21,16 @@
  */
 package com.splash.file;
 
+import com.splash.gui.elements.DimensionedTool;
 import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.Tool;
+import com.splash.gui.tools.Circle;
+import com.splash.gui.tools.Ellipse;
+import com.splash.gui.tools.EquilateralTriangle;
+import com.splash.gui.tools.IsocelesTriangle;
+import com.splash.gui.tools.Rectangle;
+import com.splash.gui.tools.RightAngledTriangle;
+import com.splash.gui.tools.Square;
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -112,9 +120,9 @@ public class AboudaFileStructure {
         if (!colorsData.header.items.contains(colorItem)) {
             colorsData.header.items.add(colorItem);
             return colorsData.header.size++;
+        } else {
+            return colorsData.header.items.indexOf(colorItem);
         }
-
-        return -1;
     }
 
     public void setImageDimentions(int width, int height) {
@@ -122,13 +130,51 @@ public class AboudaFileStructure {
         layersData.header.height = height;
     }
 
+    public final static int OBJTYPE_CIRCLE = 1;
+    public final static int OBJTYPE_ELLIPSE = 2;
+    public final static int OBJTYPE_EQUTRIANGLE = 3;
+    public final static int OBJTYPE_ERASER = 4;
+    public final static int OBJTYPE_FILL = 5;
+    public final static int OBJTYPE_FREEHAND = 6;
+    public final static int OBJTYPE_ISOTRIANGLE = 7;
+    public final static int OBJTYPE_LINE = 8;
+    public final static int OBJTYPE_RECTANGLE = 9;
+    public final static int OBJTYPE_RIGHTTRIANGLE = 10;
+    public final static int OBJTYPE_SQUARE = 11;
+    public final static int OBJTYPE_TEXT = 12;
+
     public void addLayer(Layer layer) {
         LayersDataItem layerItem = new LayersDataItem();
 
         for (Tool tool : layer.getTools()) {
-            ObjectItem objectItem = new ObjectItem();
             ImageDataItem imageDataItem = new ImageDataItem();
+            imageDataItem.border = (byte) tool.getBorderSize();
+            imageDataItem.x = tool.getX();
+            imageDataItem.y = tool.getY();
+            imageDataItem.color = addColor(tool.getColor());
 
+            if (tool instanceof DimensionedTool) {
+                imageDataItem.height = ((DimensionedTool) tool).getHeight();
+                imageDataItem.width = ((DimensionedTool) tool).getWidth();
+
+                if (tool instanceof Circle) {
+                    imageDataItem.type = OBJTYPE_CIRCLE;
+                } else if (tool instanceof Ellipse) {
+                    imageDataItem.type = OBJTYPE_ELLIPSE;
+                } else if (tool instanceof EquilateralTriangle) {
+                    imageDataItem.type = OBJTYPE_EQUTRIANGLE;
+                } else if (tool instanceof IsocelesTriangle) {
+                    imageDataItem.type = OBJTYPE_ISOTRIANGLE;
+                } else if (tool instanceof Rectangle) {
+                    imageDataItem.type = OBJTYPE_RECTANGLE;
+                } else if (tool instanceof Square) {
+                    imageDataItem.type = OBJTYPE_SQUARE;
+                } else if (tool instanceof RightAngledTriangle) {
+                    imageDataItem.type = OBJTYPE_RIGHTTRIANGLE;
+                }
+            }
+
+            ObjectItem objectItem = new ObjectItem();
             objectItem.offset = addImageDataItem(imageDataItem);
 
             layerItem.objects.add(objectItem);
@@ -203,6 +249,13 @@ public class AboudaFileStructure {
     }
 
     class ImageDataItem {
+
+        int color = 0;
+        byte border = 0;
+        int x = 0;
+        int y = 0;
+        int width = 0;
+        int height = 0;
 
         byte type = 0;      // 1 byte
         byte flags = 0;     // 1 byte
