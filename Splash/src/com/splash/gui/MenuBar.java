@@ -47,9 +47,17 @@ class MenuBar extends JMenuBar {
             new ImageIcon("res/images/document-save.png"));
     public JMenuItem saveAsAction = new JMenuItem("Save As",
             new ImageIcon("res/images/document-save-as.png"));
+    
     public JMenu exportAction = new JMenu("Export As");
     public JMenuItem exportAsPngAction = new JMenuItem("PNG Image",
-            new ImageIcon("res/images/png-icon.png"));    
+            new ImageIcon("res/images/png-icon.png"));   
+    public JMenuItem exportAsBmpAction = new JMenuItem("Bitmap Image",
+            new ImageIcon("res/images/png-icon.png"));  
+    public JMenuItem exportAsGifAction = new JMenuItem("GIF Image",
+            new ImageIcon("res/images/png-icon.png"));  
+    public JMenuItem exportAsJpgAction = new JMenuItem("JPG Image",
+            new ImageIcon("res/images/png-icon.png"));      
+    
     public JMenuItem printAction = new JMenuItem("Print",
             new ImageIcon("res/images/document-print.png"));    
     public JMenuItem exitAction = new JMenuItem("Exit",
@@ -96,6 +104,10 @@ class MenuBar extends JMenuBar {
         fileMenu.addSeparator();
         fileMenu.add(exportAction);
         exportAction.add(exportAsPngAction);
+        exportAction.add(exportAsJpgAction);
+        exportAction.add(exportAsBmpAction);
+        exportAction.add(exportAsGifAction);
+        
         fileMenu.addSeparator();
         fileMenu.add(printAction);
         printAction.setMnemonic('P');

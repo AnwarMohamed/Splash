@@ -218,6 +218,90 @@ public class MainWindow extends WebFrame {
             }
         });
 
+        menuBar.exportAsGifAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                fileChooser.setDialogTitle("Export As GIF");
+                fileChooser.setFileFilter(
+                        new FileNameExtensionFilter(
+                                "GIF Image", "gif"));
+
+                int returnVal = fileChooser.showSaveDialog(thisFrame);
+
+                if (returnVal == WebFileChooser.APPROVE_OPTION) {
+                    try {
+                        ImageIO.write(
+                                canvas.getRenderedImage(),
+                                "gif",
+                                new File(
+                                        fileChooser.getSelectedFile().
+                                        getAbsolutePath() + ".gif"));
+                    } catch (IOException ex) {
+                    }
+                }
+
+                fileChooser.setFileFilter(
+                        new FileNameExtensionFilter(
+                                "Splash Project file", "abouda"));
+            }
+        });
+        
+        menuBar.exportAsJpgAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                fileChooser.setDialogTitle("Export As JPG");
+                fileChooser.setFileFilter(
+                        new FileNameExtensionFilter(
+                                "JPG Image", "jpg"));
+
+                int returnVal = fileChooser.showSaveDialog(thisFrame);
+
+                if (returnVal == WebFileChooser.APPROVE_OPTION) {
+                    try {
+                        ImageIO.write(
+                                canvas.getRenderedImage(),
+                                "jpg",
+                                new File(
+                                        fileChooser.getSelectedFile().
+                                        getAbsolutePath() + ".jpg"));
+                    } catch (IOException ex) {
+                    }
+                }
+
+                fileChooser.setFileFilter(
+                        new FileNameExtensionFilter(
+                                "Splash Project file", "abouda"));
+            }
+        });
+        
+        menuBar.exportAsBmpAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                fileChooser.setDialogTitle("Export As Bitmap");
+                fileChooser.setFileFilter(
+                        new FileNameExtensionFilter(
+                                "Bitmap Image", "bmp"));
+
+                int returnVal = fileChooser.showSaveDialog(thisFrame);
+
+                if (returnVal == WebFileChooser.APPROVE_OPTION) {
+                    try {
+                        ImageIO.write(
+                                canvas.getRenderedImage(),
+                                "bmp",
+                                new File(
+                                        fileChooser.getSelectedFile().
+                                        getAbsolutePath() + ".bmp"));
+                    } catch (IOException ex) {
+                    }
+                }
+
+                fileChooser.setFileFilter(
+                        new FileNameExtensionFilter(
+                                "Splash Project file", "abouda"));
+            }
+        });
+                   
         setJMenuBar(menuBar);
     }
 
