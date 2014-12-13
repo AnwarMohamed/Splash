@@ -26,10 +26,6 @@ import java.awt.Graphics;
 
 public class FreeHand extends PixeledTool {
 
-    public FreeHand(int x, int y) {
-        super();
-    }
-
     public FreeHand() {
         super();
     }
@@ -37,6 +33,7 @@ public class FreeHand extends PixeledTool {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
+
         for (int i = 0; i < getPixels().size() - 1; i++) {
             graph.drawLine(
                     (int) getPixels().get(i).getX(),

@@ -30,6 +30,7 @@ import com.splash.gui.tools.Circle;
 import com.splash.gui.tools.Ellipse;
 import com.splash.gui.tools.EquilateralTriangle;
 import com.splash.gui.tools.Eraser;
+import com.splash.gui.tools.Fill;
 import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.FreeHand;
@@ -145,6 +146,9 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 fillAction.setSelected(true);
+                
+                currentTool = new Fill();
+                setCanvasTool(currentTool);
             }
         });
 

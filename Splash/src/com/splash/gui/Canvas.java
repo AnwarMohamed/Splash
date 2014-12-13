@@ -28,6 +28,8 @@ import com.splash.gui.elements.DimensionedTool;
 import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.PixeledTool;
 import com.splash.gui.elements.Tool;
+import com.splash.gui.tools.Fill;
+import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.Line;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -62,7 +64,7 @@ public class Canvas extends JComponent implements MouseListener,
     private int selectedLayer;
 
     private ToolBoxDialog toolBox;
-    private Tool selectedTool;    
+    private Tool selectedTool;
 
     private BufferedImage image;
     private int imageHeight, imageWidth, imageX, imageY;
@@ -163,6 +165,19 @@ public class Canvas extends JComponent implements MouseListener,
         return image;
     }
 
+    public BufferedImage getRenderedImage(Layer layer) {
+        image = new BufferedImage(
+                imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
+        {
+            if (layer != null) {
+                Graphics2D g = image.createGraphics();
+                layer.paintComponent(g);
+                g.dispose();
+            }
+        }
+        return image;
+    }
+
     public void setMouseMoveLabel(JLabel label) {
         mouseMoveLabel = label;
     }
@@ -177,18 +192,22 @@ public class Canvas extends JComponent implements MouseListener,
             layers.get(selectedLayer).addTool(selectedTool);
             selectedTool.setCoordinates(
                     e.getX() - getImageX(), e.getY() - getImageY());
-            
+
             if (mainFrame != null && mainFrame.getBrushDialog() != null) {
                 selectedTool.setBorderSize(
                         mainFrame.getBrushDialog().getStrokeSize());
+            }
+
+            if (selectedTool instanceof Fill) {
+                ((Fill) selectedTool).doFill(
+                        getRenderedImage(layers.get(selectedLayer)));
             }
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (/*withinBounds(e.getX(), e.getY()) &&*/selectedTool != null) {
-            //        selectedTool.setDragMode(false);
+        if (selectedTool != null) {
             selectedTool = selectedTool.newInstance();
             repaint();
         }
@@ -239,8 +258,7 @@ public class Canvas extends JComponent implements MouseListener,
                     e.getX() - getImageX(),
                     e.getY() - getImageY());
             repaint();
-        }
-        else {
+        } else {
             repaint();
         }
     }
@@ -300,7 +318,7 @@ public class Canvas extends JComponent implements MouseListener,
 
     public void setBrushBox(BrushDialog aThis) {
     }
-    
+
     public ArrayList<Layer> getLayers() {
         return layers;
     }

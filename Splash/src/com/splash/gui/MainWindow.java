@@ -21,6 +21,7 @@
  */
 package com.splash.gui;
 
+import com.alee.laf.colorchooser.WebColorChooser;
 import com.alee.laf.filechooser.WebFileChooser;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
@@ -29,6 +30,7 @@ import com.splash.gui.dialogs.BrushDialog;
 import com.splash.gui.dialogs.LayersDialog;
 import com.splash.gui.dialogs.ToolBoxDialog;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
@@ -38,6 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -100,21 +103,20 @@ public class MainWindow extends WebFrame {
             }
         });
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                brushDialog = new BrushDialog(thisFrame);
-                brushDialog.setLocationRelativeTo(thisFrame);
-                brushDialog.setLocation(1115, 485);
-                brushDialog.setVisible(true);
-                brushDialog.setCanvas(canvas);
-
-                if (toolBoxDialog != null) {
-                    toolBoxDialog.setBrushBox(brushDialog);
-                }
-            }
-        });
-
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                brushDialog = new BrushDialog(thisFrame);
+//                brushDialog.setLocationRelativeTo(thisFrame);
+//                brushDialog.setLocation(1115, 485);
+//                brushDialog.setVisible(true);
+//                brushDialog.setCanvas(canvas);
+//
+//                if (toolBoxDialog != null) {
+//                    toolBoxDialog.setBrushBox(brushDialog);
+//                }
+//            }
+//        });
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -125,6 +127,16 @@ public class MainWindow extends WebFrame {
                                 "Splash Project file", "abouda"));
             }
         });
+
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                Color newColor = WebColorChooser.showDialog(
+//                        thisFrame,
+//                        "Choose Background Color",
+//                        thisFrame.getBackground());
+//            }
+//        });
     }
 
     private ToolBar toolBar = null;
@@ -173,6 +185,12 @@ public class MainWindow extends WebFrame {
             public void actionPerformed(ActionEvent ev) {
                 fileChooser.setDialogTitle("Open Project");
                 int returnVal = fileChooser.showOpenDialog(thisFrame);
+
+                if (returnVal == WebFileChooser.APPROVE_OPTION) {
+                    AboudaFactory.parseInputFile(
+                            fileChooser.getSelectedFile().getAbsolutePath(),
+                            canvas);
+                }
             }
         });
 
@@ -245,7 +263,7 @@ public class MainWindow extends WebFrame {
                                 "Splash Project file", "abouda"));
             }
         });
-        
+
         menuBar.exportAsJpgAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ev) {
@@ -273,7 +291,7 @@ public class MainWindow extends WebFrame {
                                 "Splash Project file", "abouda"));
             }
         });
-        
+
         menuBar.exportAsBmpAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ev) {
@@ -301,7 +319,7 @@ public class MainWindow extends WebFrame {
                                 "Splash Project file", "abouda"));
             }
         });
-                   
+
         setJMenuBar(menuBar);
     }
 

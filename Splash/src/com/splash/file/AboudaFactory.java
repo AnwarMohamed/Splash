@@ -23,14 +23,10 @@ package com.splash.file;
 
 import com.splash.gui.Canvas;
 import com.splash.gui.elements.Layer;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -79,7 +75,7 @@ public class AboudaFactory {
                     filename.endsWith(".abouda")
                             ? filename : filename.concat(".abouda"));
 
-            AboudaFileStructure outputStruct = new AboudaFileStructure();
+            AboudaFileFormat outputStruct = new AboudaFileFormat();
 
             if (canvas != null && canvas.getLayers() != null) {
 
@@ -99,6 +95,7 @@ public class AboudaFactory {
     }
 
     public static void parseInputFile(String filename, Canvas canvas) {
-
+        AboudaFile inputFile = new AboudaFile(filename);
+        inputFile.reloadCanvas(canvas);
     }
 }

@@ -33,7 +33,7 @@ public abstract class PixeledTool extends Tool {
     }
 
     public void setPixels(ArrayList<Point> pixels) {
-        this.pixels = pixels;
+        this.pixels.addAll(pixels);
     }
 
     @Override
