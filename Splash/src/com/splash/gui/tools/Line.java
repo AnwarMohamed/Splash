@@ -23,6 +23,7 @@ package com.splash.gui.tools;
 
 import com.splash.gui.elements.Tool;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 

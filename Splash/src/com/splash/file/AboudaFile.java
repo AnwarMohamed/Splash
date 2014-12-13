@@ -21,18 +21,16 @@
  */
 package com.splash.file;
 
-import com.alee.utils.FileUtils;
 import com.splash.file.AboudaFileFormat.FileHeader;
 import com.splash.file.AboudaFileFormat.ImageDataItem;
-import com.splash.file.AboudaFileFormat.LayersDataItem;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_CIRCLE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_ELLIPSE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_EQUTRIANGLE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_ISOTRIANGLE;
+import static com.splash.file.AboudaFileFormat.OBJTYPE_LINE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_RECTANGLE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_RIGHTTRIANGLE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_SQUARE;
-import com.splash.file.AboudaFileFormat.ObjectItem;
 import com.splash.gui.Canvas;
 import com.splash.gui.elements.DimensionedTool;
 import com.splash.gui.elements.Layer;
@@ -41,21 +39,20 @@ import com.splash.gui.tools.Circle;
 import com.splash.gui.tools.Ellipse;
 import com.splash.gui.tools.EquilateralTriangle;
 import com.splash.gui.tools.IsocelesTriangle;
+import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.RightAngledTriangle;
 import com.splash.gui.tools.Square;
 import java.awt.Color;
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class AboudaFile {
 
@@ -80,7 +77,8 @@ public class AboudaFile {
 
     public final static String signature = "ABOUDA";
 
-    private void parseFile(InputStream buffer, Canvas canvas) throws IOException {
+    private void parseFile(InputStream buffer, Canvas canvas)
+            throws IOException {
 
         if (buffer.available() < 34) {
             return;
@@ -113,7 +111,7 @@ public class AboudaFile {
             }
         }
 
-        ArrayList<ArrayList<Integer>> layers = null;
+        ArrayList<ArrayList<Integer>> layers;
         ArrayList<Integer> offsets;
         int imageWidth, imageHeight;
 
@@ -139,6 +137,8 @@ public class AboudaFile {
                 buffer.read(imageData);
 
                 canvas.clearLayers();
+
+                Collections.reverse(layers);
                 for (ArrayList<Integer> layerItem : layers) {
                     Layer newLayer = new Layer(imageWidth, imageHeight);
 
@@ -185,6 +185,9 @@ public class AboudaFile {
                             case OBJTYPE_RIGHTTRIANGLE:
                                 newTool = new RightAngledTriangle();
                                 break;
+                            case OBJTYPE_LINE:
+                                newTool = new Line();
+                                break;
                         }
 
                         newTool.setLocation(imageItem.x, imageItem.y);
@@ -204,12 +207,22 @@ public class AboudaFile {
                                                 offset + 14, offset + 16));
                                 imageItem.height = shortFromByteArray(
                                         Arrays.copyOfRange(imageData,
-                                                offset + 16, offset + 18));  
-                                
+                                                offset + 16, offset + 18));
+
                                 ((DimensionedTool) newTool).setWidth(
                                         imageItem.width);
                                 ((DimensionedTool) newTool).setHeight(
                                         imageItem.height);
+                                break;
+                            case OBJTYPE_LINE:
+                                imageItem.endX = shortFromByteArray(
+                                        Arrays.copyOfRange(imageData,
+                                                offset + 14, offset + 16));
+                                imageItem.endY = shortFromByteArray(
+                                        Arrays.copyOfRange(imageData,
+                                                offset + 16, offset + 18));
+                                ((Line) newTool).setEndPoint(
+                                        imageItem.endX, imageItem.endY);
                                 break;
                         }
 

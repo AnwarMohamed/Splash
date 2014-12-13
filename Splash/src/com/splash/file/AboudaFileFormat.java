@@ -23,11 +23,13 @@ package com.splash.file;
 
 import com.splash.gui.elements.DimensionedTool;
 import com.splash.gui.elements.Layer;
+import com.splash.gui.elements.PixeledTool;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.tools.Circle;
 import com.splash.gui.tools.Ellipse;
 import com.splash.gui.tools.EquilateralTriangle;
 import com.splash.gui.tools.IsocelesTriangle;
+import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.RightAngledTriangle;
 import com.splash.gui.tools.Square;
@@ -101,6 +103,10 @@ public class AboudaFileFormat {
                     case OBJTYPE_RIGHTTRIANGLE:
                         buffer.write(shortToByteArray(imageItem.width));
                         buffer.write(shortToByteArray(imageItem.height));
+                        break;
+                    case OBJTYPE_LINE:
+                        buffer.write(shortToByteArray(imageItem.endX));
+                        buffer.write(shortToByteArray(imageItem.endY));
                         break;
                 }
             }
@@ -202,6 +208,15 @@ public class AboudaFileFormat {
                 } else if (tool instanceof RightAngledTriangle) {
                     imageDataItem.type = OBJTYPE_RIGHTTRIANGLE;
                 }
+            } else if (tool instanceof PixeledTool) {
+
+            } else {
+                if (tool instanceof Line) {
+                    imageDataItem.type = OBJTYPE_LINE;
+
+                    imageDataItem.endX = (short) ((Line) tool).getEndX();
+                    imageDataItem.endY = (short) ((Line) tool).getEndY();
+                }
             }
 
             ObjectItem objectItem = new ObjectItem();
@@ -225,6 +240,7 @@ public class AboudaFileFormat {
             case OBJTYPE_RECTANGLE:
             case OBJTYPE_SQUARE:
             case OBJTYPE_RIGHTTRIANGLE:
+            case OBJTYPE_LINE:
                 item.size = 18;
                 break;
             default:

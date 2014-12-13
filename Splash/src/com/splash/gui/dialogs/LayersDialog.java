@@ -170,7 +170,7 @@ public class LayersDialog extends WebDialog {
         if (layers.size() > 0) {
             layersModel.add(
                     list.getSelectedIndex(), "New Layer" + layersSum++);
-            layers.add(list.getSelectedIndex() - 1, new Layer(width, height));
+            layers.add(list.getSelectedIndex() - 1, layer);
             list.setSelectedIndex(list.getSelectedIndex() - 1);
         } else {
             layersModel.addElement("New Layer" + layersSum++);
