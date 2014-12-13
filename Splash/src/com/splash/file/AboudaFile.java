@@ -21,52 +21,100 @@
  */
 package com.splash.file;
 
+import com.alee.utils.FileUtils;
+import com.splash.file.AboudaFileFormat.FileHeader;
+import com.splash.gui.Canvas;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 public class AboudaFile {
 
     public AboudaFile(byte[] buffer) {
-        ByteArrayInputStream is = new ByteArrayInputStream(buffer);
-        BufferedReader bufferedReader = new BufferedReader(
-                new InputStreamReader(is));
-        parseFile(bufferedReader);
+        try {
+            if (buffer.length >= 34) {
+                InputStream inputStream = new ByteArrayInputStream(buffer);
+                parseFile(inputStream);
+            }
+        } catch (IOException ex) {
+        }
     }
 
     public AboudaFile(String filename) {
         try {
-            BufferedReader bufferedReader
-                    = new BufferedReader(new FileReader(filename));
-            parseFile(bufferedReader);
+            InputStream inputStream
+                    = new BufferedInputStream(new FileInputStream(filename));
+            parseFile(inputStream);
         } catch (IOException e) {
         }
     }
 
-    public AboudaFile(BufferedReader buffer) {
-        parseFile(buffer);
-    }
-
     public final static String signature = "ABOUDA";
 
-    private void parseFile(BufferedReader buffer) {
+    private void parseFile(InputStream buffer) throws IOException {
 
+        if (buffer.available() < 34) {
+            return;
+        }
+
+        FileHeader fileHeader = new FileHeader();
+        buffer.read(fileHeader.signature, 0, 6);
+
+        if (!signature.equals(
+                new String(fileHeader.signature, 0, 6))) {
+            return;
+        }
+
+        fileHeader.fileSize = intFromByteArray(buffer);
+        fileHeader.colorsDataOffset = intFromByteArray(buffer);
+        fileHeader.colorsDataSize = intFromByteArray(buffer);
+        fileHeader.layersDataOffset = intFromByteArray(buffer);
+        fileHeader.layersDataSize = intFromByteArray(buffer);
+        fileHeader.imageDataOffset = intFromByteArray(buffer);
+        fileHeader.imageDataSize = intFromByteArray(buffer);
+
+        if (fileHeader.colorsDataSize > 0) {
+            int colorsSize = intFromByteArray(buffer);
+            ArrayList<Integer> colors = new ArrayList<>();
+
+            for (int i = 0; i < colorsSize; i++) {
+                colors.add(intFromByteArray(buffer));
+            }
+        }
+
+        isReady = true;
     }
 
     private boolean isReady = false;
 
-    public boolean isIsReady() {
+    public boolean isReady() {
         return isReady;
     }
 
-    private byte[] toByteArray(int value) {
-        return ByteBuffer.allocate(4).putInt(value).array();
+    private short shortFromByteArray(InputStream is)
+            throws IOException {
+        byte[] tempShort = null;
+        is.read(tempShort, 0, 2);
+        return ByteBuffer.wrap(tempShort).getShort();
     }
 
-    private int fromByteArray(byte[] bytes) {
-        return ByteBuffer.wrap(bytes).getInt();
+    private int intFromByteArray(InputStream is)
+            throws IOException {
+        byte[] tempInt = null;
+        is.read(tempInt, 0, 4);
+        return ByteBuffer.wrap(tempInt).getInt();
+    }
+
+    public void reloadCanvas(Canvas canvas) {
+        if (isReady()) {
+
+        }
     }
 }
