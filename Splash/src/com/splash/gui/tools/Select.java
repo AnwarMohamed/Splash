@@ -22,7 +22,14 @@
 package com.splash.gui.tools;
 
 import com.splash.gui.elements.DimensionedTool;
+import com.splash.gui.elements.Layer;
+import com.splash.gui.elements.PixeledTool;
+import com.splash.gui.elements.Tool;
+import java.awt.BasicStroke;
 import java.awt.Graphics;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
 public class Select extends DimensionedTool {
 
@@ -32,21 +39,62 @@ public class Select extends DimensionedTool {
 
     @Override
     public void paint(Graphics g) {
-        /*Graphics2D graph2 = (Graphics2D) g;*/
-
-        /*if (getDragMode()) {
-         g.clearRect(getX(), getY(), getWidth(), getHeight());
-         }
-         */
-        /*
-         graph2.setColor(getColor());
-         Shape drawEllipse = new Ellipse2D.Float(getX(), getY(), getWidth(), getHeight());
-         graph2.draw(drawEllipse);
-         */
+        super.paint(g);
+        graph.setStroke(
+                new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+                        BasicStroke.JOIN_MITER, 10.0f,
+                        new float[]{3.0f}, 0.0f));
+        Shape drawRect = new Rectangle2D.Float(
+                getX(), getY(), getWidth(), getHeight());
+        graph.draw(drawRect);
     }
 
     @Override
     public Select newInstance() {
         return new Select();
+    }
+
+    public void selectInboundObjects(Layer layer) {
+        for (Tool tool : layer.getTools()) {
+            if (isInbound(tool)) {
+                tool.setSelected(true);
+            }
+        }
+    }
+
+    private boolean isInbound(Tool tool) {
+        if (tool instanceof DimensionedTool) {
+            return (getX() <= tool.getX())
+                    && (tool.getX()
+                    + ((DimensionedTool) tool).getWidth()
+                    <= getX() + getWidth())
+                    && (getY() <= tool.getY())
+                    && (tool.getY()
+                    + ((DimensionedTool) tool).getHeight()
+                    <= getY() + getHeight());
+        } else if (tool instanceof PixeledTool) {
+            return (getX() <= ((PixeledTool)tool).getMinX()
+                    && ((PixeledTool)tool).getMaxX() <= getX() + getWidth()
+                    && getY() <= ((PixeledTool)tool).getMinY()
+                    && ((PixeledTool)tool).getMaxY() <= getY() + getHeight());
+        } else if (tool instanceof Tool) {
+            if (tool instanceof Line) {
+                return (getX() <= tool.getX()
+                        && tool.getX() <= getX() + getWidth()
+                        && getY() <= tool.getY()
+                        && tool.getY() <= getY() + getHeight()
+                        && getX() <= ((Line) tool).getEndX()
+                        && ((Line) tool).getEndX() <= getX() + getWidth()
+                        && getY() <= ((Line) tool).getEndY()
+                        && ((Line) tool).getEndY() <= getY() + getHeight());
+            } else {
+                return (getX() <= tool.getX()
+                        && tool.getX() <= getX() + getWidth()
+                        && getY() <= tool.getY()
+                        && tool.getY() <= getY() + getHeight());
+            }
+        } else {
+            return false;
+        }
     }
 }

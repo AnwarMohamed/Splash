@@ -34,36 +34,42 @@ public class Layer extends JComponent {
     private Graphics2D graphics2D = null;
 
     private ArrayList<Tool> objects = new ArrayList<>();
-    
+
     public static final Color TRANSPARENT = new Color(255, 255, 255, 0);
     public static final int SELECTION_OVERLAY = 0x3f3f5f7f;
 
     public Layer(int width, int height) {
         super();
-        
+
         setSize(width, height);
     }
 
-    public void addTool(Tool component) {
-        objects.add(component);
-    }        
-    
+    public void addTool(Tool tool) {
+        objects.add(tool);
+    }
+
+    public void removeTool(Tool tool) {
+        if (objects.contains(tool)) {
+            objects.remove(tool);
+        }
+    }
+
     public ArrayList<Tool> getTools() {
         return objects;
     }
-    
+
     @Override
-    public void paintComponent(Graphics g) {        
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        for (Tool object: objects) {
+        for (Tool object : objects) {
             object.paint(g);
         }
     }
 
     public void clear() {
         objects.clear();
-        
+
         graphics2D.setPaint(TRANSPARENT);
         graphics2D.fillRect(0, 0, getSize().width, getSize().height);
         graphics2D.setPaint(Color.black);

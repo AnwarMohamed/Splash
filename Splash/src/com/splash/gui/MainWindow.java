@@ -27,6 +27,7 @@ import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
 import com.splash.file.AboudaFactory;
 import com.splash.gui.dialogs.BrushDialog;
+import com.splash.gui.dialogs.ColorPickerDialog;
 import com.splash.gui.dialogs.LayersDialog;
 import com.splash.gui.dialogs.ToolBoxDialog;
 import java.awt.BorderLayout;
@@ -38,6 +39,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
@@ -50,6 +53,7 @@ public class MainWindow extends WebFrame {
     private LayersDialog layersDialog = null;
     private ToolBoxDialog toolBoxDialog = null;
     private BrushDialog brushDialog = null;
+    private ColorPickerDialog colorPickerDialog = null;
     private WebFrame thisFrame = this;
     private WebFileChooser fileChooser = null;
 
@@ -85,7 +89,7 @@ public class MainWindow extends WebFrame {
                 layersDialog.setLocation(1115, 105);
                 layersDialog.setVisible(true);
                 canvas.setLayersModel(layersDialog.layers);
-                layersDialog.linkCanvas(canvas);                
+                layersDialog.linkCanvas(canvas);
             }
         });
 
@@ -103,20 +107,35 @@ public class MainWindow extends WebFrame {
             }
         });
 
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                brushDialog = new BrushDialog(thisFrame);
-//                brushDialog.setLocationRelativeTo(thisFrame);
-//                brushDialog.setLocation(1115, 485);
-//                brushDialog.setVisible(true);
-//                brushDialog.setCanvas(canvas);
-//
-//                if (toolBoxDialog != null) {
-//                    toolBoxDialog.setBrushBox(brushDialog);
-//                }
-//            }
-//        });
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    colorPickerDialog = new ColorPickerDialog(thisFrame);
+                    colorPickerDialog.setLocationRelativeTo(thisFrame);
+                    colorPickerDialog.setLocation(8, 105);
+                    colorPickerDialog.setVisible(true);
+                    colorPickerDialog.setCanvas(canvas);
+                } catch (IOException ex) {
+                }
+            }
+        });
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                brushDialog = new BrushDialog(thisFrame);
+                brushDialog.setLocationRelativeTo(thisFrame);
+                brushDialog.setLocation(1115, 485);
+                brushDialog.setVisible(true);
+                brushDialog.setCanvas(canvas);
+
+                if (toolBoxDialog != null) {
+                    toolBoxDialog.setBrushBox(brushDialog);
+                }
+            }
+        });
+        
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -127,16 +146,6 @@ public class MainWindow extends WebFrame {
                                 "Splash Project file", "abouda"));
             }
         });
-
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                Color newColor = WebColorChooser.showDialog(
-//                        thisFrame,
-//                        "Choose Background Color",
-//                        thisFrame.getBackground());
-//            }
-//        });
     }
 
     private ToolBar toolBar = null;

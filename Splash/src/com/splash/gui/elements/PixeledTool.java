@@ -21,12 +21,36 @@
  */
 package com.splash.gui.elements;
 
+import java.awt.BasicStroke;
+import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public abstract class PixeledTool extends Tool {
 
     private ArrayList<Point> pixels = new ArrayList<>();
+    private int minX = Integer.MAX_VALUE;
+    private int maxX = Integer.MIN_VALUE;
+    private int minY = Integer.MAX_VALUE;
+    private int maxY = Integer.MIN_VALUE;
+
+    public int getMinY() {
+        return minY;
+    }
+
+    public int getMinX() {
+        return minX;
+    }
+
+    public int getMaxX() {
+        return maxX;
+    }
+
+    public int getMaxY() {
+        return maxY;
+    }
 
     public ArrayList<Point> getPixels() {
         return pixels;
@@ -40,9 +64,32 @@ public abstract class PixeledTool extends Tool {
     public void setCoordinates(int x, int y) {
         super.setCoordinates(x, y);
         pixels.add(new Point(x, y));
+
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+        minY = Math.min(minY, y);
+        maxY = Math.max(maxY, y);
     }
-    
+
     public PixeledTool() {
         super();
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+
+        if (isSelected()) {
+            graph.setStroke(
+                    new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+                            BasicStroke.JOIN_MITER, 10.0f,
+                            new float[]{3.0f}, 0.0f));
+            Shape drawRect = new Rectangle2D.Float(
+                    getMinX(), getMinY(),
+                    Math.abs(getMaxX() - getMinX()),
+                    Math.abs(getMaxY() - getMinY()));
+            graph.draw(drawRect);
+            graph.setStroke(new BasicStroke(getBorderSize()));
+        }
     }
 }

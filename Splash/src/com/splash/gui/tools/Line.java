@@ -22,10 +22,11 @@
 package com.splash.gui.tools;
 
 import com.splash.gui.elements.Tool;
+import java.awt.BasicStroke;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 
 public class Line extends Tool {
 
@@ -64,6 +65,21 @@ public class Line extends Tool {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
+
+        if (isSelected()) {
+            graph.setStroke(
+                    new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+                            BasicStroke.JOIN_MITER, 10.0f,
+                            new float[]{3.0f}, 0.0f));
+            Shape drawRect = new Rectangle2D.Float(
+                    Math.min(getX(), getEndX()),
+                    Math.min(getY(), getEndY()),
+                    Math.abs(getX() - getEndX()),
+                    Math.abs(getY() - getEndY()));
+            graph.draw(drawRect);
+            graph.setStroke(new BasicStroke(getBorderSize()));
+        }
+
         Shape drawline = new Line2D.Float(
                 getX(), getY(), getEndX(), getEndY());
         graph.draw(drawline);

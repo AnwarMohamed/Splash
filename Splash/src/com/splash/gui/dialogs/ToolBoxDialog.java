@@ -35,7 +35,9 @@ import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.IsocelesTriangle;
+import com.splash.gui.tools.Move;
 import com.splash.gui.tools.RightTriangle;
+import com.splash.gui.tools.Select;
 import com.splash.gui.tools.Square;
 import com.splash.gui.tools.Text;
 import java.awt.event.ActionEvent;
@@ -114,7 +116,8 @@ public class ToolBoxDialog extends WebDialog {
                 untoggleButtons();
                 moveAction.setSelected(true);
 
-                currentTool = null;
+                currentTool = new Move();
+                setCanvasTool(currentTool);
             }
         });
 
@@ -123,6 +126,9 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 selectAction.setSelected(true);
+
+                currentTool = new Select();
+                setCanvasTool(currentTool);
             }
         });
 
@@ -146,7 +152,7 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 fillAction.setSelected(true);
-                
+
                 currentTool = new Fill();
                 setCanvasTool(currentTool);
             }

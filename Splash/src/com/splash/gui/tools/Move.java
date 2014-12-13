@@ -21,28 +21,12 @@
  */
 package com.splash.gui.tools;
 
-import com.splash.gui.elements.DimensionedTool;
-import java.awt.Graphics;
+import com.splash.gui.elements.Tool;
 
-public class Move extends DimensionedTool {
+public class Move extends Tool {
 
     public Move() {
         super();
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        /*Graphics2D graph2 = (Graphics2D) g;*/
-
-        /*if (getDragMode()) {
-         g.clearRect(getX(), getY(), getWidth(), getHeight());
-         }
-         */
-        /*
-         graph2.setColor(getColor());
-         Shape drawEllipse = new Ellipse2D.Float(getX(), getY(), getWidth(), getHeight());
-         graph2.draw(drawEllipse);
-         */
     }
 
     @Override

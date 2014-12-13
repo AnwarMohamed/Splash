@@ -69,18 +69,18 @@ public class BrushDialog extends WebDialog {
 
         add(slider);
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                String fonts[]
-                        = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                        .getAvailableFontFamilyNames();
-
-                for (String font : fonts) {
-                    fontComboBox.addItem(font);
-                }
-            }
-        });
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                String fonts[]
+//                        = GraphicsEnvironment.getLocalGraphicsEnvironment()
+//                        .getAvailableFontFamilyNames();
+//
+//                for (String font : fonts) {
+//                    fontComboBox.addItem(font);
+//                }
+//            }
+//        });
 
         add(fontComboBox);
 

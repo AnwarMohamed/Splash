@@ -21,6 +21,11 @@
  */
 package com.splash.gui.elements;
 
+import java.awt.BasicStroke;
+import java.awt.Graphics;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
+
 public abstract class DimensionedTool extends Tool {
 
     private int width;
@@ -48,5 +53,21 @@ public abstract class DimensionedTool extends Tool {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        
+        if (isSelected()) {
+            graph.setStroke(
+                    new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
+                            BasicStroke.JOIN_MITER, 10.0f,
+                            new float[]{3.0f}, 0.0f));
+            Shape drawRect = new Rectangle2D.Float(
+                    getX(), getY(), getWidth(), getHeight());
+            graph.draw(drawRect);
+            graph.setStroke(new BasicStroke(getBorderSize()));
+        }
     }
 }

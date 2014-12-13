@@ -23,6 +23,7 @@ package com.splash.gui;
 
 import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.dialogs.BrushDialog;
+import com.splash.gui.dialogs.ColorPickerDialog;
 import com.splash.gui.dialogs.LayersDialog;
 import com.splash.gui.dialogs.ToolBoxDialog;
 import com.splash.gui.elements.DimensionedTool;
@@ -32,6 +33,8 @@ import com.splash.gui.elements.Tool;
 import com.splash.gui.tools.Fill;
 import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.Line;
+import com.splash.gui.tools.Move;
+import com.splash.gui.tools.Select;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -66,6 +69,11 @@ public class Canvas extends JComponent implements MouseListener,
 
     private ToolBoxDialog toolBox;
     private Tool selectedTool;
+    private ColorPickerDialog colorDialog;
+
+    public Tool getSelectedTool() {
+        return selectedTool;
+    }
 
     private BufferedImage image;
     private int imageHeight, imageWidth, imageX, imageY;
@@ -192,6 +200,11 @@ public class Canvas extends JComponent implements MouseListener,
     public void mousePressed(MouseEvent e) {
         if (withinBounds(e.getX(), e.getY()) && selectedTool != null) {
             layers.get(selectedLayer).addTool(selectedTool);
+
+            if (colorDialog != null) {
+                selectedTool.setColor(colorDialog.getColor());
+            }
+
             selectedTool.setCoordinates(
                     e.getX() - getImageX(), e.getY() - getImageY());
 
@@ -210,8 +223,15 @@ public class Canvas extends JComponent implements MouseListener,
     @Override
     public void mouseReleased(MouseEvent e) {
         if (selectedTool != null) {
-            selectedTool = selectedTool.newInstance();
-            repaint();
+            if (selectedTool instanceof Select) {
+                ((Select) selectedTool).selectInboundObjects(
+                        layers.get(selectedLayer));
+                layers.get(selectedLayer).removeTool(selectedTool);
+                repaint();
+            } else {
+                selectedTool = selectedTool.newInstance();
+                repaint();
+            }
         }
     }
 
@@ -260,6 +280,17 @@ public class Canvas extends JComponent implements MouseListener,
                     e.getX() - getImageX(),
                     e.getY() - getImageY());
             repaint();
+        } else if (selectedTool instanceof Move) {
+            Tool object = withinBounds(
+                    e.getX() - getImageX(),
+                    e.getY() - getImageY(),
+                    layers.get(selectedLayer));
+            if (object != null) {
+                object.setCoordinates(
+                        e.getX() - getImageX(),
+                        e.getY() - getImageY());
+                repaint();
+            }
         } else {
             repaint();
         }
@@ -274,7 +305,19 @@ public class Canvas extends JComponent implements MouseListener,
         }
 
         if (withinBounds(e.getX(), e.getY())) {
-            setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+            if (selectedTool instanceof Move
+                    && withinBounds(
+                            e.getX() - getImageX(),
+                            e.getY() - getImageY(),
+                            layers.get(selectedLayer)) != null) {
+                setCursor(new Cursor(Cursor.MOVE_CURSOR));
+            } else if (selectedTool instanceof DimensionedTool
+                    || selectedTool instanceof PixeledTool
+                    || selectedTool instanceof Line) {
+                setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+            } else {
+                setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
         } else {
             setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
@@ -308,6 +351,50 @@ public class Canvas extends JComponent implements MouseListener,
         return cellBounds.contains(x, y);
     }
 
+    private Tool withinBounds(int x, int y, Layer layer) {
+        for (Tool tool : layer.getTools()) {
+            if (tool instanceof DimensionedTool) {
+                if (x >= tool.getX()
+                        && (tool.getX()
+                        + ((DimensionedTool) tool).getWidth() >= x)
+                        && (y >= tool.getY())
+                        && (tool.getY()
+                        + ((DimensionedTool) tool).getHeight() >= y)) {
+                    return tool;
+                }
+            } else if (tool instanceof PixeledTool) {
+                if (x >= ((PixeledTool) tool).getMinX()
+                        && ((PixeledTool) tool).getMaxX() >= x
+                        && y >= ((PixeledTool) tool).getMinY()
+                        && ((PixeledTool) tool).getMaxY() >= y) {
+                    return tool;
+                }
+            } else if (tool instanceof Tool) {
+                if (tool instanceof Line) {
+                    if (x >= tool.getX()
+                            && tool.getX() >= x
+                            && y >= tool.getY()
+                            && tool.getY() >= y
+                            && x >= ((Line) tool).getEndX()
+                            && ((Line) tool).getEndX() >= x
+                            && y >= ((Line) tool).getEndY()
+                            && ((Line) tool).getEndY() >= y) {
+                        return tool;
+                    }
+                } else {
+                    if (x >= tool.getX()
+                            && tool.getX() >= x
+                            && y >= tool.getY()
+                            && tool.getY() >= y) {
+                        return tool;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     private MainWindow mainFrame = null;
 
     public WebFrame getMainFrame() {
@@ -327,6 +414,10 @@ public class Canvas extends JComponent implements MouseListener,
 
     public void setLayersDialog(LayersDialog layersDialog) {
         this.layersDialog = layersDialog;
+    }
+
+    public void setColorPickerDialog(ColorPickerDialog colorDialog) {
+        this.colorDialog = colorDialog;
     }
 
     public void addLayer(Layer layer) {
