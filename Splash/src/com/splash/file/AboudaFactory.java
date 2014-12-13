@@ -23,48 +23,38 @@ package com.splash.file;
 
 import com.splash.gui.Canvas;
 import com.splash.gui.elements.Layer;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.zip.DataFormatException;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class AboudaFactory {
 
     public static byte[] compressBuffer(byte[] data) throws IOException {
-        Deflater deflater = new Deflater();
-        deflater.setInput(data);
-
-        ByteArrayOutputStream outputStream
-                = new ByteArrayOutputStream(data.length);
-
-        deflater.finish();
-        byte[] buffer = new byte[1024];
-        while (!deflater.finished()) {
-            int count = deflater.deflate(buffer);
-            outputStream.write(buffer, 0, count);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (GZIPOutputStream zos = new GZIPOutputStream(baos)) {
+            zos.write(data);
         }
-        outputStream.close();
-        return outputStream.toByteArray();
+        return baos.toByteArray();
     }
 
     public static byte[] decompressBuffer(byte[] data) throws IOException,
             DataFormatException {
-        Inflater inflater = new Inflater();
-        inflater.setInput(data);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ByteArrayInputStream bais = new ByteArrayInputStream(data);
 
-        ByteArrayOutputStream outputStream
-                = new ByteArrayOutputStream(data.length);
-
-        byte[] buffer = new byte[1024];
-        while (!inflater.finished()) {
-            int count = inflater.inflate(buffer);
-            outputStream.write(buffer, 0, count);
+        try (GZIPInputStream zis = new GZIPInputStream(bais)) {
+            byte[] tmpBuffer = new byte[256];
+            int n;
+            while ((n = zis.read(tmpBuffer)) >= 0) {
+                baos.write(tmpBuffer, 0, n);
+            }
         }
-        outputStream.close();
-        return outputStream.toByteArray();
+        return baos.toByteArray();
     }
 
     public static void generateOutputFile(String filename, Canvas canvas) {

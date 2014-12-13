@@ -21,31 +21,28 @@
  */
 package com.splash.gui.tools;
 
-import java.awt.AlphaComposite;
+import com.splash.gui.elements.DimensionedTool;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.Polygon;
+import java.awt.Shape;
 
-public class Eraser extends FreeHand {
+public class RightTriangle extends DimensionedTool {
 
-    public Eraser() {
+    public RightTriangle() {
         super();
     }
-
-    @Override
-    public Eraser newInstance() {
-        return new Eraser();
-    }
-
+    
     @Override
     public void paint(Graphics g) {
-        graph = (Graphics2D) g;
-        graph.setComposite(
-                AlphaComposite.getInstance(
-                        AlphaComposite.SRC_IN, 0.0f));
-        super.paint(graph);
+        super.paint(g);
+        Shape drawTriangle = new Polygon(
+                new int[]{getX(), getX(), getX() + getWidth()}, 
+                new int[]{getY(), getY() + getHeight(), getY() + getHeight()}, 3);
+        graph.draw(drawTriangle);
+    }    
 
-        graph.setComposite(
-                AlphaComposite.getInstance(
-                        AlphaComposite.SRC_OVER, 1.0f));
+    @Override
+    public RightTriangle newInstance() {
+        return new RightTriangle();
     }
 }

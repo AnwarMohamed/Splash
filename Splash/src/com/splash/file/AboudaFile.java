@@ -26,6 +26,8 @@ import com.splash.file.AboudaFileFormat.ImageDataItem;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_CIRCLE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_ELLIPSE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_EQUTRIANGLE;
+import static com.splash.file.AboudaFileFormat.OBJTYPE_ERASER;
+import static com.splash.file.AboudaFileFormat.OBJTYPE_FREEHAND;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_ISOTRIANGLE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_LINE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_RECTANGLE;
@@ -38,10 +40,12 @@ import com.splash.gui.elements.Tool;
 import com.splash.gui.tools.Circle;
 import com.splash.gui.tools.Ellipse;
 import com.splash.gui.tools.EquilateralTriangle;
+import com.splash.gui.tools.Eraser;
+import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.IsocelesTriangle;
 import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
-import com.splash.gui.tools.RightAngledTriangle;
+import com.splash.gui.tools.RightTriangle;
 import com.splash.gui.tools.Square;
 import java.awt.Color;
 import java.io.BufferedInputStream;
@@ -53,6 +57,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.zip.DataFormatException;
 
 public class AboudaFile {
 
@@ -62,7 +67,7 @@ public class AboudaFile {
                 InputStream inputStream = new ByteArrayInputStream(buffer);
                 parseFile(inputStream, canvas);
             }
-        } catch (IOException ex) {
+        } catch (IOException | DataFormatException ex) {
         }
     }
 
@@ -71,14 +76,15 @@ public class AboudaFile {
             InputStream inputStream
                     = new BufferedInputStream(new FileInputStream(filename));
             parseFile(inputStream, canvas);
-        } catch (IOException e) {
+        } catch (IOException | DataFormatException e) {
+            e.printStackTrace();
         }
     }
 
     public final static String signature = "ABOUDA";
 
     private void parseFile(InputStream buffer, Canvas canvas)
-            throws IOException {
+            throws IOException, DataFormatException {
 
         if (buffer.available() < 34) {
             return;
@@ -183,14 +189,20 @@ public class AboudaFile {
                                 newTool = new Square();
                                 break;
                             case OBJTYPE_RIGHTTRIANGLE:
-                                newTool = new RightAngledTriangle();
+                                newTool = new RightTriangle();
                                 break;
                             case OBJTYPE_LINE:
                                 newTool = new Line();
                                 break;
+                            case OBJTYPE_ERASER:
+                                newTool = new Eraser();
+                                break;
+                            case OBJTYPE_FREEHAND:
+                                newTool = new FreeHand();
+                                break;
                         }
 
-                        newTool.setLocation(imageItem.x, imageItem.y);
+                        newTool.setCoordinates(imageItem.x, imageItem.y);
                         newTool.setColor(new Color(colors.get(imageItem.color)));
                         newTool.setBorderSize(imageItem.border);
 
@@ -223,6 +235,33 @@ public class AboudaFile {
                                                 offset + 16, offset + 18));
                                 ((Line) newTool).setEndPoint(
                                         imageItem.endX, imageItem.endY);
+                                break;
+                            case OBJTYPE_ERASER:
+                            case OBJTYPE_FREEHAND:
+                                int bufferSize = intFromByteArray(
+                                        Arrays.copyOfRange(imageData,
+                                                offset + 14, offset + 18));
+
+                                byte[] compressed = Arrays.copyOfRange(
+                                        imageData,
+                                        offset + 18, offset + 18 + bufferSize);
+                                byte[] decompressed
+                                        = AboudaFactory.decompressBuffer(
+                                                compressed);
+
+                                for (int i = 0; i < decompressed.length; i += 4) {
+                                    newTool.setCoordinates(
+                                            shortFromByteArray(
+                                                    Arrays.copyOfRange(
+                                                            decompressed,
+                                                            i,
+                                                            i + 2)),
+                                            shortFromByteArray(
+                                                    Arrays.copyOfRange(
+                                                            decompressed,
+                                                            i + 2,
+                                                            i + 4)));
+                                }
                                 break;
                         }
 

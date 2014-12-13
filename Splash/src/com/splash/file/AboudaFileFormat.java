@@ -28,18 +28,35 @@ import com.splash.gui.elements.Tool;
 import com.splash.gui.tools.Circle;
 import com.splash.gui.tools.Ellipse;
 import com.splash.gui.tools.EquilateralTriangle;
+import com.splash.gui.tools.Eraser;
+import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.IsocelesTriangle;
 import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
-import com.splash.gui.tools.RightAngledTriangle;
+import com.splash.gui.tools.RightTriangle;
 import com.splash.gui.tools.Square;
 import java.awt.Color;
+import java.awt.Point;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class AboudaFileFormat {
+
+    public final static byte OBJTYPE_CIRCLE = 1;
+    public final static byte OBJTYPE_ELLIPSE = 2;
+    public final static byte OBJTYPE_EQUTRIANGLE = 3;
+    public final static byte OBJTYPE_ERASER = 4;
+    public final static byte OBJTYPE_FILL = 5;
+    public final static byte OBJTYPE_FREEHAND = 6;
+    public final static byte OBJTYPE_ISOTRIANGLE = 7;
+    public final static byte OBJTYPE_LINE = 8;
+    public final static byte OBJTYPE_RECTANGLE = 9;
+    public final static byte OBJTYPE_RIGHTTRIANGLE = 10;
+    public final static byte OBJTYPE_SQUARE = 11;
+    public final static byte OBJTYPE_TEXT = 12;
 
     public FileHeader fileHeader = new FileHeader();
     public ColorsData colorsData = new ColorsData();
@@ -108,6 +125,13 @@ public class AboudaFileFormat {
                         buffer.write(shortToByteArray(imageItem.endX));
                         buffer.write(shortToByteArray(imageItem.endY));
                         break;
+                    case OBJTYPE_ERASER:
+                    case OBJTYPE_FREEHAND:
+                        byte[] compressed = AboudaFactory.compressBuffer(
+                                imageItem.pixels.toByteArray());
+
+                        buffer.write(intToByteArray(compressed.length));
+                        buffer.write(compressed);
                 }
             }
         }
@@ -166,20 +190,7 @@ public class AboudaFileFormat {
         layersData.header.height = (short) height;
     }
 
-    public final static byte OBJTYPE_CIRCLE = 1;
-    public final static byte OBJTYPE_ELLIPSE = 2;
-    public final static byte OBJTYPE_EQUTRIANGLE = 3;
-    public final static byte OBJTYPE_ERASER = 4;
-    public final static byte OBJTYPE_FILL = 5;
-    public final static byte OBJTYPE_FREEHAND = 6;
-    public final static byte OBJTYPE_ISOTRIANGLE = 7;
-    public final static byte OBJTYPE_LINE = 8;
-    public final static byte OBJTYPE_RECTANGLE = 9;
-    public final static byte OBJTYPE_RIGHTTRIANGLE = 10;
-    public final static byte OBJTYPE_SQUARE = 11;
-    public final static byte OBJTYPE_TEXT = 12;
-
-    public void addLayer(Layer layer) {
+    public void addLayer(Layer layer) throws IOException {
         LayersDataItem layerItem = new LayersDataItem();
 
         for (Tool tool : layer.getTools()) {
@@ -205,11 +216,22 @@ public class AboudaFileFormat {
                     imageDataItem.type = OBJTYPE_RECTANGLE;
                 } else if (tool instanceof Square) {
                     imageDataItem.type = OBJTYPE_SQUARE;
-                } else if (tool instanceof RightAngledTriangle) {
+                } else if (tool instanceof RightTriangle) {
                     imageDataItem.type = OBJTYPE_RIGHTTRIANGLE;
                 }
             } else if (tool instanceof PixeledTool) {
+                for (Point point : ((PixeledTool) tool).getPixels()) {
+                    imageDataItem.pixels.write(
+                            shortToByteArray((short) point.getX()));
+                    imageDataItem.pixels.write(
+                            shortToByteArray((short) point.getY()));
+                }
 
+                if (tool instanceof Eraser) {
+                    imageDataItem.type = OBJTYPE_ERASER;
+                } else if (tool instanceof FreeHand) {
+                    imageDataItem.type = OBJTYPE_FREEHAND;
+                }
             } else {
                 if (tool instanceof Line) {
                     imageDataItem.type = OBJTYPE_LINE;
@@ -231,7 +253,7 @@ public class AboudaFileFormat {
 
     }
 
-    private int addImageDataItem(ImageDataItem item) {
+    private int addImageDataItem(ImageDataItem item) throws IOException {
         switch (item.type) {
             case OBJTYPE_CIRCLE:
             case OBJTYPE_ELLIPSE:
@@ -242,6 +264,11 @@ public class AboudaFileFormat {
             case OBJTYPE_RIGHTTRIANGLE:
             case OBJTYPE_LINE:
                 item.size = 18;
+                break;
+            case OBJTYPE_FREEHAND:
+            case OBJTYPE_ERASER:
+                item.size = 18 + AboudaFactory.compressBuffer(
+                        item.pixels.toByteArray()).length;
                 break;
             default:
                 item.size = 14;
@@ -325,6 +352,9 @@ public class AboudaFileFormat {
 
         short endX = 0;
         short endY = 0;
+
+        ByteArrayOutputStream pixels
+                = new ByteArrayOutputStream();
     }
 
     private byte[] shortToByteArray(short value) {

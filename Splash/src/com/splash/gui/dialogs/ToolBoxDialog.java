@@ -35,7 +35,7 @@ import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.IsocelesTriangle;
-import com.splash.gui.tools.RightAngledTriangle;
+import com.splash.gui.tools.RightTriangle;
 import com.splash.gui.tools.Square;
 import com.splash.gui.tools.Text;
 import java.awt.event.ActionEvent;
@@ -223,7 +223,7 @@ public class ToolBoxDialog extends WebDialog {
                 untoggleButtons();
                 rightTriangleAction.setSelected(true);
 
-                currentTool = new RightAngledTriangle();
+                currentTool = new RightTriangle();
                 setCanvasTool(currentTool);
 
                 if (brushBox != null) {
