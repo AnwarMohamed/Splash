@@ -37,6 +37,7 @@ import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.IsocelesTriangle;
 import com.splash.gui.tools.Move;
 import com.splash.gui.tools.RightTriangle;
+import com.splash.gui.tools.RoundedRect;
 import com.splash.gui.tools.Select;
 import com.splash.gui.tools.Square;
 import com.splash.gui.tools.Text;
@@ -68,8 +69,8 @@ public class ToolBoxDialog extends WebDialog {
             new ImageIcon("res/images/draw-eraser.png"));
     public JToggleButton textAction = new JToggleButton(
             new ImageIcon("res/images/draw-text.png"));
-    public JToggleButton brushAction = new JToggleButton(
-            new ImageIcon("res/images/draw-brush.png"));
+    public JToggleButton roundedAction = new JToggleButton(
+            new ImageIcon("res/images/draw-rectangle-round.png"));
     public JToggleButton fillAction = new JToggleButton(
             new ImageIcon("res/images/fill-color.png"));
     public JToggleButton selectAction = new JToggleButton(
@@ -98,12 +99,12 @@ public class ToolBoxDialog extends WebDialog {
         add(selectAction);
         add(freeHandAction);
         add(fillAction);
-        add(brushAction);
         add(eraserAction);
         add(textAction);
         add(pickAction);
         add(lineAction);
         add(rectangleAction);
+        add(roundedAction);
         add(squareAction);
         add(isocelesTriangleAction);
         add(rightTriangleAction);
@@ -158,11 +159,14 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
-        brushAction.addActionListener(new ActionListener() {
+        roundedAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
-                brushAction.setSelected(true);
+                roundedAction.setSelected(true);
+
+                currentTool = new RoundedRect();
+                setCanvasTool(currentTool);
 
                 if (brushBox != null) {
                     brushBox.EnableBrushBox(true);
@@ -319,7 +323,7 @@ public class ToolBoxDialog extends WebDialog {
         selectAction.setSelected(false);
         freeHandAction.setSelected(false);
         fillAction.setSelected(false);
-        brushAction.setSelected(false);
+        roundedAction.setSelected(false);
         eraserAction.setSelected(false);
         pickAction.setSelected(false);
         lineAction.setSelected(false);
