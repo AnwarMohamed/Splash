@@ -85,7 +85,7 @@ public class MainWindow extends WebFrame {
                 layersDialog.setLocation(1115, 105);
                 layersDialog.setVisible(true);
                 canvas.setLayersModel(layersDialog.layers);
-                layersDialog.linkCanvas(canvas);
+                layersDialog.linkCanvas(canvas);                
             }
         });
 

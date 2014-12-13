@@ -23,6 +23,7 @@ package com.splash.gui;
 
 import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.dialogs.BrushDialog;
+import com.splash.gui.dialogs.LayersDialog;
 import com.splash.gui.dialogs.ToolBoxDialog;
 import com.splash.gui.elements.DimensionedTool;
 import com.splash.gui.elements.Layer;
@@ -69,6 +70,7 @@ public class Canvas extends JComponent implements MouseListener,
     private BufferedImage image;
     private int imageHeight, imageWidth, imageX, imageY;
     private ArrayList<Layer> layers;
+    private LayersDialog layersDialog;
 
     public int getImageHeight() {
         return imageHeight;
@@ -323,4 +325,19 @@ public class Canvas extends JComponent implements MouseListener,
         return layers;
     }
 
+    public void setLayersDialog(LayersDialog layersDialog) {
+        this.layersDialog = layersDialog;
+    }
+
+    public void addLayer(Layer layer) {
+        if (layersDialog != null) {
+            layersDialog.addNewLayer(layer);
+        }
+    }
+
+    public void clearLayers() {
+        if (layersDialog != null) {
+            layersDialog.clearLayers();
+        }
+    }
 }

@@ -123,13 +123,13 @@ public class AboudaFileFormat {
         if (fileHeader.colorsDataSize > 0) {
             fileHeader.layersDataOffset
                     = fileHeader.colorsDataOffset + fileHeader.colorsDataSize;
-            fileHeader.layersDataSize = 6 + layersData.header.size * 2;
-            for (LayersDataItem layer : layersData.header.items) {
-                fileHeader.layersDataSize += layer.objectsSize * 4;
-            }
         } else {
-            fileHeader.layersDataOffset = 0;
-            fileHeader.layersDataSize = 0;
+            fileHeader.layersDataOffset = 34;
+        }
+
+        fileHeader.layersDataSize = 6 + layersData.header.size * 2;
+        for (LayersDataItem layer : layersData.header.items) {
+            fileHeader.layersDataSize += layer.objectsSize * 4;
         }
     }
 

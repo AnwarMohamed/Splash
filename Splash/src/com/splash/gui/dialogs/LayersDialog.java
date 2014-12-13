@@ -101,8 +101,8 @@ public class LayersDialog extends WebDialog {
                         canvas.setSelectedLayer(list.getSelectedIndex());
                     }
                 } else if (event.getClickCount() == 2) {
-                    String layerLabel = 
-                            JOptionPane.showInputDialog(
+                    String layerLabel
+                            = JOptionPane.showInputDialog(
                                     "Enter New Layer Label");
                     if (layerLabel != null && layerLabel.length() > 0) {
                         layersModel.set(list.getSelectedIndex(), layerLabel);
@@ -163,5 +163,35 @@ public class LayersDialog extends WebDialog {
 
     public void linkCanvas(Canvas canvas) {
         this.canvas = canvas;
+        canvas.setLayersDialog(LayersDialog.this);
+    }
+
+    public void addNewLayer(Layer layer) {
+        if (layers.size() > 0) {
+            layersModel.add(
+                    list.getSelectedIndex(), "New Layer" + layersSum++);
+            layers.add(list.getSelectedIndex() - 1, new Layer(width, height));
+            list.setSelectedIndex(list.getSelectedIndex() - 1);
+        } else {
+            layersModel.addElement("New Layer" + layersSum++);
+            layers.add(layer);
+            list.setSelectedIndex(0);
+        }
+
+        if (canvas != null) {
+            canvas.setSelectedLayer(list.getSelectedIndex());
+            canvas.repaint();
+
+            if (canvas.getMainFrame() != null) {
+                canvas.getMainFrame().invalidate();
+                canvas.getMainFrame().repaint();
+            }
+        }
+    }
+
+    public void clearLayers() {
+        layersModel.clear();
+        layers.clear();
+        layersSum = 0;
     }
 }
