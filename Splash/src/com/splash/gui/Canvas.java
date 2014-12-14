@@ -212,6 +212,11 @@ public class Canvas extends JComponent implements MouseListener,
                 selectedTool.setColor(colorDialog.getColor());
             }
 
+            if (selectedTool instanceof DimensionedTool) {
+                ((DimensionedTool) selectedTool).setBaseCoordinates(
+                        e.getX() - getImageX(), e.getY() - getImageY());
+            }
+
             selectedTool.setCoordinates(
                     e.getX() - getImageX(), e.getY() - getImageY());
 
@@ -234,6 +239,12 @@ public class Canvas extends JComponent implements MouseListener,
                 ((Select) selectedTool).selectInboundObjects(
                         layers.get(selectedLayer));
                 layers.get(selectedLayer).removeTool(selectedTool);
+                for (Tool tool : layers.get(selectedLayer).getTools()) {
+                    if (tool.isSelected() && mainFrame != null
+                            && mainFrame.getToolBoxDialog() != null) {
+                        mainFrame.getToolBoxDialog().moveAction.doClick();
+                    }
+                }
                 repaint();
             } else {
                 selectedTool = selectedTool.newInstance();
@@ -254,28 +265,55 @@ public class Canvas extends JComponent implements MouseListener,
     public void mouseDragged(MouseEvent e) {
 
         if (selectedTool instanceof DimensionedTool) {
-            final int height = e.getY() - getImageY() - selectedTool.getY();
-            final int width = e.getX() - getImageX() - selectedTool.getX();
+            mouseY = e.getY() - getImageY();
+            mouseX = e.getX() - getImageX();
 
-            if (height >= 0 && width >= 0) {
-                ((DimensionedTool) selectedTool).setHeight(height);
-                ((DimensionedTool) selectedTool).setWidth(width);
-            } else if (height < 0 && width < 0) {
-                System.out.println(height + " " + width);
-                final int newY = e.getY() - getImageY();
-                final int newX = e.getX() - getImageX();
-
-                int x = Math.min(e.getX() - getImageX(), selectedTool.getX());
-                int w = Math.abs(selectedTool.getX() - e.getX() - getImageX());
-
-                int y = Math.min(e.getY() - getImageY(), selectedTool.getY());
-                int h = Math.abs(selectedTool.getY() - e.getY() - getImageY());
-
-                selectedTool.setLocation(x, y);
-                ((DimensionedTool) selectedTool).setHeight(h);
-                ((DimensionedTool) selectedTool).setWidth(w);
+            if (mouseX >= ((DimensionedTool) selectedTool).getBaseX()) {
+                selectedTool.setLocation(
+                        ((DimensionedTool) selectedTool).getBaseX(),
+                        selectedTool.getY());
+                ((DimensionedTool) selectedTool).setWidth(
+                        mouseX - selectedTool.getX());
+            } else {
+                selectedTool.setLocation(
+                        mouseX,
+                        selectedTool.getY());
+                ((DimensionedTool) selectedTool).setWidth(
+                        ((DimensionedTool) selectedTool).getBaseX() - mouseX);
             }
 
+            if (mouseY >= ((DimensionedTool) selectedTool).getBaseY()) {
+                selectedTool.setLocation(
+                        selectedTool.getX(),
+                        ((DimensionedTool) selectedTool).getBaseY());
+                ((DimensionedTool) selectedTool).setHeight(
+                        mouseY - selectedTool.getY());
+            } else {
+                selectedTool.setLocation(
+                        selectedTool.getX(),
+                        mouseY);
+                ((DimensionedTool) selectedTool).setHeight(
+                        ((DimensionedTool) selectedTool).getBaseY() - mouseY);
+            }
+
+//            if (height >= 0 && width >= 0) {
+//                
+//                
+//            } else if (height < 0 && width < 0) {
+//                System.out.println(height + " " + width);
+//                final int newY = e.getY() - getImageY();
+//                final int newX = e.getX() - getImageX();
+//
+//                int x = Math.min(e.getX() - getImageX(), selectedTool.getX());
+//                int w = Math.abs(selectedTool.getX() - e.getX() - getImageX());
+//
+//                int y = Math.min(e.getY() - getImageY(), selectedTool.getY());
+//                int h = Math.abs(selectedTool.getY() - e.getY() - getImageY());
+//
+//                selectedTool.setLocation(x, y);
+//                ((DimensionedTool) selectedTool).setHeight(h);
+//                ((DimensionedTool) selectedTool).setWidth(w);
+//            }
             repaint();
         } else if (selectedTool instanceof Line) {
             ((Line) selectedTool).setEndPoint(
@@ -387,12 +425,14 @@ public class Canvas extends JComponent implements MouseListener,
                         return tool;
                     }
                 } else {
-                    if (x >= tool.getX()
-                            && tool.getX() >= x
-                            && y >= tool.getY()
-                            && tool.getY() >= y) {
-                        return tool;
-                    }
+                    /*
+                     if (x >= tool.getX()
+                     && tool.getX() >= x
+                     && y >= tool.getY()
+                     && tool.getY() >= y) {
+                     return tool;
+                     }
+                     */
                 }
             }
         }

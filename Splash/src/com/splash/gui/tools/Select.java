@@ -26,10 +26,10 @@ import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.PixeledTool;
 import com.splash.gui.elements.Tool;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 
 public class Select extends DimensionedTool {
 
@@ -40,6 +40,7 @@ public class Select extends DimensionedTool {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
+        graph.setColor(Color.BLACK);
         graph.setStroke(
                 new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
                         BasicStroke.JOIN_MITER, 10.0f,

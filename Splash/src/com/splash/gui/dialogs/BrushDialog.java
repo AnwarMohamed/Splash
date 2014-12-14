@@ -40,7 +40,7 @@ import javax.swing.SwingUtilities;
 
 public class BrushDialog extends WebDialog {
 
-    private JSlider slider = new JSlider(1, 100, 1);
+    private JSlider slider = new JSlider(1, 50, 1);
     private Canvas canvas = null;
     private JComboBox fontComboBox = new JComboBox();
     private JComboBox fontSizeComboBox = new JComboBox();
