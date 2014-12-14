@@ -25,6 +25,7 @@ import com.splash.gui.elements.Tool;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
@@ -91,5 +92,15 @@ public class Line extends Tool {
     @Override
     public Line newInstance() {
         return new Line();
+    }
+
+    @Override
+    public void drawResizePoint(int x, int y, Graphics2D graph2d) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void drawResizePoints(Graphics2D graph2d) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

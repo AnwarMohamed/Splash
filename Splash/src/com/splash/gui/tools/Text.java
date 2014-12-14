@@ -23,6 +23,7 @@ package com.splash.gui.tools;
 
 import com.splash.gui.elements.Tool;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class Text extends Tool {
 
@@ -43,13 +44,23 @@ public class Text extends Tool {
 
     @Override
     public void paint(Graphics g) {
-        super.paint(g);        
+        super.paint(g);
         graph.drawString(getText(), getX(), getY());
     }
 
     @Override
     public Text newInstance() {
         return new Text();
+    }
+
+    @Override
+    public void drawResizePoint(int x, int y, Graphics2D graph2d) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void drawResizePoints(Graphics2D graph2d) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

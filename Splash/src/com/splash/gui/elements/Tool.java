@@ -70,6 +70,8 @@ public abstract class Tool extends JComponent {
     }
 
     public abstract Tool newInstance();
+    public abstract void drawResizePoint(int x, int y, Graphics2D graph2d);
+    public abstract void drawResizePoints(Graphics2D graph2d);
 
     private boolean selected = false;
 

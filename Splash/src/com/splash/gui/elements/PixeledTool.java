@@ -24,6 +24,7 @@ package com.splash.gui.elements;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
@@ -72,6 +73,26 @@ public abstract class PixeledTool extends Tool {
         maxY = Math.max(maxY, y);
     }
 
+    @Override
+    public void drawResizePoint(int x, int y, Graphics2D graph2d) {
+        graph2d.setColor(Color.BLACK);
+        graph2d.drawOval(x - 3, y - 3, 7, 7);
+        graph2d.setColor(Color.WHITE);
+        graph2d.fillOval(x - 2, y - 2, 6, 6);
+    }
+
+    @Override
+    public void drawResizePoints(Graphics2D graph2d) {
+        drawResizePoint(getMinX(), getMinY(), graph2d);
+        drawResizePoint((getMinX() + getMaxX()) / 2, getMinY(), graph2d);
+        drawResizePoint(getMaxX(), getMinY(), graph2d);
+        drawResizePoint(getMaxX(), (getMinY() + getMaxY()) / 2, graph2d);
+        drawResizePoint(getMaxX(), getMaxY(), graph2d);
+        drawResizePoint((getMinX() + getMaxX()) / 2, getMaxY(), graph2d);
+        drawResizePoint(getMinX(), getMaxY(), graph2d);
+        drawResizePoint(getMinX(), (getMinY() + getMaxY()) / 2, graph2d);
+    }
+
     public PixeledTool() {
         super();
     }
@@ -91,8 +112,9 @@ public abstract class PixeledTool extends Tool {
                     Math.abs(getMaxX() - getMinX()),
                     Math.abs(getMaxY() - getMinY()));
             graph.draw(drawRect);
-            graph.setColor(getColor());
-            graph.setStroke(new BasicStroke(getBorderSize()));
+            graph.setStroke(new BasicStroke(getBorderSize()));            
+            drawResizePoints(graph);
+            graph.setColor(getColor());            
         }
     }
 }

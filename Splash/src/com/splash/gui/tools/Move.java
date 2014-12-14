@@ -22,6 +22,7 @@
 package com.splash.gui.tools;
 
 import com.splash.gui.elements.Tool;
+import java.awt.Graphics2D;
 
 public class Move extends Tool {
 
@@ -32,5 +33,13 @@ public class Move extends Tool {
     @Override
     public Move newInstance() {
         return new Move();
+    }
+
+    @Override
+    public void drawResizePoint(int x, int y, Graphics2D graph2d) {
+    }
+
+    @Override
+    public void drawResizePoints(Graphics2D graph2d) {
     }
 }

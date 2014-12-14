@@ -24,6 +24,7 @@ package com.splash.gui.elements;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
@@ -73,6 +74,26 @@ public abstract class DimensionedTool extends Tool {
     }
 
     @Override
+    public void drawResizePoint(int x, int y, Graphics2D graph2d) {
+        graph2d.setColor(Color.BLACK);
+        graph2d.drawOval(x - 3, y - 3, 7, 7);
+        graph2d.setColor(Color.WHITE);
+        graph2d.fillOval(x - 2, y - 2, 6, 6);
+    }
+
+    @Override
+    public void drawResizePoints(Graphics2D graph2d) {
+        drawResizePoint(getX(), getY(), graph2d);
+        drawResizePoint(getX() + getWidth() / 2, getY(), graph2d);
+        drawResizePoint(getX() + getWidth(), getY(), graph2d);
+        drawResizePoint(getX(), getY() + getHeight(), graph2d);
+        drawResizePoint(getX(), getY() + getHeight() / 2, graph2d);
+        drawResizePoint(getX() + getWidth(), getY() + getHeight(), graph2d);
+        drawResizePoint(getX() + getWidth() / 2, getY() + getHeight(), graph2d);
+        drawResizePoint(getX() + getWidth(), getY() + getHeight() / 2, graph2d);
+    }
+
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
 
@@ -85,8 +106,9 @@ public abstract class DimensionedTool extends Tool {
             Shape drawRect = new Rectangle2D.Float(
                     getX(), getY(), getWidth(), getHeight());
             graph.draw(drawRect);
-            graph.setColor(getColor());
             graph.setStroke(new BasicStroke(getBorderSize()));
+            drawResizePoints(graph);
+            graph.setColor(getColor());
         }
     }
 }
