@@ -32,7 +32,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
-class MenuBar extends JMenuBar {
+public class MenuBar extends JMenuBar {
 
     private JMenu fileMenu = new JMenu("File");
     private JMenu editMenu = new JMenu("Edit");

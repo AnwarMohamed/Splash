@@ -24,6 +24,8 @@ package com.splash.gui.dialogs;
 import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.Canvas;
+import com.splash.gui.elements.Tool;
+import com.splash.gui.tools.Move;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -89,6 +91,14 @@ public class ColorPickerDialog extends WebDialog implements MouseListener, Mouse
         
         if (canvas != null && canvas.getSelectedTool() != null) {
             canvas.getSelectedTool().setColor(current);
+            
+            if (canvas.getSelectedTool() instanceof Move &&
+                    canvas.getSelectedObjects() != null) {
+                for (Tool object : canvas.getSelectedObjects()) {
+                    object.setColor(current);
+                }
+                canvas.repaint();
+            }
         }
         
         repaint();

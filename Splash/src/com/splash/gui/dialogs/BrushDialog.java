@@ -25,20 +25,20 @@ import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.Canvas;
+import com.splash.gui.elements.Tool;
 import com.splash.gui.elements.WrapLayout;
+import com.splash.gui.tools.Move;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JPopupMenu.Separator;
 import javax.swing.JSlider;
 import javax.swing.JToggleButton;
-import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class BrushDialog extends WebDialog {
+public final class BrushDialog extends WebDialog implements ChangeListener {
 
     private JSlider slider = new JSlider(1, 50, 1);
     private Canvas canvas = null;
@@ -66,6 +66,7 @@ public class BrushDialog extends WebDialog {
 
         slider.setMinorTickSpacing(1);
         slider.setMajorTickSpacing(60);
+        slider.addChangeListener(BrushDialog.this);
 
         add(slider);
 
@@ -81,7 +82,6 @@ public class BrushDialog extends WebDialog {
 //                }
 //            }
 //        });
-
         add(fontComboBox);
 
         int fontSizes[]
@@ -100,7 +100,7 @@ public class BrushDialog extends WebDialog {
         formatPanel.add(underlineAction);
 
         add(formatPanel, BorderLayout.SOUTH);
-        
+
         EnableFontBox(false);
         EnableBrushBox(false);
     }
@@ -124,5 +124,19 @@ public class BrushDialog extends WebDialog {
 
     public void EnableBrushBox(boolean bool) {
         slider.setEnabled(bool);
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (canvas != null && canvas.getSelectedTool() != null) {
+            if (canvas.getSelectedTool() instanceof Move
+                    && canvas.getSelectedObjects() != null) {
+                for (Tool object : canvas.getSelectedObjects()) {
+                    object.setBorderSize(slider.getValue());
+                }
+                canvas.repaint();
+                canvas.getSnapshotManager().saveSnapshot();
+            }
+        }
     }
 }

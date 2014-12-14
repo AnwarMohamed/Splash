@@ -29,6 +29,9 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import static java.lang.Math.abs;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 public class Line extends Tool {
 
@@ -75,11 +78,13 @@ public class Line extends Tool {
                             BasicStroke.JOIN_MITER, 10.0f,
                             new float[]{3.0f}, 0.0f));
             Shape drawRect = new Rectangle2D.Float(
-                    Math.min(getX(), getEndX()),
-                    Math.min(getY(), getEndY()),
-                    Math.abs(getX() - getEndX()),
-                    Math.abs(getY() - getEndY()));
+                    Math.min(getX(), getEndX()) - getBorderSize() / 2,
+                    Math.min(getY(), getEndY()) - getBorderSize() / 2,
+                    Math.abs(getX() - getEndX()) + getBorderSize(),
+                    Math.abs(getY() - getEndY()) + getBorderSize());
             graph.draw(drawRect);
+            graph.setStroke(new BasicStroke(1));
+            drawResizePoints(graph);
             graph.setColor(getColor());
             graph.setStroke(new BasicStroke(getBorderSize()));
         }
@@ -95,12 +100,38 @@ public class Line extends Tool {
     }
 
     @Override
-    public void drawResizePoint(int x, int y, Graphics2D graph2d) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void drawResizePoints(Graphics2D graph2d) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        drawResizePoint(
+                min(getX(), getEndX()) - getBorderSize() / 2,
+                min(getY(), getEndY()) - getBorderSize() / 2,
+                graph2d);
+        drawResizePoint(
+                min(getX(), getEndX()) + abs(getEndX() - getX()) / 2,
+                max(getY(), getEndY()) + getBorderSize() / 2,
+                graph2d);
+        drawResizePoint(
+                min(getX(), getEndX()) + abs(getEndX() - getX()) + getBorderSize() / 2,
+                max(getY(), getEndY()) + getBorderSize() / 2,
+                graph2d);
+        drawResizePoint(
+                min(getX(), getEndX()) - getBorderSize() / 2,
+                max(getY(), getEndY()) + getBorderSize() / 2,
+                graph2d);
+        drawResizePoint(
+                min(getX(), getEndX()) - getBorderSize() / 2,
+                min(getY(), getEndY()) + abs(getEndY() - getY()) / 2,
+                graph2d);
+        drawResizePoint(
+                max(getX(), getEndX()) + getBorderSize() / 2,
+                min(getY(), getEndY()) - getBorderSize() / 2,
+                graph2d);
+        drawResizePoint(
+                max(getX(), getEndX()) + getBorderSize() / 2,
+                min(getY(), getEndY()) + abs(getEndY() - getY()) / 2,
+                graph2d);
+        drawResizePoint(
+                min(getX(), getEndX()) + abs(getEndX() - getX()) / 2,
+                min(getY(), getEndY()) - getBorderSize() / 2,
+                graph2d);
     }
 }

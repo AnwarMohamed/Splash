@@ -25,13 +25,13 @@ import com.splash.file.AboudaFileFormat.FileHeader;
 import com.splash.file.AboudaFileFormat.ImageDataItem;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_CIRCLE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_ELLIPSE;
-import static com.splash.file.AboudaFileFormat.OBJTYPE_EQUTRIANGLE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_ERASER;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_FREEHAND;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_ISOTRIANGLE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_LINE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_RECTANGLE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_RIGHTTRIANGLE;
+import static com.splash.file.AboudaFileFormat.OBJTYPE_ROUNDED;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_SQUARE;
 import com.splash.gui.Canvas;
 import com.splash.gui.elements.DimensionedTool;
@@ -39,13 +39,13 @@ import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.tools.Circle;
 import com.splash.gui.tools.Ellipse;
-import com.splash.gui.tools.EquilateralTriangle;
 import com.splash.gui.tools.Eraser;
 import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.IsocelesTriangle;
 import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.RightTriangle;
+import com.splash.gui.tools.RoundedRect;
 import com.splash.gui.tools.Square;
 import java.awt.Color;
 import java.io.BufferedInputStream;
@@ -176,8 +176,8 @@ public class AboudaFile {
                             case OBJTYPE_ELLIPSE:
                                 newTool = new Ellipse();
                                 break;
-                            case OBJTYPE_EQUTRIANGLE:
-                                newTool = new EquilateralTriangle();
+                            case OBJTYPE_ROUNDED:
+                                newTool = new RoundedRect();
                                 break;
                             case OBJTYPE_ISOTRIANGLE:
                                 newTool = new IsocelesTriangle();
@@ -209,7 +209,7 @@ public class AboudaFile {
                         switch (imageItem.type) {
                             case OBJTYPE_CIRCLE:
                             case OBJTYPE_ELLIPSE:
-                            case OBJTYPE_EQUTRIANGLE:
+                            case OBJTYPE_ROUNDED:
                             case OBJTYPE_ISOTRIANGLE:
                             case OBJTYPE_RECTANGLE:
                             case OBJTYPE_SQUARE:

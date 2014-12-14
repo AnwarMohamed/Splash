@@ -21,7 +21,6 @@
  */
 package com.splash.gui;
 
-import com.alee.laf.colorchooser.WebColorChooser;
 import com.alee.laf.filechooser.WebFileChooser;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
@@ -31,7 +30,6 @@ import com.splash.gui.dialogs.ColorPickerDialog;
 import com.splash.gui.dialogs.LayersDialog;
 import com.splash.gui.dialogs.ToolBoxDialog;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
@@ -41,11 +39,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -119,6 +114,7 @@ public class MainWindow extends WebFrame implements WindowListener {
 
                 if (canvas != null) {
                     toolBoxDialog.setCanvas(canvas);
+                    canvas.getSnapshotManager().updateDoers();
                 }
             }
         });
@@ -165,6 +161,14 @@ public class MainWindow extends WebFrame implements WindowListener {
     }
 
     private ToolBar toolBar = null;
+
+    public ToolBar getToolBarPanel() {
+        return toolBar;
+    }
+
+    public MenuBar getMenuBarPanel() {
+        return menuBar;
+    }
     private MenuBar menuBar = null;
     private StatusBar statusBar = null;
     private Canvas canvas = null;
@@ -364,6 +368,7 @@ public class MainWindow extends WebFrame implements WindowListener {
         centre.setSize(width, height);
 
         canvas = new Canvas(
+                MainWindow.this,
                 ((getWidth() - 50) / 2) - (width / 2),
                 ((getHeight() - 160) / 2) - (height / 2), width, height);
         canvas.setMainWindow(MainWindow.this);

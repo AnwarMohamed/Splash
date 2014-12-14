@@ -70,7 +70,14 @@ public abstract class Tool extends JComponent {
     }
 
     public abstract Tool newInstance();
-    public abstract void drawResizePoint(int x, int y, Graphics2D graph2d);
+
+    public void drawResizePoint(int x, int y, Graphics2D graph2d) {
+        graph2d.setColor(Color.BLACK);
+        graph2d.drawOval(x - 3, y - 3, 7, 7);
+        graph2d.setColor(Color.WHITE);
+        graph2d.fillOval(x - 2, y - 2, 6, 6);
+    }
+
     public abstract void drawResizePoints(Graphics2D graph2d);
 
     private boolean selected = false;

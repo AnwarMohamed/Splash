@@ -27,19 +27,18 @@ import com.splash.gui.elements.PixeledTool;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.tools.Circle;
 import com.splash.gui.tools.Ellipse;
-import com.splash.gui.tools.EquilateralTriangle;
 import com.splash.gui.tools.Eraser;
 import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.IsocelesTriangle;
 import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.RightTriangle;
+import com.splash.gui.tools.RoundedRect;
 import com.splash.gui.tools.Square;
 import java.awt.Color;
 import java.awt.Point;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
@@ -47,7 +46,7 @@ public class AboudaFileFormat {
 
     public final static byte OBJTYPE_CIRCLE = 1;
     public final static byte OBJTYPE_ELLIPSE = 2;
-    public final static byte OBJTYPE_EQUTRIANGLE = 3;
+    public final static byte OBJTYPE_ROUNDED = 3;
     public final static byte OBJTYPE_ERASER = 4;
     public final static byte OBJTYPE_FILL = 5;
     public final static byte OBJTYPE_FREEHAND = 6;
@@ -113,7 +112,7 @@ public class AboudaFileFormat {
                 switch (imageItem.type) {
                     case OBJTYPE_CIRCLE:
                     case OBJTYPE_ELLIPSE:
-                    case OBJTYPE_EQUTRIANGLE:
+                    case OBJTYPE_ROUNDED:
                     case OBJTYPE_ISOTRIANGLE:
                     case OBJTYPE_RECTANGLE:
                     case OBJTYPE_SQUARE:
@@ -208,8 +207,8 @@ public class AboudaFileFormat {
                     imageDataItem.type = OBJTYPE_CIRCLE;
                 } else if (tool instanceof Ellipse) {
                     imageDataItem.type = OBJTYPE_ELLIPSE;
-                } else if (tool instanceof EquilateralTriangle) {
-                    imageDataItem.type = OBJTYPE_EQUTRIANGLE;
+                } else if (tool instanceof RoundedRect) {
+                    imageDataItem.type = OBJTYPE_ROUNDED;
                 } else if (tool instanceof IsocelesTriangle) {
                     imageDataItem.type = OBJTYPE_ISOTRIANGLE;
                 } else if (tool instanceof Rectangle) {
@@ -257,7 +256,7 @@ public class AboudaFileFormat {
         switch (item.type) {
             case OBJTYPE_CIRCLE:
             case OBJTYPE_ELLIPSE:
-            case OBJTYPE_EQUTRIANGLE:
+            case OBJTYPE_ROUNDED:
             case OBJTYPE_ISOTRIANGLE:
             case OBJTYPE_RECTANGLE:
             case OBJTYPE_SQUARE:

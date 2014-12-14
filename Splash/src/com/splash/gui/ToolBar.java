@@ -27,7 +27,7 @@ import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
-class ToolBar extends JToolBar {
+public class ToolBar extends JToolBar {
 
     public JButton newAction = new JButton(
             new ImageIcon("res/images/document-new.png"));
@@ -37,7 +37,7 @@ class ToolBar extends JToolBar {
             new ImageIcon("res/images/document-save.png"));
     public JButton saveAsAction = new JButton(
             new ImageIcon("res/images/document-save-as.png"));
-   
+
     public JButton undoAction = new JButton(
             new ImageIcon("res/images/edit-undo.png"));
     public JButton redoAction = new JButton(
@@ -51,9 +51,9 @@ class ToolBar extends JToolBar {
 
     public ToolBar() {
         super();
-        
+
         setFloatable(false);
-        
+
         newAction.setToolTipText("New");
         openAction.setToolTipText("Open");
         saveAction.setToolTipText("Save");
@@ -62,7 +62,7 @@ class ToolBar extends JToolBar {
         pasteAction.setToolTipText("Paste");
         undoAction.setToolTipText("Undo");
         redoAction.setToolTipText("Redo");
-        
+
         add(newAction);
         add(openAction);
         add(saveAction);

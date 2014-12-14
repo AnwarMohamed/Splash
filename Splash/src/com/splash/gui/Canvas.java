@@ -21,7 +21,7 @@
  */
 package com.splash.gui;
 
-import com.alee.laf.rootpane.WebFrame;
+import com.splash.SnapshotManager;
 import com.splash.gui.dialogs.BrushDialog;
 import com.splash.gui.dialogs.ColorPickerDialog;
 import com.splash.gui.dialogs.LayersDialog;
@@ -31,7 +31,6 @@ import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.PixeledTool;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.tools.Fill;
-import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Move;
 import com.splash.gui.tools.Select;
@@ -39,12 +38,14 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.TexturePaint;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -82,6 +83,16 @@ public class Canvas extends JComponent implements MouseListener,
 
     private ArrayList<Tool> selectedObjects;
 
+    private SnapshotManager snapshotManager;
+
+    public SnapshotManager getSnapshotManager() {
+        return snapshotManager;
+    }
+
+    public ArrayList<Tool> getSelectedObjects() {
+        return selectedObjects;
+    }
+
     public int getImageHeight() {
         return imageHeight;
     }
@@ -98,12 +109,14 @@ public class Canvas extends JComponent implements MouseListener,
         return imageY;
     }
 
-    public Canvas(int x, int y, int width, int height) {
+    public Canvas(MainWindow mainWindow, int x, int y, int width, int height) {
         super();
 
         setMinimumSize(new Dimension(8, 8));
         setDoubleBuffered(true);
         setFocusable(true);
+
+        this.mainFrame = mainWindow;
 
         addMouseListener(Canvas.this);
         addMouseMotionListener(Canvas.this);
@@ -124,6 +137,31 @@ public class Canvas extends JComponent implements MouseListener,
 
         setSize(width, height);
         selectedLayer = 0;
+
+        snapshotManager = new SnapshotManager(Canvas.this);
+        snapshotManager.updateDoers();
+
+        KeyEventDispatcher keyEventDispatcher = new KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(final KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                    if (selectedObjects != null) {
+                        for (Tool object : selectedObjects) {
+                            if (layers.get(selectedLayer).getTools().contains(object)) {
+                                layers.get(selectedLayer).getTools().remove(object);
+                            }
+                        }
+                        snapshotManager.saveSnapshot();
+                    }
+                    repaint();
+                    clearSelectedObjects();
+                }
+
+                return false;
+            }
+        };
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .addKeyEventDispatcher(keyEventDispatcher);
     }
 
     public static BufferedImage backgroundLight, backgroundDark;
@@ -259,9 +297,33 @@ public class Canvas extends JComponent implements MouseListener,
 
                 if (selectedObjects.size() > 0) {
                     mainFrame.getToolBoxDialog().moveAction.doClick();
+                    mainFrame.getBrushDialog().EnableBrushBox(true);
                 }
 
+                //snapshotManager.saveSnapshot();
+            } else if (selectedTool instanceof Move) {
+                layers.get(selectedLayer).removeTool(selectedTool);
+
+                snapshotManager.saveSnapshot();
+
             } else {
+
+                if (selectedTool instanceof DimensionedTool) {
+                    if (((DimensionedTool) selectedTool).getHeight() > 0
+                            || ((DimensionedTool) selectedTool).getWidth() > 0) {
+                        snapshotManager.saveSnapshot();
+                    }
+                } else if (selectedTool instanceof PixeledTool) {
+                    if (((PixeledTool) selectedTool).getPixels().size() > 0) {
+                        snapshotManager.saveSnapshot();
+                    }
+                } else if (selectedTool instanceof Line) {
+                    if (((Line) selectedTool).getEndX() != 0
+                            || ((Line) selectedTool).getEndY() != 0) {
+                        snapshotManager.saveSnapshot();
+                    }
+                }
+
                 selectedTool = selectedTool.newInstance();
             }
 
@@ -332,9 +394,8 @@ public class Canvas extends JComponent implements MouseListener,
                 selectedObjects.get(0).setCoordinates(
                         e.getX() - getImageX() - mouseX,
                         e.getY() - getImageY() - mouseY);
-            }           
+            }
         }
-
         repaint();
     }
 
@@ -393,31 +454,31 @@ public class Canvas extends JComponent implements MouseListener,
 
     private boolean withinBounds(int x, int y, Tool tool) {
         if (tool instanceof DimensionedTool) {
-            if (x >= tool.getX()
-                    && (tool.getX()
+            if (x >= tool.getX() - tool.getBorderSize() / 2
+                    && (tool.getX() + tool.getBorderSize()
                     + ((DimensionedTool) tool).getWidth() >= x)
-                    && (y >= tool.getY())
-                    && (tool.getY()
+                    && (y >= tool.getY() - tool.getBorderSize() / 2)
+                    && (tool.getY() + tool.getBorderSize()
                     + ((DimensionedTool) tool).getHeight() >= y)) {
                 return true;
             }
         } else if (tool instanceof PixeledTool) {
-            if (x >= ((PixeledTool) tool).getMinX()
-                    && ((PixeledTool) tool).getMaxX() >= x
-                    && y >= ((PixeledTool) tool).getMinY()
-                    && ((PixeledTool) tool).getMaxY() >= y) {
+            if (x >= ((PixeledTool) tool).getMinX() - tool.getBorderSize() / 2
+                    && ((PixeledTool) tool).getMaxX() + tool.getBorderSize() / 2 >= x
+                    && y >= ((PixeledTool) tool).getMinY() - tool.getBorderSize() / 2
+                    && ((PixeledTool) tool).getMaxY() + tool.getBorderSize() / 2 >= y) {
                 return true;
             }
         } else if (tool instanceof Tool) {
             if (tool instanceof Line) {
-                if (x >= tool.getX()
-                        && tool.getX() >= x
-                        && y >= tool.getY()
-                        && tool.getY() >= y
-                        && x >= ((Line) tool).getEndX()
-                        && ((Line) tool).getEndX() >= x
-                        && y >= ((Line) tool).getEndY()
-                        && ((Line) tool).getEndY() >= y) {
+                if (x >= tool.getX() - tool.getBorderSize() / 2
+                        && tool.getX() + tool.getBorderSize() / 2 >= x
+                        && y >= tool.getY() - tool.getBorderSize() / 2
+                        && tool.getY() + tool.getBorderSize() / 2 >= y
+                        && x >= ((Line) tool).getEndX() + tool.getBorderSize() / 2
+                        && ((Line) tool).getEndX() + tool.getBorderSize() / 2 >= x
+                        && y >= ((Line) tool).getEndY() - tool.getBorderSize() / 2
+                        && ((Line) tool).getEndY() + tool.getBorderSize() / 2 >= y) {
                     return true;
                 }
             } else {
@@ -447,7 +508,7 @@ public class Canvas extends JComponent implements MouseListener,
 
     private MainWindow mainFrame = null;
 
-    public WebFrame getMainFrame() {
+    public MainWindow getMainFrame() {
         return mainFrame;
     }
 

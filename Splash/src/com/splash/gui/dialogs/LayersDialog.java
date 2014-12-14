@@ -39,8 +39,6 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 public class LayersDialog extends WebDialog {
 
@@ -134,6 +132,8 @@ public class LayersDialog extends WebDialog {
             }
 
             canvas.clearSelectedObjects();
+            canvas.getSnapshotManager().saveSnapshot();
+            
         }
     }
 
@@ -160,6 +160,7 @@ public class LayersDialog extends WebDialog {
             }
 
             canvas.clearSelectedObjects();
+            canvas.getSnapshotManager().saveSnapshot();
         }
     }
 

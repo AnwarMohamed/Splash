@@ -74,23 +74,39 @@ public abstract class DimensionedTool extends Tool {
     }
 
     @Override
-    public void drawResizePoint(int x, int y, Graphics2D graph2d) {
-        graph2d.setColor(Color.BLACK);
-        graph2d.drawOval(x - 3, y - 3, 7, 7);
-        graph2d.setColor(Color.WHITE);
-        graph2d.fillOval(x - 2, y - 2, 6, 6);
-    }
-
-    @Override
     public void drawResizePoints(Graphics2D graph2d) {
-        drawResizePoint(getX(), getY(), graph2d);
-        drawResizePoint(getX() + getWidth() / 2, getY(), graph2d);
-        drawResizePoint(getX() + getWidth(), getY(), graph2d);
-        drawResizePoint(getX(), getY() + getHeight(), graph2d);
-        drawResizePoint(getX(), getY() + getHeight() / 2, graph2d);
-        drawResizePoint(getX() + getWidth(), getY() + getHeight(), graph2d);
-        drawResizePoint(getX() + getWidth() / 2, getY() + getHeight(), graph2d);
-        drawResizePoint(getX() + getWidth(), getY() + getHeight() / 2, graph2d);
+        drawResizePoint(
+                getX() - getBorderSize() / 2,
+                getY() - getBorderSize() / 2,
+                graph2d);
+        drawResizePoint(
+                getX() + getWidth() / 2,
+                getY() - getBorderSize() / 2,
+                graph2d);
+        drawResizePoint(
+                getX() + getWidth() + getBorderSize() / 2,
+                getY() - getBorderSize() / 2,
+                graph2d);
+        drawResizePoint(
+                getX() - getBorderSize() / 2,
+                getY() + getHeight() + getBorderSize() / 2,
+                graph2d);
+        drawResizePoint(
+                getX() - getBorderSize() / 2,
+                getY() + getHeight() / 2,
+                graph2d);
+        drawResizePoint(
+                getX() + getWidth() + getBorderSize() / 2,
+                getY() + getHeight() + getBorderSize() / 2,
+                graph2d);
+        drawResizePoint(
+                getX() + getWidth() / 2,
+                getY() + getHeight() + getBorderSize() / 2,
+                graph2d);
+        drawResizePoint(
+                getX() + getWidth() + getBorderSize() / 2,
+                getY() + getHeight() / 2,
+                graph2d);
     }
 
     @Override
@@ -104,10 +120,14 @@ public abstract class DimensionedTool extends Tool {
                             BasicStroke.JOIN_MITER, 10.0f,
                             new float[]{3.0f}, 0.0f));
             Shape drawRect = new Rectangle2D.Float(
-                    getX(), getY(), getWidth(), getHeight());
+                    getX() - getBorderSize() / 2,
+                    getY() - getBorderSize() / 2,
+                    getWidth() + getBorderSize(),
+                    getHeight() + getBorderSize());
             graph.draw(drawRect);
-            graph.setStroke(new BasicStroke(getBorderSize()));
+            graph.setStroke(new BasicStroke(1));
             drawResizePoints(graph);
+            graph.setStroke(new BasicStroke(getBorderSize()));
             graph.setColor(getColor());
         }
     }

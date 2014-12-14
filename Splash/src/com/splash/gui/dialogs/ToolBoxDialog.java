@@ -28,7 +28,6 @@ import com.splash.gui.elements.Tool;
 import com.splash.gui.elements.WrapLayout;
 import com.splash.gui.tools.Circle;
 import com.splash.gui.tools.Ellipse;
-import com.splash.gui.tools.EquilateralTriangle;
 import com.splash.gui.tools.Eraser;
 import com.splash.gui.tools.Fill;
 import com.splash.gui.tools.Line;
