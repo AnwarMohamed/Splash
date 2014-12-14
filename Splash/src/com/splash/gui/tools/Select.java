@@ -30,6 +30,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
 public class Select extends DimensionedTool {
 
@@ -55,12 +56,17 @@ public class Select extends DimensionedTool {
         return new Select();
     }
 
-    public void selectInboundObjects(Layer layer) {
+    public ArrayList<Tool> selectInboundObjects(Layer layer) {
+        ArrayList<Tool> selected = new ArrayList<>();
         for (Tool tool : layer.getTools()) {
-            if (isInbound(tool)) {
+            if (!(tool instanceof Select)
+                    && !(tool instanceof Move)
+                    && isInbound(tool)) {
                 tool.setSelected(true);
+                selected.add(tool);
             }
         }
+        return selected;
     }
 
     private boolean isInbound(Tool tool) {
@@ -74,10 +80,10 @@ public class Select extends DimensionedTool {
                     + ((DimensionedTool) tool).getHeight()
                     <= getY() + getHeight());
         } else if (tool instanceof PixeledTool) {
-            return (getX() <= ((PixeledTool)tool).getMinX()
-                    && ((PixeledTool)tool).getMaxX() <= getX() + getWidth()
-                    && getY() <= ((PixeledTool)tool).getMinY()
-                    && ((PixeledTool)tool).getMaxY() <= getY() + getHeight());
+            return (getX() <= ((PixeledTool) tool).getMinX()
+                    && ((PixeledTool) tool).getMaxX() <= getX() + getWidth()
+                    && getY() <= ((PixeledTool) tool).getMinY()
+                    && ((PixeledTool) tool).getMaxY() <= getY() + getHeight());
         } else if (tool instanceof Tool) {
             if (tool instanceof Line) {
                 return (getX() <= tool.getX()

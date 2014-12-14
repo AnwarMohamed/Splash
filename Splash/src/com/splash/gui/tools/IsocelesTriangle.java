@@ -31,15 +31,15 @@ public class IsocelesTriangle extends DimensionedTool {
     public IsocelesTriangle() {
         super();
     }
-    
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         Shape drawTriangle = new Polygon(
-                new int[]{getX(), getX()-getWidth(), getX() + getWidth()}, 
+                new int[]{getX(), getX() - getWidth(), getX() + getWidth()},
                 new int[]{getY(), getY() + getHeight(), getY() + getHeight()}, 3);
         graph.draw(drawTriangle);
-    }    
+    }
 
     @Override
     public IsocelesTriangle newInstance() {

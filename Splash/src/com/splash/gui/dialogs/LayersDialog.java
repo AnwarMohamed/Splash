@@ -132,6 +132,8 @@ public class LayersDialog extends WebDialog {
                 canvas.getMainFrame().invalidate();
                 canvas.getMainFrame().repaint();
             }
+
+            canvas.clearSelectedObjects();
         }
     }
 
@@ -156,6 +158,8 @@ public class LayersDialog extends WebDialog {
                 canvas.getMainFrame().invalidate();
                 canvas.getMainFrame().repaint();
             }
+
+            canvas.clearSelectedObjects();
         }
     }
 
@@ -186,6 +190,8 @@ public class LayersDialog extends WebDialog {
                 canvas.getMainFrame().invalidate();
                 canvas.getMainFrame().repaint();
             }
+
+            canvas.clearSelectedObjects();
         }
     }
 
