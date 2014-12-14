@@ -37,6 +37,8 @@ import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -48,12 +50,24 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class MainWindow extends WebFrame {
+public class MainWindow extends WebFrame implements WindowListener {
 
     private LayersDialog layersDialog = null;
     private ToolBoxDialog toolBoxDialog = null;
     private BrushDialog brushDialog = null;
     private ColorPickerDialog colorPickerDialog = null;
+
+    public LayersDialog getLayersDialog() {
+        return layersDialog;
+    }
+
+    public ToolBoxDialog getToolBoxDialog() {
+        return toolBoxDialog;
+    }
+
+    public ColorPickerDialog getColorPickerDialog() {
+        return colorPickerDialog;
+    }
     private WebFrame thisFrame = this;
     private WebFileChooser fileChooser = null;
 
@@ -71,6 +85,8 @@ public class MainWindow extends WebFrame {
 
         setMinimumSize(new Dimension(500, 500));
         setLocationRelativeTo(null);
+
+        addWindowListener(MainWindow.this);
 
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -135,7 +151,7 @@ public class MainWindow extends WebFrame {
                 }
             }
         });
-        
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -181,6 +197,7 @@ public class MainWindow extends WebFrame {
 
     private void initMenuBar() {
         menuBar = new MenuBar();
+        menuBar.setMainWindow(MainWindow.this);
         menuBar.aboutAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ev) {
@@ -355,5 +372,62 @@ public class MainWindow extends WebFrame {
 
     public BrushDialog getBrushDialog() {
         return brushDialog;
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        if (menuBar != null) {
+            if (colorPickerDialog != null) {
+                if (menuBar.colorsAction.isSelected()) {
+                    colorPickerDialog.setVisible(!colorPickerDialog.isVisible());
+                }
+                colorPickerDialog.setVisible(menuBar.colorsAction.isSelected());
+            }
+
+            if (brushDialog != null) {
+                if (menuBar.brushAction.isSelected()) {
+                    brushDialog.setVisible(!brushDialog.isVisible());
+                }
+                brushDialog.setVisible(menuBar.brushAction.isSelected());
+            }
+
+            if (toolBoxDialog != null) {
+                if (menuBar.toolsAction.isSelected()) {
+                    toolBoxDialog.setVisible(!toolBoxDialog.isVisible());
+                }
+                toolBoxDialog.setVisible(menuBar.toolsAction.isSelected());
+            }
+
+            if (layersDialog != null) {
+                if (menuBar.layersAction.isSelected()) {
+                    layersDialog.setVisible(!layersDialog.isVisible());
+                }
+                layersDialog.setVisible(menuBar.layersAction.isSelected());
+            }
+        }
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
     }
 }

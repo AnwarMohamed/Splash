@@ -55,7 +55,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 
 public class Canvas extends JComponent implements MouseListener,
-        MouseMotionListener, MouseWheelListener {
+        MouseMotionListener {
 
     private int mouseX, mouseY, mouseLastDragPosX, mouseLastDragPosY;
 
@@ -105,7 +105,6 @@ public class Canvas extends JComponent implements MouseListener,
 
         addMouseListener(Canvas.this);
         addMouseMotionListener(Canvas.this);
-        addMouseWheelListener(Canvas.this);
 
         cam_zoom = 1;
         cam_positionX = 0;
@@ -194,6 +193,14 @@ public class Canvas extends JComponent implements MouseListener,
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if (withinBounds(
+                e.getX() - getImageX(),
+                e.getY() - getImageY(),
+                layers.get(selectedLayer)) == null) {
+            for (Tool tool : layers.get(selectedLayer).getTools()) {
+                tool.setSelected(false);
+            }
+        }
     }
 
     @Override
@@ -285,7 +292,7 @@ public class Canvas extends JComponent implements MouseListener,
                     e.getX() - getImageX(),
                     e.getY() - getImageY(),
                     layers.get(selectedLayer));
-            if (object != null) {
+            if (object != null && object.isSelected()) {
                 object.setCoordinates(
                         e.getX() - getImageX(),
                         e.getY() - getImageY());
@@ -304,12 +311,14 @@ public class Canvas extends JComponent implements MouseListener,
                     + ", " + (e.getY() - getImageY()));
         }
 
+        Tool tool;
         if (withinBounds(e.getX(), e.getY())) {
             if (selectedTool instanceof Move
-                    && withinBounds(
+                    && (tool = withinBounds(
                             e.getX() - getImageX(),
                             e.getY() - getImageY(),
-                            layers.get(selectedLayer)) != null) {
+                            layers.get(selectedLayer))) != null
+                    && tool.isSelected()) {
                 setCursor(new Cursor(Cursor.MOVE_CURSOR));
             } else if (selectedTool instanceof DimensionedTool
                     || selectedTool instanceof PixeledTool
@@ -321,10 +330,6 @@ public class Canvas extends JComponent implements MouseListener,
         } else {
             setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
-    }
-
-    @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
     }
 
     void setLayersModel(ArrayList<Layer> layers) {

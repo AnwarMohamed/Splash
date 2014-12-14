@@ -111,6 +111,7 @@ public class ToolBoxDialog extends WebDialog {
         add(circleAction);
         add(ellipseAction);
 
+        moveAction.setToolTipText("Move Selection");
         moveAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -122,6 +123,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        selectAction.setToolTipText("Rectangle Select");
         selectAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -133,6 +135,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        freeHandAction.setToolTipText("Pencil");
         freeHandAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -148,6 +151,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        fillAction.setToolTipText("Paint Bucket");
         fillAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -159,6 +163,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        roundedAction.setToolTipText("Rounded Rectangle");
         roundedAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -174,6 +179,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        eraserAction.setToolTipText("Eraser");
         eraserAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -189,6 +195,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        pickAction.setToolTipText("Color Picker");
         pickAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -197,6 +204,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        lineAction.setToolTipText("Line");
         lineAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -212,6 +220,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        rectangleAction.setToolTipText("Rectangle");
         rectangleAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -227,6 +236,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        rightTriangleAction.setToolTipText("Right-Angled Triangle");
         rightTriangleAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -242,6 +252,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        isocelesTriangleAction.setToolTipText("Isoceles Triangle");
         isocelesTriangleAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -257,6 +268,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        circleAction.setToolTipText("Circle");
         circleAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -272,6 +284,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        ellipseAction.setToolTipText("Ellipse");
         ellipseAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -287,6 +300,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        textAction.setToolTipText("Text");
         textAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -302,6 +316,7 @@ public class ToolBoxDialog extends WebDialog {
             }
         });
 
+        squareAction.setToolTipText("Square");
         squareAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

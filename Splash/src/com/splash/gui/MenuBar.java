@@ -22,8 +22,11 @@
 package com.splash.gui;
 
 import java.awt.Event;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -38,6 +41,15 @@ class MenuBar extends JMenuBar {
     private JMenu layersMenu = new JMenu("Layers");
     private JMenu helpMenu = new JMenu("Help");
 
+    public JCheckBoxMenuItem layersAction = new JCheckBoxMenuItem("Layers",
+            new ImageIcon("res/images/layer-visible-on.png"));
+    public JCheckBoxMenuItem colorsAction = new JCheckBoxMenuItem("Color Picker",
+            new ImageIcon("res/images/format-stroke-color.png"));
+    public JCheckBoxMenuItem toolsAction = new JCheckBoxMenuItem("Tool Box",
+            new ImageIcon("res/images/tools-wizard.png"));
+    public JCheckBoxMenuItem brushAction = new JCheckBoxMenuItem("Brush Box",
+            new ImageIcon("res/images/draw-brush.png"));
+
     public JMenuItem newAction = new JMenuItem("New",
             new ImageIcon("res/images/document-new.png"));
     public JMenuItem openAction = new JMenuItem("Open",
@@ -47,19 +59,19 @@ class MenuBar extends JMenuBar {
             new ImageIcon("res/images/document-save.png"));
     public JMenuItem saveAsAction = new JMenuItem("Save As",
             new ImageIcon("res/images/document-save-as.png"));
-    
+
     public JMenu exportAction = new JMenu("Export As");
     public JMenuItem exportAsPngAction = new JMenuItem("PNG Image",
-            new ImageIcon("res/images/png-icon.png"));   
+            new ImageIcon("res/images/png-icon.png"));
     public JMenuItem exportAsBmpAction = new JMenuItem("Bitmap Image",
-            new ImageIcon("res/images/png-icon.png"));  
+            new ImageIcon("res/images/png-icon.png"));
     public JMenuItem exportAsGifAction = new JMenuItem("GIF Image",
-            new ImageIcon("res/images/png-icon.png"));  
+            new ImageIcon("res/images/png-icon.png"));
     public JMenuItem exportAsJpgAction = new JMenuItem("JPG Image",
-            new ImageIcon("res/images/png-icon.png"));      
-    
+            new ImageIcon("res/images/png-icon.png"));
+
     public JMenuItem printAction = new JMenuItem("Print",
-            new ImageIcon("res/images/document-print.png"));    
+            new ImageIcon("res/images/document-print.png"));
     public JMenuItem exitAction = new JMenuItem("Exit",
             new ImageIcon("res/images/application-exit.png"));
 
@@ -76,6 +88,8 @@ class MenuBar extends JMenuBar {
 
     public JMenuItem aboutAction = new JMenuItem("About",
             new ImageIcon("res/images/help-about.png"));
+
+    private MainWindow mainWindow = null;
 
     public MenuBar() {
         fileMenu.add(newAction);
@@ -107,7 +121,7 @@ class MenuBar extends JMenuBar {
         exportAction.add(exportAsJpgAction);
         exportAction.add(exportAsBmpAction);
         exportAction.add(exportAsGifAction);
-        
+
         fileMenu.addSeparator();
         fileMenu.add(printAction);
         printAction.setMnemonic('P');
@@ -115,7 +129,7 @@ class MenuBar extends JMenuBar {
                 KeyStroke.getKeyStroke(
                         KeyEvent.VK_P,
                         Event.CTRL_MASK));
-        fileMenu.addSeparator();        
+        fileMenu.addSeparator();
         fileMenu.add(exitAction);
         exitAction.setMnemonic('E');
         exitAction.setAccelerator(
@@ -157,14 +171,66 @@ class MenuBar extends JMenuBar {
                         Event.CTRL_MASK));
         add(editMenu);
 
+        layersAction.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (mainWindow != null
+                        && mainWindow.getLayersDialog() != null) {
+                    mainWindow.getLayersDialog().setVisible(
+                            layersAction.isSelected());
+                }
+            }
+        });
+        layersAction.setSelected(true);
+        viewMenu.add(layersAction);
+        toolsAction.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (mainWindow != null
+                        && mainWindow.getToolBoxDialog() != null) {
+                    mainWindow.getToolBoxDialog().setVisible(
+                            toolsAction.isSelected());
+                }
+            }
+        });
+        toolsAction.setSelected(true);
+        viewMenu.add(toolsAction);
+        brushAction.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (mainWindow != null
+                        && mainWindow.getBrushDialog() != null) {
+                    mainWindow.getBrushDialog().setVisible(
+                            brushAction.isSelected());
+                }
+            }
+        });
+        brushAction.setSelected(true);
+        viewMenu.add(brushAction);
+        colorsAction.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (mainWindow != null
+                        && mainWindow.getColorPickerDialog() != null) {
+                    mainWindow.getColorPickerDialog().setVisible(
+                            colorsAction.isSelected());
+                }
+            }
+        });
+        colorsAction.setSelected(true);
+        viewMenu.add(colorsAction);
         add(viewMenu);
 
         add(imageMenu);
-        
+
         add(layersMenu);
 
         helpMenu.add(aboutAction);
         add(helpMenu);
 
+    }
+
+    public void setMainWindow(MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
     }
 }

@@ -68,6 +68,7 @@ public class AboutWindow extends JWindow {
                 }
             }
         });
+        
+        setAlwaysOnTop(true);
     }
-
 }
