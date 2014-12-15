@@ -34,6 +34,7 @@ import com.splash.gui.tools.Fill;
 import com.splash.gui.tools.Line;
 import com.splash.gui.tools.Move;
 import com.splash.gui.tools.Select;
+import com.splash.gui.tools.Text;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -58,13 +59,9 @@ import javax.swing.JLabel;
 public class Canvas extends JComponent implements MouseListener,
         MouseMotionListener {
 
-    private int mouseX, mouseY, mouseLastDragPosX, mouseLastDragPosY;
+    private int mouseX, mouseY;
 
     private JLabel mouseMoveLabel = null;
-
-    private float cam_zoom;
-    private float cam_positionX;
-    private float cam_positionY;
 
     private int selectedLayer;
 
@@ -121,14 +118,7 @@ public class Canvas extends JComponent implements MouseListener,
         addMouseListener(Canvas.this);
         addMouseMotionListener(Canvas.this);
 
-        cam_zoom = 1;
-        cam_positionX = 0;
-        cam_positionY = 0;
-
         updateBackground();
-
-        mouseLastDragPosX = 0;
-        mouseLastDragPosY = 0;
 
         imageHeight = height;
         imageWidth = width;
@@ -138,8 +128,13 @@ public class Canvas extends JComponent implements MouseListener,
         setSize(width, height);
         selectedLayer = 0;
 
-        snapshotManager = new SnapshotManager(Canvas.this);
+        snapshotManager = new SnapshotManager(Canvas.this);       
         snapshotManager.updateDoers();
+
+        try {
+            backgroundLight = ImageIO.read(new File("res/tbg.png"));
+        } catch (IOException e) {
+        }
 
         KeyEventDispatcher keyEventDispatcher = new KeyEventDispatcher() {
             @Override
@@ -151,28 +146,26 @@ public class Canvas extends JComponent implements MouseListener,
                                 layers.get(selectedLayer).getTools().remove(object);
                             }
                         }
-                        snapshotManager.saveSnapshot();
+                        snapshotManager.saveSnapshot(true);
                     }
                     repaint();
                     clearSelectedObjects();
                 }
-
                 return false;
             }
         };
+
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addKeyEventDispatcher(keyEventDispatcher);
     }
 
-    public static BufferedImage backgroundLight, backgroundDark;
+    public static BufferedImage backgroundLight;
 
-    private Rectangle2D backgroundRectangle;
-    private TexturePaint paintLight, paintDark;
+    private TexturePaint paintLight;
 
     static {
         try {
             backgroundLight = ImageIO.read(new File("res/tbg.png"));
-            backgroundDark = ImageIO.read(new File("res/tbgd.png"));
         } catch (IOException e) {
         }
     }
@@ -194,9 +187,8 @@ public class Canvas extends JComponent implements MouseListener,
 
     private void updateBackground() {
         Rectangle2D.Float rect
-                = new Rectangle2D.Float(0, 0, 16f / cam_zoom, 16f / cam_zoom);
+                = new Rectangle2D.Float(0, 0, 16, 16);
         paintLight = new TexturePaint(backgroundLight, rect);
-        paintDark = new TexturePaint(backgroundDark, rect);
     }
 
     public BufferedImage getRenderedImage() {
@@ -238,6 +230,12 @@ public class Canvas extends JComponent implements MouseListener,
                 e.getY() - getImageY(),
                 layers.get(selectedLayer)) == null) {
             clearSelectedObjects();
+        }
+
+        if (withinBounds(e.getX(), e.getY()) && selectedTool != null) {
+            if (selectedTool instanceof Text) {
+
+            }
         }
     }
 
@@ -304,23 +302,23 @@ public class Canvas extends JComponent implements MouseListener,
             } else if (selectedTool instanceof Move) {
                 layers.get(selectedLayer).removeTool(selectedTool);
 
-                snapshotManager.saveSnapshot();
+                snapshotManager.saveSnapshot(true);
 
             } else {
 
                 if (selectedTool instanceof DimensionedTool) {
                     if (((DimensionedTool) selectedTool).getHeight() > 0
                             || ((DimensionedTool) selectedTool).getWidth() > 0) {
-                        snapshotManager.saveSnapshot();
+                        snapshotManager.saveSnapshot(true);
                     }
                 } else if (selectedTool instanceof PixeledTool) {
                     if (((PixeledTool) selectedTool).getPixels().size() > 0) {
-                        snapshotManager.saveSnapshot();
+                        snapshotManager.saveSnapshot(true);
                     }
                 } else if (selectedTool instanceof Line) {
                     if (((Line) selectedTool).getEndX() != 0
                             || ((Line) selectedTool).getEndY() != 0) {
-                        snapshotManager.saveSnapshot();
+                        snapshotManager.saveSnapshot(true);
                     }
                 }
 
@@ -328,11 +326,11 @@ public class Canvas extends JComponent implements MouseListener,
             }
 
             repaint();
-            
+
             if (mainFrame != null) {
                 mainFrame.setEdited(true);
             }
-            
+
         }
     }
 
@@ -433,7 +431,7 @@ public class Canvas extends JComponent implements MouseListener,
         }
     }
 
-    void setLayersModel(ArrayList<Layer> layers) {
+    public void setLayersModel(ArrayList<Layer> layers) {
         this.layers = layers;
     }
 
@@ -555,6 +553,14 @@ public class Canvas extends JComponent implements MouseListener,
             }
             selectedObjects.clear();
             selectedObjects = null;
+        }
+    }
+
+    public void clearWorkspace() {
+        if (mainFrame != null && mainFrame.getLayersDialog() != null) {
+            clearLayers();
+            snapshotManager.reset();
+            snapshotManager.saveSnapshot(true);
         }
     }
 }

@@ -137,7 +137,7 @@ public final class BrushDialog extends WebDialog implements ChangeListener {
                     object.setBorderSize(slider.getValue());
                 }
                 canvas.repaint();
-                canvas.getSnapshotManager().saveSnapshot();
+                canvas.getSnapshotManager().saveSnapshot(true);
             }
         }
     }

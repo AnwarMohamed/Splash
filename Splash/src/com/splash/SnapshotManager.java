@@ -82,10 +82,10 @@ public final class SnapshotManager {
                             updateDoers();
                         }
                     });
-        }       
+        }
     }
 
-    public void saveSnapshot() {
+    public void saveSnapshot(boolean clear) {
         try {
             outputStruct = new AboudaFileFormat();
             if (canvas != null && canvas.getLayers() != null) {
@@ -98,35 +98,33 @@ public final class SnapshotManager {
             }
 
             inEvents.push(outputStruct.generateFile());
-            System.out.println(inEvents.peek().length);
 
-            if (outEvents.size() > 0) {
+            if (clear && !outEvents.empty()) {
                 outEvents.clear();
             }
 
             updateDoers();
-            //applySnapshot();
         } catch (IOException ex) {
-            ex.printStackTrace();
         }
     }
 
     public void redoSnapshot() {
-        if (!outEvents.empty()) {
+        if (canRedoSnapshot()) {
             inEvents.push(outEvents.pop());
             applySnapshot();
         }
     }
 
     public void undoSnapshot() {
-        if (!inEvents.empty()) {
+        if (canUndoSnapshot()) {
             outEvents.push(inEvents.pop());
             applySnapshot();
+            updateDoers();
         }
     }
 
     public boolean canUndoSnapshot() {
-        return !inEvents.empty();
+        return inEvents.size() > 1;
     }
 
     public boolean canRedoSnapshot() {
@@ -151,5 +149,11 @@ public final class SnapshotManager {
                 canvas.getMainFrame().getToolBarPanel().undoAction.setEnabled(canUndoSnapshot());
             }
         }
+    }
+
+    public void reset() {
+        inEvents.clear();
+        outEvents.clear();
+        updateDoers();
     }
 }

@@ -44,6 +44,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 
 public class ToolBoxDialog extends WebDialog {
@@ -305,7 +306,7 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 textAction.setSelected(true);
-
+                
                 currentTool = new Text();
                 setCanvasTool(currentTool);
 

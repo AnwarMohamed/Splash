@@ -24,6 +24,7 @@ package com.splash.gui.dialogs;
 import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.Canvas;
+import com.splash.gui.MainWindow;
 import com.splash.gui.elements.Layer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -40,15 +41,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-public class LayersDialog extends WebDialog {
+public final class LayersDialog extends WebDialog {
 
-    public DefaultListModel layersModel;
+    public DefaultListModel layersModel = new DefaultListModel();
     private JList list;
 
     public ArrayList<Layer> layers = new ArrayList<>();
     private int width, height, layersSum = 0;
 
-    public LayersDialog(WebFrame parent, int width, int height) {
+    public LayersDialog(MainWindow parent, int width, int height) {
         super(parent, "Layers", false);
 
         setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
@@ -60,7 +61,6 @@ public class LayersDialog extends WebDialog {
         this.width = width;
         this.height = height;
 
-        layersModel = new DefaultListModel();
         list = new JList(layersModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -89,8 +89,6 @@ public class LayersDialog extends WebDialog {
         add(addButton, BorderLayout.WEST);
         add(removeButton, BorderLayout.EAST);
 
-        addNewLayer();
-
         list.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
@@ -108,6 +106,8 @@ public class LayersDialog extends WebDialog {
                 }
             }
         });
+
+        addNewLayer();
     }
 
     public void addNewLayer() {
@@ -130,10 +130,10 @@ public class LayersDialog extends WebDialog {
                 canvas.getMainFrame().invalidate();
                 canvas.getMainFrame().repaint();
                 canvas.getMainFrame().setEdited(true);
+                canvas.getSnapshotManager().saveSnapshot(true);
             }
 
             canvas.clearSelectedObjects();
-            canvas.getSnapshotManager().saveSnapshot();            
         }
     }
 
@@ -160,7 +160,7 @@ public class LayersDialog extends WebDialog {
             }
 
             canvas.clearSelectedObjects();
-            canvas.getSnapshotManager().saveSnapshot();
+            canvas.getSnapshotManager().saveSnapshot(true);
         }
     }
 
@@ -169,6 +169,11 @@ public class LayersDialog extends WebDialog {
     public void linkCanvas(Canvas canvas) {
         this.canvas = canvas;
         canvas.setLayersDialog(LayersDialog.this);
+        canvas.setLayersModel(layers);
+
+        clearLayers();
+        canvas.getSnapshotManager().reset();
+        addNewLayer();
     }
 
     public void addNewLayer(Layer layer) {

@@ -66,7 +66,7 @@ public class MainWindow extends WebFrame implements WindowListener {
     public ColorPickerDialog getColorPickerDialog() {
         return colorPickerDialog;
     }
-    private WebFrame thisFrame = this;
+
     private WebFileChooser fileChooser = null;
 
     private final int DEFAULT_WIDTH = 900;
@@ -101,20 +101,23 @@ public class MainWindow extends WebFrame implements WindowListener {
             @Override
             public void run() {
                 layersDialog = new LayersDialog(
-                        thisFrame, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-                layersDialog.setLocationRelativeTo(thisFrame);
+                        MainWindow.this, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+                layersDialog.setLocationRelativeTo(MainWindow.this);
                 layersDialog.setLocation(1115, 105);
                 layersDialog.setVisible(true);
-                canvas.setLayersModel(layersDialog.layers);
-                layersDialog.linkCanvas(canvas);
+
+                if (canvas != null) {
+                    canvas.setLayersModel(layersDialog.layers);
+                    layersDialog.linkCanvas(canvas);
+                }
             }
         });
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                toolBoxDialog = new ToolBoxDialog(thisFrame);
-                toolBoxDialog.setLocationRelativeTo(thisFrame);
+                toolBoxDialog = new ToolBoxDialog(MainWindow.this);
+                toolBoxDialog.setLocationRelativeTo(MainWindow.this);
                 toolBoxDialog.setLocation(1115, 365);
                 toolBoxDialog.setVisible(true);
 
@@ -129,8 +132,8 @@ public class MainWindow extends WebFrame implements WindowListener {
             @Override
             public void run() {
                 try {
-                    colorPickerDialog = new ColorPickerDialog(thisFrame);
-                    colorPickerDialog.setLocationRelativeTo(thisFrame);
+                    colorPickerDialog = new ColorPickerDialog(MainWindow.this);
+                    colorPickerDialog.setLocationRelativeTo(MainWindow.this);
                     colorPickerDialog.setLocation(8, 105);
                     colorPickerDialog.setVisible(true);
                     colorPickerDialog.setCanvas(canvas);
@@ -139,21 +142,20 @@ public class MainWindow extends WebFrame implements WindowListener {
             }
         });
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                brushDialog = new BrushDialog(thisFrame);
-                brushDialog.setLocationRelativeTo(thisFrame);
-                brushDialog.setLocation(1115, 485);
-                brushDialog.setVisible(true);
-                brushDialog.setCanvas(canvas);
-
-                if (toolBoxDialog != null) {
-                    toolBoxDialog.setBrushBox(brushDialog);
-                }
-            }
-        });
-
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                brushDialog = new BrushDialog(thisFrame);
+//                brushDialog.setLocationRelativeTo(thisFrame);
+//                brushDialog.setLocation(1115, 485);
+//                brushDialog.setVisible(true);
+//                brushDialog.setCanvas(canvas);
+//
+//                if (toolBoxDialog != null) {
+//                    toolBoxDialog.setBrushBox(brushDialog);
+//                }
+//            }
+//        });
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -220,7 +222,7 @@ public class MainWindow extends WebFrame implements WindowListener {
             @Override
             public void actionPerformed(ActionEvent ev) {
                 fileChooser.setDialogTitle("Open Project");
-                int returnVal = fileChooser.showOpenDialog(thisFrame);
+                int returnVal = fileChooser.showOpenDialog(MainWindow.this);
 
                 if (returnVal == WebFileChooser.APPROVE_OPTION) {
                     if (AboudaFactory.parseInputFile(
@@ -237,7 +239,7 @@ public class MainWindow extends WebFrame implements WindowListener {
             @Override
             public void actionPerformed(ActionEvent ev) {
                 fileChooser.setDialogTitle("Save Project As");
-                int returnVal = fileChooser.showSaveDialog(thisFrame);
+                int returnVal = fileChooser.showSaveDialog(MainWindow.this);
 
                 if (returnVal == WebFileChooser.APPROVE_OPTION) {
                     AboudaFactory.generateOutputFile(
@@ -257,7 +259,7 @@ public class MainWindow extends WebFrame implements WindowListener {
             public void actionPerformed(ActionEvent ev) {
                 if (currentFilename.isEmpty()) {
                     fileChooser.setDialogTitle("Save Project");
-                    int returnVal = fileChooser.showSaveDialog(thisFrame);
+                    int returnVal = fileChooser.showSaveDialog(MainWindow.this);
 
                     if (returnVal == WebFileChooser.APPROVE_OPTION) {
                         AboudaFactory.generateOutputFile(
@@ -283,7 +285,7 @@ public class MainWindow extends WebFrame implements WindowListener {
                         new FileNameExtensionFilter(
                                 "PNG Image", "png"));
 
-                int returnVal = fileChooser.showSaveDialog(thisFrame);
+                int returnVal = fileChooser.showSaveDialog(MainWindow.this);
 
                 if (returnVal == WebFileChooser.APPROVE_OPTION) {
                     try {
@@ -311,7 +313,7 @@ public class MainWindow extends WebFrame implements WindowListener {
                         new FileNameExtensionFilter(
                                 "GIF Image", "gif"));
 
-                int returnVal = fileChooser.showSaveDialog(thisFrame);
+                int returnVal = fileChooser.showSaveDialog(MainWindow.this);
 
                 if (returnVal == WebFileChooser.APPROVE_OPTION) {
                     try {
@@ -339,7 +341,7 @@ public class MainWindow extends WebFrame implements WindowListener {
                         new FileNameExtensionFilter(
                                 "JPG Image", "jpg"));
 
-                int returnVal = fileChooser.showSaveDialog(thisFrame);
+                int returnVal = fileChooser.showSaveDialog(MainWindow.this);
 
                 if (returnVal == WebFileChooser.APPROVE_OPTION) {
                     try {
@@ -367,7 +369,7 @@ public class MainWindow extends WebFrame implements WindowListener {
                         new FileNameExtensionFilter(
                                 "Bitmap Image", "bmp"));
 
-                int returnVal = fileChooser.showSaveDialog(thisFrame);
+                int returnVal = fileChooser.showSaveDialog(MainWindow.this);
 
                 if (returnVal == WebFileChooser.APPROVE_OPTION) {
                     try {
@@ -423,7 +425,10 @@ public class MainWindow extends WebFrame implements WindowListener {
                 MainWindow.this,
                 ((getWidth() - 50) / 2) - (width / 2),
                 ((getHeight() - 160) / 2) - (height / 2), width, height);
+
         canvas.setMainWindow(MainWindow.this);
+        canvas.clearWorkspace();
+
         add(canvas, BorderLayout.CENTER);
     }
 
@@ -503,5 +508,9 @@ public class MainWindow extends WebFrame implements WindowListener {
 
     @Override
     public void windowDeactivated(WindowEvent e) {
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
     }
 }
