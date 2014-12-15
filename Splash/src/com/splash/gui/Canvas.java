@@ -43,7 +43,6 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.TexturePaint;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -60,7 +59,6 @@ public class Canvas extends JComponent implements MouseListener,
         MouseMotionListener {
 
     private int mouseX, mouseY;
-
     private JLabel mouseMoveLabel = null;
 
     private int selectedLayer;
@@ -128,7 +126,7 @@ public class Canvas extends JComponent implements MouseListener,
         setSize(width, height);
         selectedLayer = 0;
 
-        snapshotManager = new SnapshotManager(Canvas.this);       
+        snapshotManager = new SnapshotManager(Canvas.this);
         snapshotManager.updateDoers();
 
         try {
@@ -298,7 +296,6 @@ public class Canvas extends JComponent implements MouseListener,
                     mainFrame.getBrushDialog().EnableBrushBox(true);
                 }
 
-                //snapshotManager.saveSnapshot();
             } else if (selectedTool instanceof Move) {
                 layers.get(selectedLayer).removeTool(selectedTool);
 

@@ -94,10 +94,20 @@ public class ColorPickerDialog extends WebDialog implements MouseListener, Mouse
             
             if (canvas.getSelectedTool() instanceof Move &&
                     canvas.getSelectedObjects() != null) {
+                boolean changeDone = false;
                 for (Tool object : canvas.getSelectedObjects()) {
+                    
+                    if (object.getColor() != current) {
+                        changeDone = true;
+                    }
+                    
                     object.setColor(current);
                 }
                 canvas.repaint();
+                
+                if (changeDone) {
+                    canvas.getSnapshotManager().saveSnapshot(true);
+                }
             }
         }
         

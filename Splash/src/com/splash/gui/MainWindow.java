@@ -142,20 +142,21 @@ public class MainWindow extends WebFrame implements WindowListener {
             }
         });
 
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                brushDialog = new BrushDialog(thisFrame);
-//                brushDialog.setLocationRelativeTo(thisFrame);
-//                brushDialog.setLocation(1115, 485);
-//                brushDialog.setVisible(true);
-//                brushDialog.setCanvas(canvas);
-//
-//                if (toolBoxDialog != null) {
-//                    toolBoxDialog.setBrushBox(brushDialog);
-//                }
-//            }
-//        });
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                brushDialog = new BrushDialog(MainWindow.this);
+                brushDialog.setLocationRelativeTo(MainWindow.this);
+                brushDialog.setLocation(1115, 485);
+                brushDialog.setVisible(true);
+                brushDialog.setCanvas(canvas);
+
+                if (toolBoxDialog != null) {
+                    toolBoxDialog.setBrushBox(brushDialog);
+                }
+            }
+        });
+        
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
