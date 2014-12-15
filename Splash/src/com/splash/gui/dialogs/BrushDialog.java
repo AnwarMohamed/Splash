@@ -29,12 +29,14 @@ import com.splash.gui.elements.Tool;
 import com.splash.gui.elements.WrapLayout;
 import com.splash.gui.tools.Move;
 import java.awt.BorderLayout;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JSlider;
 import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 

@@ -24,6 +24,8 @@ package com.splash.gui;
 import com.alee.laf.filechooser.WebFileChooser;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
+import static com.alee.managers.notification.NotificationIcon.image;
+import com.splash.PrintActionListener;
 import com.splash.file.AboudaFactory;
 import com.splash.gui.dialogs.BrushDialog;
 import com.splash.gui.dialogs.ColorPickerDialog;
@@ -42,6 +44,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -69,6 +72,9 @@ public class MainWindow extends WebFrame implements WindowListener {
     private final int DEFAULT_WIDTH = 900;
     private final int DEFAULT_HEIGHT = 500;
 
+    private String currentFilename = new String();
+    private boolean edited = false;
+
     public MainWindow() {
         super("Splash | Just Another Awesome Paint Program");
 
@@ -84,7 +90,7 @@ public class MainWindow extends WebFrame implements WindowListener {
         addWindowListener(MainWindow.this);
 
         setLayout(new BorderLayout());
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         initMenuBar();
         initToolBar();
@@ -217,9 +223,12 @@ public class MainWindow extends WebFrame implements WindowListener {
                 int returnVal = fileChooser.showOpenDialog(thisFrame);
 
                 if (returnVal == WebFileChooser.APPROVE_OPTION) {
-                    AboudaFactory.parseInputFile(
+                    if (AboudaFactory.parseInputFile(
                             fileChooser.getSelectedFile().getAbsolutePath(),
-                            canvas);
+                            canvas)) {
+                        currentFilename
+                                = fileChooser.getSelectedFile().getAbsolutePath();
+                    }
                 }
             }
         });
@@ -234,7 +243,35 @@ public class MainWindow extends WebFrame implements WindowListener {
                     AboudaFactory.generateOutputFile(
                             fileChooser.getSelectedFile().getAbsolutePath(),
                             canvas);
+
+                    currentFilename
+                            = fileChooser.getSelectedFile().getAbsolutePath();
+
+                    edited = false;
                 }
+            }
+        });
+
+        menuBar.saveAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                if (currentFilename.isEmpty()) {
+                    fileChooser.setDialogTitle("Save Project");
+                    int returnVal = fileChooser.showSaveDialog(thisFrame);
+
+                    if (returnVal == WebFileChooser.APPROVE_OPTION) {
+                        AboudaFactory.generateOutputFile(
+                                fileChooser.getSelectedFile().getAbsolutePath(),
+                                canvas);
+
+                        currentFilename
+                                = fileChooser.getSelectedFile().getAbsolutePath();
+                    }
+                } else {
+                    AboudaFactory.generateOutputFile(currentFilename, canvas);
+                }
+
+                edited = false;
             }
         });
 
@@ -350,6 +387,21 @@ public class MainWindow extends WebFrame implements WindowListener {
             }
         });
 
+        menuBar.exitAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                dispatchEvent(new WindowEvent(
+                        MainWindow.this, WindowEvent.WINDOW_CLOSING));
+            }
+        });
+
+        menuBar.printAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                (new Thread(new PrintActionListener(canvas.getRenderedImage()))).start();
+            }
+        });
+
         setJMenuBar(menuBar);
     }
 
@@ -385,6 +437,19 @@ public class MainWindow extends WebFrame implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
+        if (edited) {
+            int result = JOptionPane.showConfirmDialog(
+                    MainWindow.this, "Save before Exiting?");
+            if (result == JOptionPane.OK_OPTION) {
+                menuBar.saveAction.doClick();
+                System.exit(0);
+            } else if (result == JOptionPane.CANCEL_OPTION) {
+            } else if (result == JOptionPane.NO_OPTION) {
+                System.exit(0);
+            }
+        } else {
+            System.exit(0);
+        }
     }
 
     @Override
@@ -426,6 +491,10 @@ public class MainWindow extends WebFrame implements WindowListener {
                 layersDialog.setVisible(menuBar.layersAction.isSelected());
             }
         }
+    }
+
+    public void setEdited(boolean edited) {
+        this.edited = edited;
     }
 
     @Override

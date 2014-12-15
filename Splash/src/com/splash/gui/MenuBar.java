@@ -22,6 +22,8 @@
 package com.splash.gui;
 
 import java.awt.Event;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -54,7 +56,6 @@ public class MenuBar extends JMenuBar {
             new ImageIcon("res/images/document-new.png"));
     public JMenuItem openAction = new JMenuItem("Open",
             new ImageIcon("res/images/document-open.png"));
-    public JMenuItem openRecentAction = new JMenuItem("Open Recent");
     public JMenuItem saveAction = new JMenuItem("Save",
             new ImageIcon("res/images/document-save.png"));
     public JMenuItem saveAsAction = new JMenuItem("Save As",
@@ -86,6 +87,11 @@ public class MenuBar extends JMenuBar {
     public JMenuItem pasteAction = new JMenuItem("Paste",
             new ImageIcon("res/images/edit-paste.png"));
 
+    public JMenuItem addLayerAction = new JMenuItem("Add New Layer",
+            new ImageIcon("res/images/list-add.png"));
+    public JMenuItem removeLayerAction = new JMenuItem("Remove Current Layer",
+            new ImageIcon("res/images/list-remove.png"));
+
     public JMenuItem aboutAction = new JMenuItem("About",
             new ImageIcon("res/images/help-about.png"));
 
@@ -104,7 +110,6 @@ public class MenuBar extends JMenuBar {
                 KeyStroke.getKeyStroke(
                         KeyEvent.VK_O,
                         Event.CTRL_MASK));
-        fileMenu.add(openRecentAction);
         fileMenu.addSeparator();
         fileMenu.add(saveAction);
         saveAction.setMnemonic('S');
@@ -223,6 +228,27 @@ public class MenuBar extends JMenuBar {
 
         add(imageMenu);
 
+        addLayerAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (mainWindow != null
+                        && mainWindow.getLayersDialog() != null) {
+                    mainWindow.getLayersDialog().addNewLayer();
+                }
+            }
+        });
+        layersMenu.add(addLayerAction);
+        removeLayerAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (mainWindow != null
+                        && mainWindow.getLayersDialog() != null) {
+                    mainWindow.getLayersDialog().removeLayer(
+                            mainWindow.getLayersDialog().getSelectedIndex());
+                }
+            }
+        });
+        layersMenu.add(removeLayerAction);
         add(layersMenu);
 
         helpMenu.add(aboutAction);

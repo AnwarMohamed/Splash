@@ -110,7 +110,7 @@ public class LayersDialog extends WebDialog {
         });
     }
 
-    private void addNewLayer() {
+    public void addNewLayer() {
         if (layers.size() > 0) {
             layersModel.add(
                     list.getSelectedIndex(), "New Layer" + layersSum++);
@@ -129,15 +129,15 @@ public class LayersDialog extends WebDialog {
             if (canvas.getMainFrame() != null) {
                 canvas.getMainFrame().invalidate();
                 canvas.getMainFrame().repaint();
+                canvas.getMainFrame().setEdited(true);
             }
 
             canvas.clearSelectedObjects();
-            canvas.getSnapshotManager().saveSnapshot();
-            
+            canvas.getSnapshotManager().saveSnapshot();            
         }
     }
 
-    private void removeLayer(int index) {
+    public void removeLayer(int index) {
         layersModel.remove(index);
         layers.remove(index);
 
@@ -200,5 +200,9 @@ public class LayersDialog extends WebDialog {
         layersModel.clear();
         layers.clear();
         layersSum = 0;
+    }
+
+    public int getSelectedIndex() {
+        return list.getSelectedIndex();
     }
 }

@@ -328,6 +328,11 @@ public class Canvas extends JComponent implements MouseListener,
             }
 
             repaint();
+            
+            if (mainFrame != null) {
+                mainFrame.setEdited(true);
+            }
+            
         }
     }
 

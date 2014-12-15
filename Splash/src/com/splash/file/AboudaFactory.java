@@ -84,7 +84,8 @@ public class AboudaFactory {
         }
     }
 
-    public static void parseInputFile(String filename, Canvas canvas) {
+    public static boolean parseInputFile(String filename, Canvas canvas) {
         AboudaFile inputFile = new AboudaFile(filename, canvas);
+        return inputFile.isReady();
     }
 }
