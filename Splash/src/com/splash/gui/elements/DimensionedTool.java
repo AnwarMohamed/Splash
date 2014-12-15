@@ -74,6 +74,11 @@ public abstract class DimensionedTool extends Tool {
     }
 
     @Override
+    public void translate(int x, int y) {
+        setCoordinates(x, y);
+    }
+    
+    @Override
     public void drawResizePoints(Graphics2D graph2d) {
         drawResizePoint(
                 getX() - getBorderSize() / 2,

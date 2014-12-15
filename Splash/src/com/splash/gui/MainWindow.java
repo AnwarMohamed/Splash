@@ -156,7 +156,7 @@ public class MainWindow extends WebFrame implements WindowListener {
                 }
             }
         });
-        
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -216,6 +216,33 @@ public class MainWindow extends WebFrame implements WindowListener {
             public void actionPerformed(ActionEvent ev) {
                 AboutWindow aboutWindow = new AboutWindow(false);
                 aboutWindow.show();
+            }
+        });
+
+        menuBar.newAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                if (canvas != null && layersDialog != null) {
+                    if (edited) {
+                        int result = JOptionPane.showConfirmDialog(
+                                MainWindow.this, "Do you want to save ?");
+                        if (result == JOptionPane.OK_OPTION) {
+                            menuBar.saveAction.doClick();
+                            layersDialog.reset();
+                            canvas.repaint();
+                        } else if (result == JOptionPane.CANCEL_OPTION) {
+                        } else if (result == JOptionPane.NO_OPTION) {
+                            layersDialog.reset();
+                            canvas.repaint();
+                        }
+                    } else {
+                        layersDialog.reset();
+                        canvas.repaint();
+                    }
+
+                    currentFilename = "";
+                    setEdited(false);
+                }
             }
         });
 
@@ -401,7 +428,8 @@ public class MainWindow extends WebFrame implements WindowListener {
         menuBar.printAction.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                (new Thread(new PrintActionListener(canvas.getRenderedImage()))).start();
+                (new Thread(new PrintActionListener(
+                        canvas.getRenderedImage()))).start();
             }
         });
 

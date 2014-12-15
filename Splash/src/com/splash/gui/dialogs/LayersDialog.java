@@ -171,9 +171,7 @@ public final class LayersDialog extends WebDialog {
         canvas.setLayersDialog(LayersDialog.this);
         canvas.setLayersModel(layers);
 
-        clearLayers();
-        canvas.getSnapshotManager().reset();
-        addNewLayer();
+        reset();
     }
 
     public void addNewLayer(Layer layer) {
@@ -205,6 +203,12 @@ public final class LayersDialog extends WebDialog {
         layersModel.clear();
         layers.clear();
         layersSum = 0;
+    }
+
+    public void reset() {
+        clearLayers();
+        canvas.getSnapshotManager().reset();
+        addNewLayer();
     }
 
     public int getSelectedIndex() {

@@ -57,6 +57,8 @@ public abstract class Tool extends JComponent {
         this.color = color;
     }
 
+    public abstract void translate(int x, int y);
+    
     protected Graphics2D graph;
 
     @Override

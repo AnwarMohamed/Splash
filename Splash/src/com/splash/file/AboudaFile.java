@@ -42,7 +42,7 @@ import com.splash.gui.tools.Ellipse;
 import com.splash.gui.tools.Eraser;
 import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.IsocelesTriangle;
-import com.splash.gui.tools.Line;
+import com.splash.gui.elements.LinedTool;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.RightTriangle;
 import com.splash.gui.tools.RoundedRect;
@@ -192,7 +192,7 @@ public class AboudaFile {
                                 newTool = new RightTriangle();
                                 break;
                             case OBJTYPE_LINE:
-                                newTool = new Line();
+                                newTool = new LinedTool();
                                 break;
                             case OBJTYPE_ERASER:
                                 newTool = new Eraser();
@@ -233,7 +233,7 @@ public class AboudaFile {
                                 imageItem.endY = shortFromByteArray(
                                         Arrays.copyOfRange(imageData,
                                                 offset + 16, offset + 18));
-                                ((Line) newTool).setEndPoint(
+                                ((LinedTool) newTool).setEndPoint(
                                         imageItem.endX, imageItem.endY);
                                 break;
                             case OBJTYPE_ERASER:

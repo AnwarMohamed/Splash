@@ -30,7 +30,7 @@ import com.splash.gui.tools.Circle;
 import com.splash.gui.tools.Ellipse;
 import com.splash.gui.tools.Eraser;
 import com.splash.gui.tools.Fill;
-import com.splash.gui.tools.Line;
+import com.splash.gui.elements.LinedTool;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.IsocelesTriangle;
@@ -211,7 +211,7 @@ public class ToolBoxDialog extends WebDialog {
                 untoggleButtons();
                 lineAction.setSelected(true);
 
-                currentTool = new Line();
+                currentTool = new LinedTool();
                 setCanvasTool(currentTool);
 
                 if (brushBox != null) {

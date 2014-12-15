@@ -21,6 +21,7 @@
  */
 package com.splash.gui.tools;
 
+import com.splash.gui.elements.LinedTool;
 import com.splash.gui.elements.DimensionedTool;
 import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.PixeledTool;
@@ -85,15 +86,15 @@ public class Select extends DimensionedTool {
                     && getY() <= ((PixeledTool) tool).getMinY()
                     && ((PixeledTool) tool).getMaxY() <= getY() + getHeight());
         } else if (tool instanceof Tool) {
-            if (tool instanceof Line) {
+            if (tool instanceof LinedTool) {
                 return (getX() <= tool.getX()
                         && tool.getX() <= getX() + getWidth()
                         && getY() <= tool.getY()
                         && tool.getY() <= getY() + getHeight()
-                        && getX() <= ((Line) tool).getEndX()
-                        && ((Line) tool).getEndX() <= getX() + getWidth()
-                        && getY() <= ((Line) tool).getEndY()
-                        && ((Line) tool).getEndY() <= getY() + getHeight());
+                        && getX() <= ((LinedTool) tool).getEndX()
+                        && ((LinedTool) tool).getEndX() <= getX() + getWidth()
+                        && getY() <= ((LinedTool) tool).getEndY()
+                        && ((LinedTool) tool).getEndY() <= getY() + getHeight());
             } else {
                 return (getX() <= tool.getX()
                         && tool.getX() <= getX() + getWidth()

@@ -23,6 +23,7 @@ package com.splash.gui.tools;
 
 import com.splash.gui.elements.PixeledTool;
 import java.awt.Graphics;
+import java.awt.Point;
 
 public class FreeHand extends PixeledTool {
 
@@ -46,5 +47,14 @@ public class FreeHand extends PixeledTool {
     @Override
     public FreeHand newInstance() {
         return new FreeHand();
+    }
+
+    @Override
+    public void translate(int x, int y) {
+        for (Point pixel : getPixels()) {
+            pixel.setLocation(
+                    pixel.getX() + (x - pixel.getX()),
+                    pixel.getY() + (y - pixel.getY()));
+        }
     }
 }

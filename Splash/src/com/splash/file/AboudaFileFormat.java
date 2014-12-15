@@ -30,7 +30,7 @@ import com.splash.gui.tools.Ellipse;
 import com.splash.gui.tools.Eraser;
 import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.IsocelesTriangle;
-import com.splash.gui.tools.Line;
+import com.splash.gui.elements.LinedTool;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.RightTriangle;
 import com.splash.gui.tools.RoundedRect;
@@ -232,11 +232,11 @@ public class AboudaFileFormat {
                     imageDataItem.type = OBJTYPE_FREEHAND;
                 }
             } else {
-                if (tool instanceof Line) {
+                if (tool instanceof LinedTool) {
                     imageDataItem.type = OBJTYPE_LINE;
 
-                    imageDataItem.endX = (short) ((Line) tool).getEndX();
-                    imageDataItem.endY = (short) ((Line) tool).getEndY();
+                    imageDataItem.endX = (short) ((LinedTool) tool).getEndX();
+                    imageDataItem.endY = (short) ((LinedTool) tool).getEndY();
                 }
             }
 

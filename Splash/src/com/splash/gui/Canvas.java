@@ -31,7 +31,7 @@ import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.PixeledTool;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.tools.Fill;
-import com.splash.gui.tools.Line;
+import com.splash.gui.elements.LinedTool;
 import com.splash.gui.tools.Move;
 import com.splash.gui.tools.Select;
 import com.splash.gui.tools.Text;
@@ -312,9 +312,9 @@ public class Canvas extends JComponent implements MouseListener,
                     if (((PixeledTool) selectedTool).getPixels().size() > 0) {
                         snapshotManager.saveSnapshot(true);
                     }
-                } else if (selectedTool instanceof Line) {
-                    if (((Line) selectedTool).getEndX() != 0
-                            || ((Line) selectedTool).getEndY() != 0) {
+                } else if (selectedTool instanceof LinedTool) {
+                    if (((LinedTool) selectedTool).getEndX() != 0
+                            || ((LinedTool) selectedTool).getEndY() != 0) {
                         snapshotManager.saveSnapshot(true);
                     }
                 }
@@ -374,8 +374,8 @@ public class Canvas extends JComponent implements MouseListener,
                         ((DimensionedTool) selectedTool).getBaseY() - mouseY);
             }
 
-        } else if (selectedTool instanceof Line) {
-            ((Line) selectedTool).setEndPoint(
+        } else if (selectedTool instanceof LinedTool) {
+            ((LinedTool) selectedTool).setEndPoint(
                     e.getX() - getImageX(),
                     e.getY() - getImageY());
 
@@ -418,7 +418,7 @@ public class Canvas extends JComponent implements MouseListener,
                 setCursor(new Cursor(Cursor.MOVE_CURSOR));
             } else if (selectedTool instanceof DimensionedTool
                     || selectedTool instanceof PixeledTool
-                    || selectedTool instanceof Line) {
+                    || selectedTool instanceof LinedTool) {
                 setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
             } else {
                 setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -470,15 +470,15 @@ public class Canvas extends JComponent implements MouseListener,
                 return true;
             }
         } else if (tool instanceof Tool) {
-            if (tool instanceof Line) {
+            if (tool instanceof LinedTool) {
                 if (x >= tool.getX() - tool.getBorderSize() / 2
                         && tool.getX() + tool.getBorderSize() / 2 >= x
                         && y >= tool.getY() - tool.getBorderSize() / 2
                         && tool.getY() + tool.getBorderSize() / 2 >= y
-                        && x >= ((Line) tool).getEndX() + tool.getBorderSize() / 2
-                        && ((Line) tool).getEndX() + tool.getBorderSize() / 2 >= x
-                        && y >= ((Line) tool).getEndY() - tool.getBorderSize() / 2
-                        && ((Line) tool).getEndY() + tool.getBorderSize() / 2 >= y) {
+                        && x >= ((LinedTool) tool).getEndX() + tool.getBorderSize() / 2
+                        && ((LinedTool) tool).getEndX() + tool.getBorderSize() / 2 >= x
+                        && y >= ((LinedTool) tool).getEndY() - tool.getBorderSize() / 2
+                        && ((LinedTool) tool).getEndY() + tool.getBorderSize() / 2 >= y) {
                     return true;
                 }
             } else {

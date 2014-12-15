@@ -42,4 +42,8 @@ public class Move extends Tool {
     @Override
     public void drawResizePoints(Graphics2D graph2d) {
     }
+
+    @Override
+    public void translate(int x, int y) {
+    }
 }
