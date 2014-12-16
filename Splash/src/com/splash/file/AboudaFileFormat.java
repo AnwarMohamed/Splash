@@ -22,6 +22,7 @@
 package com.splash.file;
 
 import com.splash.gui.elements.DimensionedTool;
+import com.splash.gui.elements.ImagedTool;
 import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.PixeledTool;
 import com.splash.gui.elements.Tool;
@@ -31,6 +32,7 @@ import com.splash.gui.tools.Eraser;
 import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.IsocelesTriangle;
 import com.splash.gui.elements.LinedTool;
+import com.splash.gui.tools.Fill;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.RightTriangle;
 import com.splash.gui.tools.RoundedRect;
@@ -41,6 +43,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 
 public class AboudaFileFormat {
 
@@ -56,6 +59,7 @@ public class AboudaFileFormat {
     public final static byte OBJTYPE_RIGHTTRIANGLE = 10;
     public final static byte OBJTYPE_SQUARE = 11;
     public final static byte OBJTYPE_TEXT = 12;
+    public final static byte OBJTYPE_IMAGE = 13;
 
     public FileHeader fileHeader = new FileHeader();
     public ColorsData colorsData = new ColorsData();
@@ -109,6 +113,7 @@ public class AboudaFileFormat {
                 buffer.write(imageItem.border);
                 buffer.write(intToByteArray(imageItem.size));
 
+                byte[] compressed;
                 switch (imageItem.type) {
                     case OBJTYPE_CIRCLE:
                     case OBJTYPE_ELLIPSE:
@@ -126,7 +131,15 @@ public class AboudaFileFormat {
                         break;
                     case OBJTYPE_ERASER:
                     case OBJTYPE_FREEHAND:
-                        byte[] compressed = AboudaFactory.compressBuffer(
+                        compressed = AboudaFactory.compressBuffer(
+                                imageItem.pixels.toByteArray());
+
+                        buffer.write(intToByteArray(compressed.length));
+                        buffer.write(compressed);
+                        break;
+                    case OBJTYPE_FILL:
+                    case OBJTYPE_IMAGE:
+                        compressed = AboudaFactory.compressBuffer(
                                 imageItem.pixels.toByteArray());
 
                         buffer.write(intToByteArray(compressed.length));
@@ -217,6 +230,16 @@ public class AboudaFileFormat {
                     imageDataItem.type = OBJTYPE_SQUARE;
                 } else if (tool instanceof RightTriangle) {
                     imageDataItem.type = OBJTYPE_RIGHTTRIANGLE;
+                } else if (tool instanceof Fill) {
+                    imageDataItem.type = OBJTYPE_FILL;
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ImageIO.write(((Fill) tool).getMergedImage(), "png", baos);
+                    imageDataItem.pixels.write(baos.toByteArray());
+                } else if (tool instanceof ImagedTool) {
+                    imageDataItem.type = OBJTYPE_IMAGE;
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ImageIO.write(((ImagedTool) tool).getImage(), "png", baos);
+                    imageDataItem.pixels.write(baos.toByteArray());                    
                 }
             } else if (tool instanceof PixeledTool) {
                 for (Point point : ((PixeledTool) tool).getPixels()) {
@@ -231,13 +254,11 @@ public class AboudaFileFormat {
                 } else if (tool instanceof FreeHand) {
                     imageDataItem.type = OBJTYPE_FREEHAND;
                 }
-            } else {
-                if (tool instanceof LinedTool) {
-                    imageDataItem.type = OBJTYPE_LINE;
+            } else if (tool instanceof LinedTool) {
+                imageDataItem.type = OBJTYPE_LINE;
 
-                    imageDataItem.endX = (short) ((LinedTool) tool).getEndX();
-                    imageDataItem.endY = (short) ((LinedTool) tool).getEndY();
-                }
+                imageDataItem.endX = (short) ((LinedTool) tool).getEndX();
+                imageDataItem.endY = (short) ((LinedTool) tool).getEndY();
             }
 
             ObjectItem objectItem = new ObjectItem();
@@ -266,6 +287,8 @@ public class AboudaFileFormat {
                 break;
             case OBJTYPE_FREEHAND:
             case OBJTYPE_ERASER:
+            case OBJTYPE_FILL:
+            case OBJTYPE_IMAGE:
                 item.size = 18 + AboudaFactory.compressBuffer(
                         item.pixels.toByteArray()).length;
                 break;

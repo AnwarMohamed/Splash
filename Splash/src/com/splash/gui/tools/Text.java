@@ -55,12 +55,23 @@ public class Text extends Tool {
 
     @Override
     public void drawResizePoint(int x, int y, Graphics2D graph2d) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void drawResizePoints(Graphics2D graph2d) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void translate(int x, int y) {
+    }
+
+    @Override
+    public void translateBy(int x, int y) {
+    }
+
+    @Override
+    public boolean withinBounds(int x, int y) {
+        return false;
     }
 
 }

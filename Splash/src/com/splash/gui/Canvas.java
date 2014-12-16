@@ -306,6 +306,7 @@ public class Canvas extends JComponent implements MouseListener,
                     }
                 }
 
+                getSnapshotManager().saveSnapshot(true);
             } else if (selectedTool instanceof Text) {
 
             } else if (selectedTool instanceof ImagedTool) {
@@ -332,6 +333,8 @@ public class Canvas extends JComponent implements MouseListener,
                     selectedTool.setSize(
                             iconImage.getWidth(null),
                             iconImage.getHeight(null));
+
+                    getSnapshotManager().saveSnapshot(true);
                 }
 
             }
@@ -660,9 +663,9 @@ public class Canvas extends JComponent implements MouseListener,
     }
 
     public Image getImageFromClipboard() throws Exception {
-        Transferable transferable = 
-                Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-        if (transferable != null 
+        Transferable transferable
+                = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+        if (transferable != null
                 && transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
             return (Image) transferable.getTransferData(DataFlavor.imageFlavor);
         } else {

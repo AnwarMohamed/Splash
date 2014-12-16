@@ -41,6 +41,10 @@ public class MergedTool extends DimensionedTool {
         return mergedTools;
     }
 
+    public void setMergedImage(BufferedImage image) {
+        mergedImage = image;
+    }
+    
     public void mergeTools(ArrayList<Tool> tools) {
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;

@@ -25,6 +25,7 @@ import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.MergedTool;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Fill extends MergedTool {
@@ -62,7 +63,7 @@ public class Fill extends MergedTool {
     public void fillAround(int x, int y, Layer layer) {
 
     }
-
+    
     @Override
     public void paint(Graphics g) {
         super.paint(g);

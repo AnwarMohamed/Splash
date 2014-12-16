@@ -26,7 +26,9 @@ import com.splash.file.AboudaFileFormat.ImageDataItem;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_CIRCLE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_ELLIPSE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_ERASER;
+import static com.splash.file.AboudaFileFormat.OBJTYPE_FILL;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_FREEHAND;
+import static com.splash.file.AboudaFileFormat.OBJTYPE_IMAGE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_ISOTRIANGLE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_LINE;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_RECTANGLE;
@@ -35,6 +37,7 @@ import static com.splash.file.AboudaFileFormat.OBJTYPE_ROUNDED;
 import static com.splash.file.AboudaFileFormat.OBJTYPE_SQUARE;
 import com.splash.gui.Canvas;
 import com.splash.gui.elements.DimensionedTool;
+import com.splash.gui.elements.ImagedTool;
 import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.tools.Circle;
@@ -43,11 +46,13 @@ import com.splash.gui.tools.Eraser;
 import com.splash.gui.tools.FreeHand;
 import com.splash.gui.tools.IsocelesTriangle;
 import com.splash.gui.elements.LinedTool;
+import com.splash.gui.tools.Fill;
 import com.splash.gui.tools.Rectangle;
 import com.splash.gui.tools.RightTriangle;
 import com.splash.gui.tools.RoundedRect;
 import com.splash.gui.tools.Square;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -58,9 +63,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.zip.DataFormatException;
+import javax.imageio.ImageIO;
 
 public class AboudaFile {
-    
+
     public AboudaFile(byte[] buffer, Canvas canvas) {
         try {
             if (buffer.length >= 34) {
@@ -70,7 +76,7 @@ public class AboudaFile {
         } catch (IOException | DataFormatException ex) {
         }
     }
-    
+
     public AboudaFile(String filename, Canvas canvas) {
         try {
             InputStream inputStream
@@ -80,24 +86,24 @@ public class AboudaFile {
             e.printStackTrace();
         }
     }
-    
+
     public final static String signature = "ABOUDA";
-    
+
     private void parseFile(InputStream buffer, Canvas canvas)
             throws IOException, DataFormatException {
-        
+
         if (buffer.available() < 34) {
             return;
         }
-        
+
         FileHeader fileHeader = new FileHeader();
         buffer.read(fileHeader.signature, 0, 6);
-        
+
         if (!signature.equals(
                 new String(fileHeader.signature, 0, 6))) {
             return;
         }
-        
+
         fileHeader.fileSize = intFromByteArray(buffer);
         fileHeader.colorsDataOffset = intFromByteArray(buffer);
         fileHeader.colorsDataSize = intFromByteArray(buffer);
@@ -105,55 +111,55 @@ public class AboudaFile {
         fileHeader.layersDataSize = intFromByteArray(buffer);
         fileHeader.imageDataOffset = intFromByteArray(buffer);
         fileHeader.imageDataSize = intFromByteArray(buffer);
-        
+
         ArrayList<Integer> colors = null;
-        
+
         if (fileHeader.colorsDataSize > 0) {
             int colorsSize = intFromByteArray(buffer);
             colors = new ArrayList<>();
-            
+
             for (int i = 0; i < colorsSize; i++) {
                 colors.add(intFromByteArray(buffer));
             }
         }
-        
+
         ArrayList<ArrayList<Integer>> layers;
         ArrayList<Integer> offsets;
         int imageWidth, imageHeight;
-        
+
         if (fileHeader.layersDataSize > 0) {
             int layersSize = shortFromByteArray(buffer);
             imageWidth = shortFromByteArray(buffer);
             imageHeight = shortFromByteArray(buffer);
             layers = new ArrayList<>();
-            
+
             for (int i = 0; i < layersSize; i++) {
                 int objectsSize = shortFromByteArray(buffer);
                 offsets = new ArrayList<>();
-                
+
                 for (int j = 0; j < objectsSize; j++) {
                     offsets.add(intFromByteArray(buffer));
                 }
-                
+
                 layers.add(offsets);
             }
-            
+
             if (fileHeader.imageDataSize > 0) {
                 byte[] imageData = new byte[buffer.available()];
                 buffer.read(imageData);
-                
+
                 canvas.clearLayers();
-                
+
                 Collections.reverse(layers);
                 for (ArrayList<Integer> layerItem : layers) {
                     Layer newLayer = new Layer(imageWidth, imageHeight);
-                    
+
                     Tool newTool = null;
                     ImageDataItem imageItem;
-                    
+
                     for (Integer offset : layerItem) {
                         imageItem = new ImageDataItem();
-                        
+
                         imageItem.type = imageData[offset];
                         imageItem.x = shortFromByteArray(
                                 Arrays.copyOfRange(
@@ -168,7 +174,7 @@ public class AboudaFile {
                         imageItem.size = intFromByteArray(
                                 Arrays.copyOfRange(
                                         imageData, offset + 10, offset + 14));
-                        
+
                         switch (imageItem.type) {
                             case OBJTYPE_CIRCLE:
                                 newTool = new Circle();
@@ -200,12 +206,18 @@ public class AboudaFile {
                             case OBJTYPE_FREEHAND:
                                 newTool = new FreeHand();
                                 break;
+                            case OBJTYPE_FILL:
+                                newTool = new Fill();
+                                break;
+                            case OBJTYPE_IMAGE:
+                                newTool = new ImagedTool();
+                                break;
                         }
-                        
+
                         newTool.setCoordinates(imageItem.x, imageItem.y);
                         newTool.setColor(new Color(colors.get(imageItem.color)));
                         newTool.setBorderSize(imageItem.border);
-                        
+
                         switch (imageItem.type) {
                             case OBJTYPE_CIRCLE:
                             case OBJTYPE_ELLIPSE:
@@ -220,7 +232,7 @@ public class AboudaFile {
                                 imageItem.height = shortFromByteArray(
                                         Arrays.copyOfRange(imageData,
                                                 offset + 16, offset + 18));
-                                
+
                                 ((DimensionedTool) newTool).setWidth(
                                         imageItem.width);
                                 ((DimensionedTool) newTool).setHeight(
@@ -241,14 +253,14 @@ public class AboudaFile {
                                 int bufferSize = intFromByteArray(
                                         Arrays.copyOfRange(imageData,
                                                 offset + 14, offset + 18));
-                                
+
                                 byte[] compressed = Arrays.copyOfRange(
                                         imageData,
                                         offset + 18, offset + 18 + bufferSize);
                                 byte[] decompressed
                                         = AboudaFactory.decompressBuffer(
                                                 compressed);
-                                
+
                                 for (int i = 0; i < decompressed.length; i += 4) {
                                     newTool.setCoordinates(
                                             shortFromByteArray(
@@ -263,46 +275,77 @@ public class AboudaFile {
                                                             i + 4)));
                                 }
                                 break;
+                            case OBJTYPE_FILL:
+                                int fillBufferSize = intFromByteArray(
+                                        Arrays.copyOfRange(imageData,
+                                                offset + 14, offset + 18));
+
+                                byte[] fillCompressed = Arrays.copyOfRange(
+                                        imageData,
+                                        offset + 18, offset + 18 + fillBufferSize);
+                                byte[] fillDecompressed
+                                        = AboudaFactory.decompressBuffer(
+                                                fillCompressed);
+
+                                BufferedImage fillBuffer = ImageIO.read(
+                                        new ByteArrayInputStream(fillDecompressed));
+                                ((Fill) newTool).setMergedImage(fillBuffer);
+                                break;
+                            case OBJTYPE_IMAGE:
+                                int imageBufferSize = intFromByteArray(
+                                        Arrays.copyOfRange(imageData,
+                                                offset + 14, offset + 18));
+
+                                byte[] imageCompressed = Arrays.copyOfRange(
+                                        imageData,
+                                        offset + 18, offset + 18 + imageBufferSize);
+                                byte[] imageDecompressed
+                                        = AboudaFactory.decompressBuffer(
+                                                imageCompressed);
+                                BufferedImage imageBuffer = ImageIO.read(
+                                        new ByteArrayInputStream(imageDecompressed));
+                                ((ImagedTool) newTool).setImage(imageBuffer);
+                                break;
                         }
-                        
+
                         newLayer.addTool(newTool);
                     }
-                    
+
                     canvas.addLayer(newLayer);
                 }
             } else if (layersSize > 0) {
                 canvas.clearLayers();
-                
+
                 for (int i = 0; i < layersSize; i++) {
                     canvas.addLayer(new Layer(imageWidth, imageHeight));
                 }
-                
+
             }
         }
         isReady = true;
     }
-    
+
     private boolean isReady = false;
-    
+
     public boolean isReady() {
         return isReady;
     }
-    
+
     private short shortFromByteArray(byte[] buffer) {
         return ByteBuffer.wrap(buffer).getShort();
     }
-    
+
     private int intFromByteArray(byte[] buffer) {
         return ByteBuffer.wrap(buffer).getInt();
     }
-    
+
     private short shortFromByteArray(InputStream is)
             throws IOException {
         byte[] tempShort = new byte[2];
         is.read(tempShort, 0, 2);
         return ByteBuffer.wrap(tempShort).getShort();
     }
-    
+
     private int intFromByteArray(InputStream is)
             throws IOException {
         byte[] tempInt = new byte[4];
