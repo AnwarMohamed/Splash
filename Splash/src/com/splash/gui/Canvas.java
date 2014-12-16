@@ -255,12 +255,13 @@ public class Canvas extends JComponent implements MouseListener,
 
             if (selectedTool instanceof Move) {
                 if (selectedObjects != null && selectedObjects.size() == 1
-                        && withinBounds(
+                        && selectedObjects.get(0).withinBounds(
                                 e.getX() - getImageX(),
-                                e.getY() - getImageY(),
-                                selectedObjects.get(0))) {
+                                e.getY() - getImageY())) {
+
                     mouseX = e.getX() - getImageX() - selectedObjects.get(0).getX();
                     mouseY = e.getY() - getImageY() - selectedObjects.get(0).getY();
+
                 }
             } else {
                 clearSelectedObjects();
@@ -450,40 +451,6 @@ public class Canvas extends JComponent implements MouseListener,
                         getImageX(), getImageY(),
                         getImageWidth(), getImageHeight());
         return cellBounds.contains(x, y);
-    }
-
-    private boolean withinBounds(int x, int y, Tool tool) {
-        if (tool instanceof DimensionedTool) {
-            DimensionedTool dimensionedTool = (DimensionedTool) tool;
-            if (x >= tool.getX() - tool.getBorderSize() / 2
-                    && (tool.getX() + tool.getBorderSize()
-                    + dimensionedTool.getWidth() >= x)
-                    && (y >= tool.getY() - tool.getBorderSize() / 2)
-                    && (tool.getY() + tool.getBorderSize()
-                    + dimensionedTool.getHeight() >= y)) {
-                return true;
-            }
-        } else if (tool instanceof PixeledTool) {
-            if (x >= ((PixeledTool) tool).getMinX() - tool.getBorderSize() / 2
-                    && ((PixeledTool) tool).getMaxX() + tool.getBorderSize() / 2 >= x
-                    && y >= ((PixeledTool) tool).getMinY() - tool.getBorderSize() / 2
-                    && ((PixeledTool) tool).getMaxY() + tool.getBorderSize() / 2 >= y) {
-                return true;
-            }
-        } else if (tool instanceof LinedTool) {
-            if (x >= tool.getX() - tool.getBorderSize() / 2
-                    && tool.getX() + tool.getBorderSize() / 2 >= x
-                    && y >= tool.getY() - tool.getBorderSize() / 2
-                    && tool.getY() + tool.getBorderSize() / 2 >= y
-                    && x >= ((LinedTool) tool).getEndX() + tool.getBorderSize() / 2
-                    && ((LinedTool) tool).getEndX() + tool.getBorderSize() / 2 >= x
-                    && y >= ((LinedTool) tool).getEndY() - tool.getBorderSize() / 2
-                    && ((LinedTool) tool).getEndY() + tool.getBorderSize() / 2 >= y) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private Tool withinBounds(int x, int y, Layer layer) {

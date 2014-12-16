@@ -21,7 +21,6 @@
  */
 package com.splash.gui.elements;
 
-import com.splash.gui.elements.Tool;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -81,10 +80,10 @@ public class LinedTool extends Tool {
         endX = x;
         endY = y;
 
-        minX = Math.min(getX(), getEndX()) - getBorderSize() / 2;
-        minY = Math.min(getY(), getEndY()) - getBorderSize() / 2;
-        maxX = minX + Math.abs(getX() - getEndX()) + getBorderSize();
-        maxY = minY + Math.abs(getY() - getEndY()) + getBorderSize();
+        minX = min(getX(), getEndX()) - getBorderSize() / 2;
+        minY = min(getY(), getEndY()) - getBorderSize() / 2;
+        maxX = minX + abs(getX() - getEndX()) + getBorderSize();
+        maxY = minY + abs(getY() - getEndY()) + getBorderSize();
     }
 
     @Override
@@ -103,8 +102,13 @@ public class LinedTool extends Tool {
                     new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
                             BasicStroke.JOIN_MITER, 10.0f,
                             new float[]{3.0f}, 0.0f));
+
             Shape drawRect = new Rectangle2D.Float(
-                    minX, minY, maxX - minX, maxY - minY);
+                    min(getX(), getEndX()) - getBorderSize() / 2,
+                    min(getY(), getEndY()) - getBorderSize() / 2,
+                    abs(getX() - getEndX()) + getBorderSize(),
+                    abs(getY() - getEndY()) + getBorderSize());
+
             graph.draw(drawRect);
             graph.setStroke(new BasicStroke(1));
             drawResizePoints(graph);
@@ -169,23 +173,12 @@ public class LinedTool extends Tool {
     public void translate(int x, int y) {
         int newX, newY, newEndX, newEndY;
 
-        if (getX() < getEndX()) {
-            newX = getX() + (x - getX());
-            newEndX = getEndX() + (x - getX());
-        } else {
-            newX = getX() + (x - getEndX());
-            newEndX = getEndX() + (x - getEndX());
-        }
+        newX = getX() + (x - getX());
+        newEndX = getEndX() + (x - getX());
+        newY = getY() + (y - getY());
+        newEndY = getEndY() + (y - getY());
 
-        if (getY() < getEndY()) {
-            newY = getY() + (y - getY());
-            newEndY = getEndY() + (y - getY());
-        } else {
-            newY = getY() + (y - getEndY());
-            newEndY = getEndY() + (y - getEndY());
-        }
-
-        super.setCoordinates(newX, newY);
+        setLocation(newX, newY);
         setEndPoint(newEndX, newEndY);
     }
 }
