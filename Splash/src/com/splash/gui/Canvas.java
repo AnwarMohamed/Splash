@@ -387,15 +387,15 @@ public class Canvas extends JComponent implements MouseListener,
         } else if (selectedTool instanceof Move) {
 
             if (selectedObjects != null && selectedObjects.size() == 1
-                    && withinBounds(
+                    && selectedObjects.get(0).withinBounds(
                             e.getX() - getImageX(),
-                            e.getY() - getImageY(),
-                            selectedObjects.get(0))) {
-                selectedObjects.get(0).setCoordinates(
+                            e.getY() - getImageY())) {
+                selectedObjects.get(0).translate(
                         e.getX() - getImageX() - mouseX,
                         e.getY() - getImageY() - mouseY);
             }
         }
+
         repaint();
     }
 
@@ -454,12 +454,13 @@ public class Canvas extends JComponent implements MouseListener,
 
     private boolean withinBounds(int x, int y, Tool tool) {
         if (tool instanceof DimensionedTool) {
+            DimensionedTool dimensionedTool = (DimensionedTool) tool;
             if (x >= tool.getX() - tool.getBorderSize() / 2
                     && (tool.getX() + tool.getBorderSize()
-                    + ((DimensionedTool) tool).getWidth() >= x)
+                    + dimensionedTool.getWidth() >= x)
                     && (y >= tool.getY() - tool.getBorderSize() / 2)
                     && (tool.getY() + tool.getBorderSize()
-                    + ((DimensionedTool) tool).getHeight() >= y)) {
+                    + dimensionedTool.getHeight() >= y)) {
                 return true;
             }
         } else if (tool instanceof PixeledTool) {
@@ -469,27 +470,16 @@ public class Canvas extends JComponent implements MouseListener,
                     && ((PixeledTool) tool).getMaxY() + tool.getBorderSize() / 2 >= y) {
                 return true;
             }
-        } else if (tool instanceof Tool) {
-            if (tool instanceof LinedTool) {
-                if (x >= tool.getX() - tool.getBorderSize() / 2
-                        && tool.getX() + tool.getBorderSize() / 2 >= x
-                        && y >= tool.getY() - tool.getBorderSize() / 2
-                        && tool.getY() + tool.getBorderSize() / 2 >= y
-                        && x >= ((LinedTool) tool).getEndX() + tool.getBorderSize() / 2
-                        && ((LinedTool) tool).getEndX() + tool.getBorderSize() / 2 >= x
-                        && y >= ((LinedTool) tool).getEndY() - tool.getBorderSize() / 2
-                        && ((LinedTool) tool).getEndY() + tool.getBorderSize() / 2 >= y) {
-                    return true;
-                }
-            } else {
-                /*
-                 if (x >= tool.getX()
-                 && tool.getX() >= x
-                 && y >= tool.getY()
-                 && tool.getY() >= y) {
-                 return tool;
-                 }
-                 */
+        } else if (tool instanceof LinedTool) {
+            if (x >= tool.getX() - tool.getBorderSize() / 2
+                    && tool.getX() + tool.getBorderSize() / 2 >= x
+                    && y >= tool.getY() - tool.getBorderSize() / 2
+                    && tool.getY() + tool.getBorderSize() / 2 >= y
+                    && x >= ((LinedTool) tool).getEndX() + tool.getBorderSize() / 2
+                    && ((LinedTool) tool).getEndX() + tool.getBorderSize() / 2 >= x
+                    && y >= ((LinedTool) tool).getEndY() - tool.getBorderSize() / 2
+                    && ((LinedTool) tool).getEndY() + tool.getBorderSize() / 2 >= y) {
+                return true;
             }
         }
 
@@ -498,7 +488,8 @@ public class Canvas extends JComponent implements MouseListener,
 
     private Tool withinBounds(int x, int y, Layer layer) {
         for (Tool tool : layer.getTools()) {
-            if (withinBounds(x, y, tool)) {
+            /*if (withinBounds(x, y, tool)) {*/
+            if (tool.withinBounds(x, y)) {
                 return tool;
             }
         }

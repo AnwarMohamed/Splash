@@ -28,6 +28,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import java.util.ArrayList;
 
 public abstract class PixeledTool extends Tool {
@@ -67,10 +69,10 @@ public abstract class PixeledTool extends Tool {
         super.setCoordinates(x, y);
         pixels.add(new Point(x, y));
 
-        minX = Math.min(minX, x);
-        maxX = Math.max(maxX, x);
-        minY = Math.min(minY, y);
-        maxY = Math.max(maxY, y);
+        minX = min(minX, x);
+        maxX = max(maxX, x);
+        minY = min(minY, y);
+        maxY = max(maxY, y);
     }
 
     @Override
@@ -112,9 +114,37 @@ public abstract class PixeledTool extends Tool {
                     Math.abs(getMaxX() - getMinX()),
                     Math.abs(getMaxY() - getMinY()));
             graph.draw(drawRect);
-            graph.setStroke(new BasicStroke(getBorderSize()));            
+            graph.setStroke(new BasicStroke(getBorderSize()));
             drawResizePoints(graph);
-            graph.setColor(getColor());            
+            graph.setColor(getColor());
+        }
+    }
+
+    @Override
+    public boolean withinBounds(int x, int y) {
+        final java.awt.Rectangle cellBounds = new java.awt.Rectangle(
+                getMinX(), getMinY(),
+                Math.abs(getMaxX() - getMinX()),
+                Math.abs(getMaxY() - getMinY()));
+        return cellBounds.contains(x, y);
+    }
+
+    @Override
+    public void translate(int x, int y) {
+        minX = Integer.MAX_VALUE;
+        maxX = Integer.MIN_VALUE;
+        minY = Integer.MAX_VALUE;
+        maxY = Integer.MIN_VALUE;
+
+        for (Point pixel : getPixels()) {
+            pixel.setLocation(
+                    pixel.x + (x - pixel.x),
+                    pixel.y + (y - pixel.y));
+
+            minX = min(minX, pixel.x);
+            maxX = max(maxX, pixel.x);
+            minY = min(minY, pixel.y);
+            maxY = max(maxY, pixel.y);
         }
     }
 }

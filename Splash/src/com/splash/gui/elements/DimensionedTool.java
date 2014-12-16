@@ -77,7 +77,17 @@ public abstract class DimensionedTool extends Tool {
     public void translate(int x, int y) {
         setCoordinates(x, y);
     }
-    
+
+    @Override
+    public boolean withinBounds(int x, int y) {
+        final java.awt.Rectangle cellBounds = new java.awt.Rectangle(
+                getX() - getBorderSize() / 2,
+                getY() - getBorderSize() / 2,
+                getWidth() + getBorderSize() - 1,
+                getHeight() + getBorderSize() - 1);
+        return cellBounds.contains(x, y);
+    }
+
     @Override
     public void drawResizePoints(Graphics2D graph2d) {
         drawResizePoint(
@@ -127,8 +137,8 @@ public abstract class DimensionedTool extends Tool {
             Shape drawRect = new Rectangle2D.Float(
                     getX() - getBorderSize() / 2,
                     getY() - getBorderSize() / 2,
-                    getWidth() + getBorderSize(),
-                    getHeight() + getBorderSize());
+                    getWidth() + getBorderSize() - 1,
+                    getHeight() + getBorderSize() - 1);
             graph.draw(drawRect);
             graph.setStroke(new BasicStroke(1));
             drawResizePoints(graph);

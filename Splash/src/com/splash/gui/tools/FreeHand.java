@@ -48,13 +48,4 @@ public class FreeHand extends PixeledTool {
     public FreeHand newInstance() {
         return new FreeHand();
     }
-
-    @Override
-    public void translate(int x, int y) {
-        for (Point pixel : getPixels()) {
-            pixel.setLocation(
-                    pixel.getX() + (x - pixel.getX()),
-                    pixel.getY() + (y - pixel.getY()));
-        }
-    }
 }

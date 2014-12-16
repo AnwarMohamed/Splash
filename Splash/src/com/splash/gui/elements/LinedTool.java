@@ -118,6 +118,13 @@ public class LinedTool extends Tool {
     }
 
     @Override
+    public boolean withinBounds(int x, int y) {
+        final java.awt.Rectangle cellBounds = new java.awt.Rectangle(
+                minX, minY, maxX - minX, maxY - minY);
+        return cellBounds.contains(x, y);
+    }
+
+    @Override
     public LinedTool newInstance() {
         return new LinedTool();
     }
@@ -177,7 +184,7 @@ public class LinedTool extends Tool {
             newY = getY() + (y - getEndY());
             newEndY = getEndY() + (y - getEndY());
         }
-        
+
         super.setCoordinates(newX, newY);
         setEndPoint(newEndX, newEndY);
     }
