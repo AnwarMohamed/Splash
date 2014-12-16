@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.KeyStroke;
 
 public class Canvas extends JComponent implements MouseListener,
         MouseMotionListener {
@@ -148,6 +149,19 @@ public class Canvas extends JComponent implements MouseListener,
                     }
                     repaint();
                     clearSelectedObjects();
+                } else if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_A) {
+                    for (Tool tool : layers.get(selectedLayer).getTools()) {
+                        tool.setSelected(true);
+
+                        if (selectedObjects == null) {
+                            selectedObjects = new ArrayList<>();
+                        }
+
+                        selectedObjects.add(tool);
+                    }
+
+                    mainFrame.getToolBoxDialog().moveAction.doClick();
+                    repaint();
                 }
                 return false;
             }

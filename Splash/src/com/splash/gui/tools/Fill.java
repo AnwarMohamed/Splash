@@ -21,6 +21,7 @@
  */
 package com.splash.gui.tools;
 
+import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.MergedTool;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -36,7 +37,8 @@ public class Fill extends MergedTool {
         x -= getX();
         y -= getY();
         
-        if (getMergedImage() != null) {
+        if (getMergedImage() != null
+                && getMergedImage().getData().getBounds().contains(x, y)) {
             ArrayList<Point> pointList = new ArrayList<>();
             int initialColor = getMergedImage().getRGB(x, y);
             pointList.add(new Point(x, y));
@@ -55,6 +57,10 @@ public class Fill extends MergedTool {
                 }
             }
         }
+    }
+
+    public void fillAround(int x, int y, Layer layer) {
+
     }
 
     @Override

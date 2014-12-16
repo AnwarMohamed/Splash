@@ -39,7 +39,6 @@ public class MenuBar extends JMenuBar {
     private JMenu fileMenu = new JMenu("File");
     private JMenu editMenu = new JMenu("Edit");
     private JMenu viewMenu = new JMenu("View");
-    private JMenu imageMenu = new JMenu("Image");
     private JMenu layersMenu = new JMenu("Layers");
     private JMenu helpMenu = new JMenu("Help");
 
@@ -225,8 +224,6 @@ public class MenuBar extends JMenuBar {
         colorsAction.setSelected(true);
         viewMenu.add(colorsAction);
         add(viewMenu);
-
-        add(imageMenu);
 
         addLayerAction.addActionListener(new ActionListener() {
             @Override
