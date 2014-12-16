@@ -36,9 +36,9 @@ public abstract class PixeledTool extends Tool {
 
     private ArrayList<Point> pixels = new ArrayList<>();
     private int minX = Integer.MAX_VALUE;
-    private int maxX = Integer.MIN_VALUE;
+    private int maxX = 0;
     private int minY = Integer.MAX_VALUE;
-    private int maxY = Integer.MIN_VALUE;
+    private int maxY = 0;
 
     public int getMinY() {
         return minY;
@@ -129,12 +129,30 @@ public abstract class PixeledTool extends Tool {
         return cellBounds.contains(x, y);
     }
 
+    public void translateBy(int x, int y) {
+        minX = Integer.MAX_VALUE;
+        maxX = 0;
+        minY = Integer.MAX_VALUE;
+        maxY = 0;
+
+        for (Point pixel : getPixels()) {
+            pixel.setLocation(
+                    pixel.x + x,
+                    pixel.y + y);
+
+            minX = min(minX, pixel.x);
+            maxX = max(maxX, pixel.x);
+            minY = min(minY, pixel.y);
+            maxY = max(maxY, pixel.y);
+        }
+    }
+
     @Override
     public void translate(int x, int y) {
         minX = Integer.MAX_VALUE;
-        maxX = Integer.MIN_VALUE;
+        maxX = 0;
         minY = Integer.MAX_VALUE;
-        maxY = Integer.MIN_VALUE;
+        maxY = 0;
 
         for (Point pixel : getPixels()) {
             pixel.setLocation(

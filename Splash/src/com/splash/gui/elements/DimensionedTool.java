@@ -44,7 +44,7 @@ public abstract class DimensionedTool extends Tool {
 
     public void setBaseCoordinates(int x, int y) {
         baseX = x;
-        baseY = y;              
+        baseY = y;
     }
 
     public DimensionedTool() {
@@ -76,6 +76,11 @@ public abstract class DimensionedTool extends Tool {
     @Override
     public void translate(int x, int y) {
         setCoordinates(x, y);
+    }
+
+    @Override
+    public void translateBy(int x, int y) {
+        setCoordinates(x + getX(), y + getY());
     }
 
     @Override

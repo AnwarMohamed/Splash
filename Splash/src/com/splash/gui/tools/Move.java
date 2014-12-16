@@ -48,6 +48,10 @@ public class Move extends Tool {
     }
 
     @Override
+    public void translateBy(int x, int y) {
+    }
+
+    @Override
     public boolean withinBounds(int x, int y) {
         return false;
     }

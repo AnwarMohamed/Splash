@@ -58,6 +58,7 @@ public abstract class Tool extends JComponent {
     }
 
     public abstract void translate(int x, int y);
+    public abstract void translateBy(int x, int y);
     public abstract boolean withinBounds(int x, int y);
     
     protected Graphics2D graph;

@@ -181,4 +181,17 @@ public class LinedTool extends Tool {
         setLocation(newX, newY);
         setEndPoint(newEndX, newEndY);
     }
+
+    @Override
+    public void translateBy(int x, int y) {
+        int newX, newY, newEndX, newEndY;
+
+        newX = getX() + x;
+        newEndX = getEndX() + x;
+        newY = getY() + y;
+        newEndY = getEndY() + y;
+
+        setLocation(newX, newY);
+        setEndPoint(newEndX, newEndY);
+    }
 }

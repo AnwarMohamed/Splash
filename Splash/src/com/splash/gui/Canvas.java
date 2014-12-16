@@ -296,14 +296,16 @@ public class Canvas extends JComponent implements MouseListener,
             }
 
             if (selectedTool instanceof Move) {
-                if (selectedObjects != null && selectedObjects.size() == 1
-                        && selectedObjects.get(0).withinBounds(
+                if (selectedObjects != null && selectedObjects.size() > 0) {
+                    for (Tool selectedObject : selectedObjects) {
+                        if (selectedObject.withinBounds(
                                 e.getX() - getImageX(),
                                 e.getY() - getImageY())) {
-
-                    mouseX = e.getX() - getImageX() - selectedObjects.get(0).getX();
-                    mouseY = e.getY() - getImageY() - selectedObjects.get(0).getY();
-
+                            mouseX = e.getX() - getImageX();
+                            mouseY = e.getY() - getImageY();
+                            break;
+                        }
+                    }
                 }
             } else {
                 clearSelectedObjects();
@@ -439,13 +441,27 @@ public class Canvas extends JComponent implements MouseListener,
 
         } else if (selectedTool instanceof Move) {
 
-            if (selectedObjects != null && selectedObjects.size() == 1
-                    && selectedObjects.get(0).withinBounds(
+            boolean inRange = false;
+            if (selectedObjects != null && selectedObjects.size() > 0) {
+                for (Tool selectedObject : selectedObjects) {
+                    if (selectedObject.withinBounds(
                             e.getX() - getImageX(),
                             e.getY() - getImageY())) {
-                selectedObjects.get(0).translate(
-                        e.getX() - getImageX() - mouseX,
-                        e.getY() - getImageY() - mouseY);
+                        inRange = true;
+                        break;
+                    }
+                }
+
+                if (inRange) {
+                    for (Tool selectedObject : selectedObjects) {
+                        selectedObject.translateBy(
+                                e.getX() - getImageX() - mouseX,
+                                e.getY() - getImageY() - mouseY);
+                    }
+                    mouseX = e.getX() - getImageX();
+                    mouseY = e.getY() - getImageY();
+
+                }
             }
         }
 
