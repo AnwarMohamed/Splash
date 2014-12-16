@@ -32,18 +32,16 @@ public class Main {
         WebLookAndFeel.setDecorateFrames(true);
         WebLookAndFeel.setDecorateDialogs(true);
 
-        /*
         AboutWindow splashWindow = new AboutWindow(true);
         splashWindow.show();
-        
+
         try {
             Thread.sleep(4000);
         } catch (InterruptedException ex) {
-        }                
+        }
 
         splashWindow.hide();
-        */
-                
+
         MainWindow mainWindow = new MainWindow();
         mainWindow.show();
     }
