@@ -35,9 +35,6 @@ public class MergedTool extends DimensionedTool {
 
     public MergedTool() {
         super();
-
-        mergedImage = new BufferedImage(
-                getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
     }
 
     public ArrayList<Tool> getMergedTools() {
@@ -47,8 +44,8 @@ public class MergedTool extends DimensionedTool {
     public void mergeTools(ArrayList<Tool> tools) {
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
-        int maxX = Integer.MIN_VALUE;
-        int maxY = Integer.MIN_VALUE;
+        int maxX = 0;
+        int maxY = 0;
 
         for (Tool tool : tools) {
             if (tool instanceof DimensionedTool) {
@@ -74,8 +71,12 @@ public class MergedTool extends DimensionedTool {
             }
         }
 
+        setLocation(minX, minY);
+        setWidth(maxX - minX + 1);
+        setHeight(maxY - minY + 1);
+
         mergedImage = new BufferedImage(
-                maxX - minX, maxY - minY, BufferedImage.TYPE_INT_ARGB);
+                maxX - minX + 1, maxY - minY + 1, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D mergedGraphics = mergedImage.createGraphics();
 
@@ -93,17 +94,22 @@ public class MergedTool extends DimensionedTool {
                 LinedTool linedTool = (LinedTool) tool;
 
             }
+
             tool.paint(mergedGraphics);
         }
+    }
 
-        setCoordinates(minX, minY);
-        setSize(maxX - minX, maxY - minY);
+    public BufferedImage getMergedImage() {
+        return mergedImage;
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        graph.drawImage(mergedImage, getX(), getY(), null);
+
+        if (mergedImage != null) {
+            graph.drawImage(mergedImage, getX(), getY(), null);
+        }
     }
 
     @Override

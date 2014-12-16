@@ -21,62 +21,45 @@
  */
 package com.splash.gui.tools;
 
-import com.splash.gui.elements.PixeledTool;
+import com.splash.gui.elements.MergedTool;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Fill extends PixeledTool {
+public class Fill extends MergedTool {
 
     public Fill() {
         super();
     }
 
-    public void doFill(BufferedImage image) {
-
-        ArrayList<Point> pointList = new ArrayList<>();
-        int x = getX(), y = getY();
-        int initialColor = image.getRGB(x, y);
-
-        pointList.add(new Point(x, y));
-        getPixels().clear();
+    public void fillArea(int x, int y) {
+        x -= getX();
+        y -= getY();
         
-        while (pointList.size() > 0) {
-            Point p = pointList.remove(0);
-            if (image.getRGB(p.x, p.y) == initialColor) {
-                x = p.x;
-                y = p.y;
+        if (getMergedImage() != null) {
+            ArrayList<Point> pointList = new ArrayList<>();
+            int initialColor = getMergedImage().getRGB(x, y);
+            pointList.add(new Point(x, y));
 
-                //image.setRGB(x, y, fillColor);
-                getPixels().add(new Point(x, y));
-                pointList.add(new Point(x - 1, y));
-                pointList.add(new Point(x + 1, y));
-                pointList.add(new Point(x, y - 1));
-                pointList.add(new Point(x, y + 1));
-                System.out.println(x + " " + y);
-            } else {
-                //getPixels().add(new Point(x, y));
+            while (pointList.size() > 0) {
+                Point p = pointList.remove(0);
+                if (getMergedImage().getRGB(p.x, p.y) == initialColor) {
+                    x = p.x;
+                    y = p.y;
+                    getMergedImage().setRGB(x, y, getColor().getRGB());
+
+                    pointList.add(new Point(x - 1, y));
+                    pointList.add(new Point(x + 1, y));
+                    pointList.add(new Point(x, y - 1));
+                    pointList.add(new Point(x, y + 1));
+                }
             }
         }
-
-        xPoints = new int[getPixels().size()];
-        yPoints = new int[getPixels().size()];
-
-        for (int i = 0; i < getPixels().size(); i++) {
-            xPoints[i] = (int) getPixels().get(i).getX();
-            yPoints[i] = (int) getPixels().get(i).getY();
-        }
-
     }
-
-    private int[] xPoints = new int[1];
-    private int[] yPoints = new int[1];
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        graph.fillPolygon(xPoints, yPoints, yPoints.length);
     }
 
     @Override

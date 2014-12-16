@@ -231,7 +231,34 @@ public class Canvas extends JComponent implements MouseListener,
         }
 
         if (withinBounds(e.getX(), e.getY()) && selectedTool != null) {
-            if (selectedTool instanceof Text) {
+            if (selectedTool instanceof Fill) {
+
+                ArrayList<Tool> objects = new ArrayList<>();
+                Fill fillTool = (Fill) selectedTool;
+
+                if (colorDialog != null) {
+                    selectedTool.setColor(colorDialog.getColor());
+                }
+
+                for (Tool tool : layers.get(selectedLayer).getTools()) {
+                    if (tool.withinBounds(
+                            e.getX() - getImageX(),
+                            e.getY() - getImageY())) {
+                        objects.add(tool);
+                    }
+                }
+
+                fillTool.mergeTools(objects);
+                fillTool.fillArea(
+                        e.getX() - getImageX(),
+                        e.getY() - getImageY());
+
+                for (Tool tool : objects) {
+                    layers.get(selectedLayer).removeTool(tool);
+                }
+
+                selectedTool = selectedTool.newInstance();
+            } else if (selectedTool instanceof Text) {
 
             }
         }
@@ -272,8 +299,6 @@ public class Canvas extends JComponent implements MouseListener,
                         e.getX() - getImageX(), e.getY() - getImageY());
             } else if (selectedTool instanceof PixeledTool) {
             } else if (selectedTool instanceof Fill) {
-                ((Fill) selectedTool).doFill(
-                        getRenderedImage(layers.get(selectedLayer)));
             }
         }
     }
@@ -320,7 +345,9 @@ public class Canvas extends JComponent implements MouseListener,
                     }
                 }
 
-                selectedTool = selectedTool.newInstance();
+                if (!(selectedTool instanceof Fill)) {
+                    selectedTool = selectedTool.newInstance();
+                }
             }
 
             repaint();
@@ -455,12 +482,10 @@ public class Canvas extends JComponent implements MouseListener,
 
     private Tool withinBounds(int x, int y, Layer layer) {
         for (Tool tool : layer.getTools()) {
-            /*if (withinBounds(x, y, tool)) {*/
             if (tool.withinBounds(x, y)) {
                 return tool;
             }
         }
-
         return null;
     }
 
