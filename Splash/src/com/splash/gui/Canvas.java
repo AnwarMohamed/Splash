@@ -21,12 +21,14 @@
  */
 package com.splash.gui;
 
+import com.alee.laf.filechooser.WebFileChooser;
 import com.splash.SnapshotManager;
 import com.splash.gui.dialogs.BrushDialog;
 import com.splash.gui.dialogs.ColorPickerDialog;
 import com.splash.gui.dialogs.LayersDialog;
 import com.splash.gui.dialogs.ToolBoxDialog;
 import com.splash.gui.elements.DimensionedTool;
+import com.splash.gui.elements.ImagedTool;
 import com.splash.gui.elements.Layer;
 import com.splash.gui.elements.PixeledTool;
 import com.splash.gui.elements.Tool;
@@ -40,9 +42,13 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.TexturePaint;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -53,9 +59,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Canvas extends JComponent implements MouseListener,
         MouseMotionListener {
@@ -170,7 +179,20 @@ public class Canvas extends JComponent implements MouseListener,
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
                 .addKeyEventDispatcher(keyEventDispatcher);
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                fileChooser = new WebFileChooser();
+                fileChooser.setAcceptAllFileFilterUsed(false);
+                fileChooser.setFileFilter(
+                        new FileNameExtensionFilter(
+                                "Image Files", "jpg", "png", "gif", "jpeg"));
+            }
+        });
     }
+
+    private WebFileChooser fileChooser;
 
     public static BufferedImage backgroundLight;
 
@@ -263,19 +285,58 @@ public class Canvas extends JComponent implements MouseListener,
                     }
                 }
 
-                fillTool.mergeTools(objects);
-                fillTool.fillArea(
-                        e.getX() - getImageX(),
-                        e.getY() - getImageY());
+                if (objects.size() == 1 && objects.get(0) instanceof Fill) {
+                    if (colorDialog != null) {
+                        objects.get(0).setColor(colorDialog.getColor());
+                    }
 
-                for (Tool tool : objects) {
-                    layers.get(selectedLayer).removeTool(tool);
+                    ((Fill) objects.get(0)).fillArea(
+                            e.getX() - getImageX(),
+                            e.getY() - getImageY());
+
+                    layers.get(selectedLayer).removeTool(fillTool);
+                } else {
+                    fillTool.mergeTools(objects);
+                    fillTool.fillArea(
+                            e.getX() - getImageX(),
+                            e.getY() - getImageY());
+
+                    for (Tool tool : objects) {
+                        layers.get(selectedLayer).removeTool(tool);
+                    }
                 }
 
-                selectedTool = selectedTool.newInstance();
             } else if (selectedTool instanceof Text) {
 
+            } else if (selectedTool instanceof ImagedTool) {
+
+                fileChooser.setDialogTitle("Insert Image");
+                int returnVal = fileChooser.showSaveDialog(this);
+
+                if (returnVal == WebFileChooser.APPROVE_OPTION) {
+                    Image iconImage = new ImageIcon(
+                            fileChooser.getSelectedFile().getAbsolutePath())
+                            .getImage();
+
+                    BufferedImage bufferedImage = new BufferedImage(
+                            iconImage.getWidth(null), iconImage.getHeight(null),
+                            BufferedImage.TYPE_INT_ARGB);
+
+                    Graphics g = bufferedImage.createGraphics();
+                    g.drawImage(iconImage, 0, 0, null);
+                    g.dispose();
+
+                    ((ImagedTool) selectedTool).setWidth(bufferedImage.getWidth());
+                    ((ImagedTool) selectedTool).setHeight(bufferedImage.getHeight());
+                    ((ImagedTool) selectedTool).setImage(bufferedImage);
+                    selectedTool.setSize(
+                            iconImage.getWidth(null),
+                            iconImage.getHeight(null));
+                }
+
             }
+
+            selectedTool = selectedTool.newInstance();
         }
     }
 
@@ -372,7 +433,8 @@ public class Canvas extends JComponent implements MouseListener,
                     }
                 }
 
-                if (!(selectedTool instanceof Fill)) {
+                if (!(selectedTool instanceof Fill)
+                        && !(selectedTool instanceof ImagedTool)) {
                     selectedTool = selectedTool.newInstance();
                 }
             }
@@ -595,5 +657,21 @@ public class Canvas extends JComponent implements MouseListener,
             snapshotManager.reset();
             snapshotManager.saveSnapshot(true);
         }
+    }
+
+    public Image getImageFromClipboard() throws Exception {
+        Transferable transferable = 
+                Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+        if (transferable != null 
+                && transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+            return (Image) transferable.getTransferData(DataFlavor.imageFlavor);
+        } else {
+            return null;
+        }
+    }
+
+    void addTool(ImagedTool tool) {
+        layers.get(selectedLayer).addTool(tool);
+        repaint();
     }
 }

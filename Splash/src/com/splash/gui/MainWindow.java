@@ -31,16 +31,22 @@ import com.splash.gui.dialogs.BrushDialog;
 import com.splash.gui.dialogs.ColorPickerDialog;
 import com.splash.gui.dialogs.LayersDialog;
 import com.splash.gui.dialogs.ToolBoxDialog;
+import com.splash.gui.elements.ImagedTool;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -103,7 +109,7 @@ public class MainWindow extends WebFrame implements WindowListener {
                 layersDialog = new LayersDialog(
                         MainWindow.this, DEFAULT_WIDTH, DEFAULT_HEIGHT);
                 layersDialog.setLocationRelativeTo(MainWindow.this);
-                layersDialog.setLocation(1115, 105);
+                layersDialog.setLocation(1115, 155);
                 layersDialog.setVisible(true);
 
                 if (canvas != null) {
@@ -118,7 +124,7 @@ public class MainWindow extends WebFrame implements WindowListener {
             public void run() {
                 toolBoxDialog = new ToolBoxDialog(MainWindow.this);
                 toolBoxDialog.setLocationRelativeTo(MainWindow.this);
-                toolBoxDialog.setLocation(1115, 365);
+                toolBoxDialog.setLocation(1115, 415);
                 toolBoxDialog.setVisible(true);
 
                 if (canvas != null) {
@@ -134,7 +140,7 @@ public class MainWindow extends WebFrame implements WindowListener {
                 try {
                     colorPickerDialog = new ColorPickerDialog(MainWindow.this);
                     colorPickerDialog.setLocationRelativeTo(MainWindow.this);
-                    colorPickerDialog.setLocation(8, 105);
+                    colorPickerDialog.setLocation(8, 145);
                     colorPickerDialog.setVisible(true);
                     colorPickerDialog.setCanvas(canvas);
                 } catch (IOException ex) {
@@ -147,7 +153,7 @@ public class MainWindow extends WebFrame implements WindowListener {
             public void run() {
                 brushDialog = new BrushDialog(MainWindow.this);
                 brushDialog.setLocationRelativeTo(MainWindow.this);
-                brushDialog.setLocation(1115, 485);
+                brushDialog.setLocation(13, 390);
                 brushDialog.setVisible(true);
                 brushDialog.setCanvas(canvas);
 
@@ -206,6 +212,13 @@ public class MainWindow extends WebFrame implements WindowListener {
                 menuBar.newAction.doClick();
             }
         });
+
+        toolBar.pasteAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                menuBar.pasteAction.doClick();
+            }
+        });
     }
 
     private void initMenuBar() {
@@ -216,6 +229,44 @@ public class MainWindow extends WebFrame implements WindowListener {
             public void actionPerformed(ActionEvent ev) {
                 AboutWindow aboutWindow = new AboutWindow(false);
                 aboutWindow.show();
+            }
+        });
+
+        menuBar.pasteAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                if (canvas != null) {
+                    try {
+                        Image pastedImage = canvas.getImageFromClipboard();
+
+                        if (pastedImage == null) {
+                            return;
+                        }
+
+                        BufferedImage bufferedImage = new BufferedImage(
+                                pastedImage.getWidth(null), pastedImage.getHeight(null),
+                                BufferedImage.TYPE_INT_ARGB);
+
+                        Graphics g = bufferedImage.createGraphics();
+                        g.drawImage(pastedImage, 0, 0, null);
+                        g.dispose();
+
+                        ImagedTool tool = new ImagedTool();
+                        tool.setCoordinates(0, 0);
+                        tool.setBaseCoordinates(0, 0);
+                        tool.setWidth(bufferedImage.getWidth());
+                        tool.setHeight(bufferedImage.getHeight());
+                        tool.setSize(
+                                pastedImage.getWidth(null),
+                                pastedImage.getHeight(null));
+                        tool.setImage(bufferedImage);
+
+                        
+                        canvas.addTool(tool);
+
+                    } catch (Exception ex) {
+                    }
+                }
             }
         });
 

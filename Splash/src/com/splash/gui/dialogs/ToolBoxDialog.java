@@ -24,6 +24,7 @@ package com.splash.gui.dialogs;
 import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.splash.gui.Canvas;
+import com.splash.gui.elements.ImagedTool;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.elements.WrapLayout;
 import com.splash.gui.tools.Circle;
@@ -80,6 +81,8 @@ public class ToolBoxDialog extends WebDialog {
             new ImageIcon("res/images/edit-select.png"));
     public JToggleButton pickAction = new JToggleButton(
             new ImageIcon("res/images/color-picker-grey.png"));
+    public JToggleButton imageAction = new JToggleButton(
+            new ImageIcon("res/images/edit-image-face-add.png"));
 
     private Canvas canvas = null;
     private Tool currentTool = null;
@@ -90,7 +93,7 @@ public class ToolBoxDialog extends WebDialog {
 
         setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 
-        setSize(240, 160);
+        setSize(240, 185);
         setResizable(true);
         setLayout(new WrapLayout(0, 3, 0));
 
@@ -100,6 +103,7 @@ public class ToolBoxDialog extends WebDialog {
         add(selectAction);
         add(freeHandAction);
         add(fillAction);
+        add(imageAction);
         add(eraserAction);
         add(textAction);
         add(pickAction);
@@ -111,6 +115,18 @@ public class ToolBoxDialog extends WebDialog {
         add(rightTriangleAction);
         add(circleAction);
         add(ellipseAction);
+
+        imageAction.setToolTipText("Image");
+        imageAction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                untoggleButtons();
+                imageAction.setSelected(true);
+
+                currentTool = new ImagedTool();
+                setCanvasTool(currentTool);
+            }
+        });
 
         moveAction.setToolTipText("Move Selection");
         moveAction.addActionListener(new ActionListener() {
@@ -202,7 +218,7 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 pickAction.setSelected(true);
-                
+
                 currentTool = new ColorPicker();
                 setCanvasTool(currentTool);
             }
@@ -310,7 +326,7 @@ public class ToolBoxDialog extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 untoggleButtons();
                 textAction.setSelected(true);
-                
+
                 currentTool = new Text();
                 setCanvasTool(currentTool);
 
@@ -353,6 +369,7 @@ public class ToolBoxDialog extends WebDialog {
         ellipseAction.setSelected(false);
         squareAction.setSelected(false);
         textAction.setSelected(false);
+        imageAction.setSelected(false);
 
         if (brushBox != null) {
             brushBox.EnableBrushBox(false);

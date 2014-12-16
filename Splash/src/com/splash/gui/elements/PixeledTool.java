@@ -129,6 +129,7 @@ public abstract class PixeledTool extends Tool {
         return cellBounds.contains(x, y);
     }
 
+    @Override
     public void translateBy(int x, int y) {
         minX = Integer.MAX_VALUE;
         maxX = 0;
