@@ -32,6 +32,7 @@ import com.splash.gui.elements.PixeledTool;
 import com.splash.gui.elements.Tool;
 import com.splash.gui.tools.Fill;
 import com.splash.gui.elements.LinedTool;
+import com.splash.gui.tools.ColorPicker;
 import com.splash.gui.tools.Move;
 import com.splash.gui.tools.Select;
 import com.splash.gui.tools.Text;
@@ -313,6 +314,15 @@ public class Canvas extends JComponent implements MouseListener,
                         e.getX() - getImageX(), e.getY() - getImageY());
             } else if (selectedTool instanceof PixeledTool) {
             } else if (selectedTool instanceof Fill) {
+            } else if (selectedTool instanceof ColorPicker) {
+                if (mainFrame != null
+                        && mainFrame.getColorPickerDialog() != null) {
+                    mainFrame.getColorPickerDialog().setCurrentColor(
+                            getRenderedImage(
+                                    layers.get(selectedLayer)).getRGB(
+                                    e.getX() - getImageX(),
+                                    e.getY() - getImageY()));
+                }
             }
         }
     }
@@ -336,7 +346,8 @@ public class Canvas extends JComponent implements MouseListener,
                     mainFrame.getBrushDialog().EnableBrushBox(true);
                 }
 
-            } else if (selectedTool instanceof Move) {
+            } else if (selectedTool instanceof Move
+                    || selectedTool instanceof ColorPicker) {
                 layers.get(selectedLayer).removeTool(selectedTool);
 
                 snapshotManager.saveSnapshot(true);
@@ -460,8 +471,20 @@ public class Canvas extends JComponent implements MouseListener,
                 setCursor(new Cursor(Cursor.MOVE_CURSOR));
             } else if (selectedTool instanceof DimensionedTool
                     || selectedTool instanceof PixeledTool
-                    || selectedTool instanceof LinedTool) {
+                    || selectedTool instanceof LinedTool
+                    || selectedTool instanceof ColorPicker) {
                 setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+
+                if (selectedTool instanceof ColorPicker) {
+                    if (mainFrame != null
+                            && mainFrame.getColorPickerDialog() != null) {
+                        mainFrame.getColorPickerDialog().setPreviewColor(
+                                getRenderedImage(
+                                        layers.get(selectedLayer)).getRGB(
+                                        e.getX() - getImageX(),
+                                        e.getY() - getImageY()));
+                    }
+                }
             } else {
                 setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             }

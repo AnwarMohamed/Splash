@@ -21,6 +21,28 @@
  */
 package com.splash.gui.tools;
 
-public class ColorPicker {
+import com.splash.gui.elements.Tool;
+import java.awt.Graphics2D;
+
+public class ColorPicker extends Tool {
+
+    @Override
+    public void translate(int x, int y) {
+    }
+
+    @Override
+    public boolean withinBounds(int x, int y) {
+        return false;
+    }
+
+    @Override
+    public ColorPicker newInstance() {
+        return new ColorPicker();
+    }
+
+    @Override
+    public void drawResizePoints(Graphics2D graph2d) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

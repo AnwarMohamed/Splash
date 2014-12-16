@@ -44,7 +44,7 @@ public abstract class DimensionedTool extends Tool {
 
     public void setBaseCoordinates(int x, int y) {
         baseX = x;
-        baseY = y;
+        baseY = y;              
     }
 
     public DimensionedTool() {
